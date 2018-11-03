@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<title>VarianteTipo</title>
+
+{% block body %}
+    <h1>VarianteTipo</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ variante_tipo.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ variante_tipo.nombre }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('variante_tipo_index') }}">back to list</a>
+
+    <a href="{{ path('variante_tipo_edit', {'id': variante_tipo.id}) }}">edit</a>
+
+    {{ include('variante_tipo/_delete_form.html.twig') }}
+{% endblock %}

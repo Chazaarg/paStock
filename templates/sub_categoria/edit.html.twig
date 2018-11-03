@@ -1,0 +1,14 @@
+{% extends"index.html.twig" %}
+{% block title %}
+Editar {{categoria.nombre}} > {{sub_categorium.nombre}}
+{% endblock %}
+
+{% block body %}
+    <h1>Editar {{categoria.nombre}} > {{sub_categorium.nombre}}</h1>
+
+    {{ include('sub_categoria/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('sub_categoria_index') }}">back to list</a>
+
+    {{ include('sub_categoria/_delete_form.html.twig') }}
+{% endblock %}

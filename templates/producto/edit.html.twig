@@ -1,0 +1,15 @@
+{% extends"index.html.twig" %}
+
+{% block title %}
+Editar {{producto.nombre}} - {{producto.marca}}
+{% endblock %}
+
+{% block body %}
+    <h1>Editar {{producto.nombre}} - {{producto.marca}}</h1>
+
+    {{ include('producto/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('producto_index') }}">back to list</a>
+
+    {{ include('producto/_delete_form.html.twig') }}
+{% endblock %}

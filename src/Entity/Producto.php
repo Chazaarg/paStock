@@ -1,0 +1,258 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\ProductoRepository")
+ */
+class Producto implements \JsonSerializable
+{
+    use TimestampableEntity;
+    
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nombre;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $precio;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codigoDeBarras;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $precioCompra;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $precioReal;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $cantidad;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Marca", inversedBy="productos")
+     */
+    private $marca;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categoria", inversedBy="productos")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $categoria;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Variante", mappedBy="producto",cascade={"persist"})
+     */
+    private $variantes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SubCategoria", inversedBy="productos")
+     */
+    private $subCategoria;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $descripcion;
+
+    public function __construct()
+    {
+        $this->variantes = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getPrecio(): ?float
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(?float $precio): self
+    {
+        $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getCodigoDeBarras(): ?string
+    {
+        return $this->codigoDeBarras;
+    }
+
+    public function setCodigoDeBarras(?string $codigoDeBarras): self
+    {
+        $this->codigoDeBarras = $codigoDeBarras;
+
+        return $this;
+    }
+
+    public function getPrecioCompra(): ?float
+    {
+        return $this->precioCompra;
+    }
+
+    public function setPrecioCompra(?float $precioCompra): self
+    {
+        $this->precioCompra = $precioCompra;
+
+        return $this;
+    }
+
+    public function getPrecioReal(): ?float
+    {
+        return $this->precioReal;
+    }
+
+    public function setPrecioReal(?float $precioReal): self
+    {
+        $this->precioReal = $precioReal;
+
+        return $this;
+    }
+
+    public function getCantidad(): ?int
+    {
+        return $this->cantidad;
+    }
+
+    public function setCantidad(?int $cantidad): self
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    public function getMarca(): ?Marca
+    {
+        return $this->marca;
+    }
+
+    public function setMarca(?Marca $marca): self
+    {
+        $this->marca = $marca;
+
+        return $this;
+    }
+
+    public function getCategoria(): ?Categoria
+    {
+        return $this->categoria;
+    }
+
+    public function setCategoria(?Categoria $categoria): self
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Variante[]
+     */
+    public function getVariantes(): Collection
+    {
+        return $this->variantes;
+    }
+
+    public function addVariante(Variante $variante): self
+    {
+        if (!$this->variantes->contains($variante)) {
+            $this->variantes[] = $variante;
+            $variante->setProducto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVariante(Variante $variante): self
+    {
+        if ($this->variantes->contains($variante)) {
+            $this->variantes->removeElement($variante);
+            // set the owning side to null (unless already changed)
+            if ($variante->getProducto() === $this) {
+                $variante->setProducto(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id'           => $this->id,
+            'nombre'        => $this->nombre,
+            'cantidad' => $this->cantidad ? $this->cantidad : null,
+            'precio' => $this->precio ? $this->precio :null,
+            'marca' => $this->marca ? array('nombre' => $this->marca->getNombre(), 'id' => $this->marca->getId()) : null,
+            'categoria' => $this->categoria ? array( 'nombre' => $this->categoria->getNombre(), 'id' => $this->categoria->getId()) : null,
+            'sub_categoria' => $this->subCategoria ? array( 'nombre' => $this->subCategoria->getNombre(), 'id' => $this->subCategoria->getId()) : null,
+            'updated_at' => $this->updatedAt ? $this->updatedAt : null,
+            'created_at' => $this->createdAt ? $this->createdAt : null,
+            'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : null,
+            'precio_compra' => $this->precioCompra ? $this->precioCompra : null,
+            'precio_real' => $this->precioReal ? $this->precioReal : null,
+            'descripcion' => $this->descripcion ? $this->descripcion : null
+        ];
+    }
+
+    public function getSubCategoria(): ?SubCategoria
+    {
+        return $this->subCategoria;
+    }
+
+    public function setSubCategoria(?SubCategoria $subCategoria): self
+    {
+        $this->subCategoria = $subCategoria;
+
+        return $this;
+    }
+
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion(?string $descripcion): self
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+}

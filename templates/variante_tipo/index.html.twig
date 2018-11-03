@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<title>VarianteTipo index</title>
+
+{% block body %}
+    <h1>VarianteTipo index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for variante_tipo in variante_tipos %}
+            <tr>
+                <td>{{ variante_tipo.id }}</td>
+                <td>{{ variante_tipo.nombre }}</td>
+                <td>
+                    <a href="{{ path('variante_tipo_show', {'id': variante_tipo.id}) }}">show</a>
+                    <a href="{{ path('variante_tipo_edit', {'id': variante_tipo.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('variante_tipo_new') }}">Create new</a>
+{% endblock %}
