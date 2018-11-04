@@ -23,7 +23,6 @@ security:
         check_path: /login
       logout:
         path: app_logout
-        target: /
 
       # activate different ways to authenticate
       # http_basic: true
