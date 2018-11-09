@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -25,7 +26,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/registration", name="registration")
      */
-    public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request)
+    public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request, ValidatorInterface $validator)
     {
         $data = (array) json_decode($request->getContent());
         $username = $data['username'];
@@ -40,6 +41,40 @@ class RegistrationController extends AbstractController
         ));
         $user->setEmail($email);
         $data['password'] = $user->getPassword();
+
+        $errors = $validator->validate($user);
+
+        if (count($errors) > 0) {
+            /*
+             * Uses a __toString method on the $errors variable which is a
+             * ConstraintViolationList object. This gives us a nice string
+             * for debugging.
+             */
+
+           
+            
+             $values = [];
+             foreach ($errors as $error){
+                $values[] = $error->getPropertyPath();
+             }
+           
+            $errorsString = $errors[0]->getMessage();
+
+         
+
+
+
+            return new JsonResponse(
+                [
+                    'status' => 'error',
+                    'errors' => $errorsString,
+                    'values' => $values
+                ],
+                JsonResponse::HTTP_BAD_REQUEST
+            );
+
+        }
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->submit($data);
@@ -53,18 +88,18 @@ class RegistrationController extends AbstractController
             // authenticate the user and use onAuthenticationSuccess on the authenticator
             return new JsonResponse([
                 'user' => [
-                    'username' => $username, 'email' => $email
+                    'username' => $username, 'email' => $email,
                 ],
                 'message' => '¡Registrado!',
-                'messageType' => 'success'
-                
+                'messageType' => 'success',
+
             ]);
 
         } else {
             throw new JsonResponse(
                 [
                     'message' => 'Hubo un error',
-                    'messageType' => 'error'
+                    'messageType' => 'error',
                 ]
             );
 
