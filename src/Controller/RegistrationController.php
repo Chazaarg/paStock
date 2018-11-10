@@ -28,52 +28,59 @@ class RegistrationController extends AbstractController
      */
     public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request, ValidatorInterface $validator)
     {
+        //Convierto en ARRAY el usuario que venga del formulario.
         $data = (array) json_decode($request->getContent());
+
+        //Inserto cada uno de los datos en variables.
         $username = $data['username'];
         $email = $data['email'];
         $password = $data['password'];
 
+        //Creo el usuario.
         $user = new User();
         $user->setUserName($username);
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            $password
-        ));
         $user->setEmail($email);
-        $data['password'] = $user->getPassword();
+        $user->setPassword($password);
 
-        $errors = $validator->validate($user);
+        //Valido el usuario.
+        $err = $validator->validate($user);
 
-        if (count($errors) > 0) {
-            /*
-             * Uses a __toString method on the $errors variable which is a
-             * ConstraintViolationList object. This gives us a nice string
-             * for debugging.
-             */
+        //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
+        //TODO: Que asocie el campo con su respectivo mensaje de error. (Cada error seguramente sea un objeto).
+        //TODO: Si el campo es válido, que se ponga color verde. O bien, que deje de estar rojo.
+        if (count($err) > 0) {
 
-           
-            
-             $values = [];
-             foreach ($errors as $error){
-                $values[] = $error->getPropertyPath();
-             }
-           
-            $errorsString = $errors[0]->getMessage();
+            $errors = [];
+            foreach ($err as $error) {
 
-         
+                $errors[$error->getPropertyPath()] = [
+                    'message' => $error->getMessage(),
+                    'status' => 'error',
 
+                ];
 
+            }
 
             return new JsonResponse(
                 [
-                    'status' => 'error',
-                    'errors' => $errorsString,
-                    'values' => $values
+                    'messageType' => 'error',
+                    'message' => 'Ha habido un error.',
+                    'errors' => $errors,
                 ],
                 JsonResponse::HTTP_BAD_REQUEST
             );
 
         }
+
+        //Codifico la contraseña del usuario.
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            $password
+        ));
+
+        //Reemplazo la vieja contraseña de $data con la codificada.
+        $password = $user->getPassword();
+        $data['password'] = $password;
 
         $form = $this->createForm(UserType::class, $user);
 

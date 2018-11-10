@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Validator as AcmeAssert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -33,9 +34,10 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @Assert\NotBlank(message="Este campo es requerido.")
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @AcmeAssert\Password
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $password;
 

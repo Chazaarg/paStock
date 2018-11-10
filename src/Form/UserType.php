@@ -13,13 +13,13 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', null, array(
-                'required' => true
+                'required' => true,
             ))
-            ->add('password',null, array(
-                'required' => true
+            ->add('password', null, array(
+                'required' => true,
             ))
-            ->add('email',null, array(
-                'required' => true
+            ->add('email', null, array(
+                'required' => true,
             ))
         ;
     }
