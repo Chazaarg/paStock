@@ -53,7 +53,8 @@ class RegistrationController extends AbstractController
             $errors = [];
             foreach ($err as $error) {
 
-                $errors[$error->getPropertyPath()] = [
+                $errors[] = [
+                    'value' => $error->getPropertyPath(),
                     'message' => $error->getMessage(),
                     'status' => 'error',
 
