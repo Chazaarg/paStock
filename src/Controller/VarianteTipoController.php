@@ -6,10 +6,10 @@ use App\Entity\VarianteTipo;
 use App\Form\VarianteTipo1Type;
 use App\Repository\VarianteTipoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/variante-tipo")
@@ -25,7 +25,7 @@ class VarianteTipoController extends AbstractController
 
         $variantes = [];
 
-        foreach ($varianteTiposRepository as $variante){
+        foreach ($varianteTiposRepository as $variante) {
 
             $variantes[] = $variante->jsonSerialize();
 
@@ -40,24 +40,36 @@ class VarianteTipoController extends AbstractController
     /**
      * @Route("/new", name="variante_tipo_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request): Response {
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
+        dump($data);
+
         $varianteTipo = new VarianteTipo();
         $form = $this->createForm(VarianteTipo1Type::class, $varianteTipo);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($varianteTipo);
-            $em->flush();
+        $form->submit($data);
 
-            return $this->redirectToRoute('variante_tipo_index');
+        if (false === $form->isValid()) {
+            return new JsonResponse(
+                [
+                    'status' => 'error',
+                ]
+            );
         }
 
-        return $this->render('variante_tipo/new.html.twig', [
-            'variante_tipo' => $varianteTipo,
-            'form' => $form->createView(),
-        ]);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($varianteTipo);
+        $em->flush();
+
+        return new JsonResponse(
+
+            $varianteTipo->jsonSerialize()
+            ,
+            JsonResponse::HTTP_CREATED
+        );
     }
 
     /**
@@ -93,7 +105,7 @@ class VarianteTipoController extends AbstractController
      */
     public function delete(Request $request, VarianteTipo $varianteTipo): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$varianteTipo->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $varianteTipo->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($varianteTipo);
             $em->flush();

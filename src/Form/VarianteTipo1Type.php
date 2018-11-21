@@ -20,6 +20,7 @@ class VarianteTipo1Type extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => VarianteTipo::class,
+            'csrf_protection' => false,
         ]);
     }
 }
