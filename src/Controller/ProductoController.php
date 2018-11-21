@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/producto")
@@ -61,7 +62,7 @@ class ProductoController extends AbstractController
     /**
      * @Route("/new", name="producto_new", methods="GET|POST")
      */
-    function new (Request $request, ProductoRepository $productoRepository): Response {
+    function new (Request $request, ProductoRepository $productoRepository, ValidatorInterface $validator): Response {
         //REACT API
 
         $data = json_decode(
@@ -78,12 +79,40 @@ class ProductoController extends AbstractController
  */
 
         $producto = new Producto();
-
         $producto->setCreatedAt(new \DateTime());
         $producto->setUpdatedAt(new \DateTime());
         $form = $this->createForm(ProductoType::class, $producto);
 
         $form->submit($data);
+
+        $err = $validator->validate($producto);
+
+        //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
+
+        if (count($err) > 0) {
+
+            $errors = [];
+            foreach ($err as $error) {
+
+                $errors[] = [
+                    'value' => $error->getPropertyPath(),
+                    'message' => $error->getMessage(),
+                    'status' => 'error',
+
+                ];
+
+            }
+
+            return new JsonResponse(
+                [
+                    'messageType' => 'error',
+                    'message' => 'Ha habido un error.',
+                    'errors' => $errors,
+                ],
+                JsonResponse::HTTP_BAD_REQUEST
+            );
+
+        }
 
         if (false === $form->isValid()) {
             return new JsonResponse(
