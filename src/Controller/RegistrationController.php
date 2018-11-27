@@ -94,9 +94,18 @@ class RegistrationController extends AbstractController
 
             // after validating the user and saving them to the database
             // authenticate the user and use onAuthenticationSuccess on the authenticator
+
+            $guardHandler->authenticateUserAndHandleSuccess(
+                $user,          // the User object you just created
+                $request,
+                $authenticator, // authenticator whose onAuthenticationSuccess you want to use
+                'main'          // the name of your firewall in security.yaml
+            );
+            
+
             return new JsonResponse([
                 'user' => [
-                    'username' => $username, 'email' => $email,
+                    'username' => $username, 'email' => $email, 'roles' => $user->getRoles(), 'id' =>$user->getId()
                 ],
                 'message' => '¡Registrado!',
                 'messageType' => 'success',
