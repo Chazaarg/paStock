@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Producto;
 use App\Entity\Variante;
 use App\Form\ProductoType;
+use App\Form\VarianteType;
+use App\Service\ProductoValidator;
 use App\Repository\ProductoRepository;
 use App\Repository\VarianteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -62,70 +64,23 @@ class ProductoController extends AbstractController
     /**
      * @Route("/new", name="producto_new", methods="GET|POST")
      */
-    function new (Request $request, ProductoRepository $productoRepository, ValidatorInterface $validator): Response {
-        //REACT API
+    function new (Request $request, ProductoRepository $productoRepository, ProductoValidator $productoValidator): Response {
+
+        //Agarro la data de $request y la decodifico.
 
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-/*
-
-//$variante = new Variante();
-//$variante->setNombre('Hola');
-//$variante->setProducto($producto);
-//$producto->getVariantes()->add($variante);
- */
-
+        //Creo un nuevo producto
         $producto = new Producto();
         $producto->setCreatedAt(new \DateTime());
-        $producto->setUpdatedAt(new \DateTime());
-        $form = $this->createForm(ProductoType::class, $producto);
 
-        $form->submit($data);
-
-        $err = $validator->validate($producto);
-
-        //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
-
-        if (count($err) > 0) {
-
-            $errors = [];
-            foreach ($err as $error) {
-
-                $errors[] = [
-                    'value' => $error->getPropertyPath(),
-                    'message' => $error->getMessage(),
-                    'status' => 'error',
-
-                ];
-
-            }
-
-            return new JsonResponse(
-                [
-                    'messageType' => 'error',
-                    'message' => 'Ha habido un error.',
-                    'errors' => $errors,
-                ],
-                JsonResponse::HTTP_BAD_REQUEST
-            );
-
-        }
-
-        if (false === $form->isValid()) {
-            return new JsonResponse(
-                [
-                    'status' => 'error',
-                ]
-            );
-        }
-
-        if (sizeOf($form->getData()->getVariantes()) !== 0) {
-            foreach ($form->getData()->getVariantes() as $variante_) {
-                $variante_->setProducto($producto);
-            };
+        //Valido el producto.
+        $err = $productoValidator->validarProducto($data, $producto);
+        if($err){
+            return $err;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -134,37 +89,12 @@ class ProductoController extends AbstractController
 
         return new JsonResponse(
             [
-                'status' => 'ok',
+                'messageType' => 'success',
+                'message' => 'Producto importado con éxito.',
+                'producto' => $producto,
             ],
-            JsonResponse::HTTP_CREATED
+            JsonResponse::HTTP_OK
         );
-
-/*
-$producto = new Producto();
-
-$producto ->setCreatedAt(new \DateTime());
-$producto ->setUpdatedAt(new \DateTime());
-$form = $this->createForm(ProductoType::class, $producto, array(
-'action' => $this->generateUrl('producto_new'),
-'method' => 'POST',
-));
-$form->handleRequest($request);
-
-if (!$request->isXmlHttpRequest())
-{
-if ($form->isSubmitted() && $form->isValid()) {
-$em = $this->getDoctrine()->getManager();
-$em->persist($producto);
-$em->flush();
-return $this->redirectToRoute('producto_index');
-}
-}
-
-return $this->render('producto/new.html.twig', [
-'producto' => $producto,
-'form' => $form->createView(),
-]);
- */
     }
 
     /**
@@ -195,68 +125,37 @@ return $this->render('producto/new.html.twig', [
             $array,
             JsonResponse::HTTP_OK
         );
-
-        /*$repository = $this->getDoctrine()->getRepository(Variante::class);
-    $variantes = $repository->findBy(
-    ['producto' => $producto->getId()]
-
-    );
-
-    $repository = $this->getDoctrine()->getRepository(Categoria::class);
-    $categoria = $repository->find($producto->getCategoria()->getId());
-
-    $array= array(
-    "nombre" => $producto->getNombre(),
-    "categoria" => $categoria->getNombre(),
-    "variantes" => $variantes
-    );
-    dump(json_decode($variantes));
-    die;
-
-    return new JsonResponse(json_encode((json_encode($array))));*/
     }
 
     /**
      * @Route("/{id}/edit", name="producto_edit", methods="GET|POST|PUT")
      */
-    public function edit(Request $request, Producto $producto, $id): Response
+    public function edit(Request $request, Producto $producto, $id, ValidatorInterface $validator, ProductoValidator $productoValidator): Response
     {
         $variantesOriginales = new ArrayCollection();
 
-        // Create an ArrayCollection of the current Tag objects in the database
+        // Crea un ArrayCollection de las actuales variantes en la DB
         foreach ($producto->getVariantes() as $variante) {
             $variantesOriginales->add($variante);
         }
 
+        //Agarro la data de $request y la decodifico.
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-        $producto->setUpdatedAt(new \DateTime());
-        $form = $this->createForm(ProductoType::class, $producto);
+        //Valido el producto.
+        $err = $productoValidator->validarProducto($data, $producto);
 
-        $form->submit($data);
-
-        if (false === $form->isValid()) {
-            return new JsonResponse(
-                [
-                    'status' => 'error',
-                ]
-            );
+        if($err){
+            return $err;
         }
 
-        //Agrega a cada variante su respectivo producto
-        if (sizeOf($form->getData()->getVariantes()) !== 0) {
-            foreach ($form->getData()->getVariantes() as $variante_) {
-                $variante_->setProducto($producto);
-            };
-
-        }
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        // remove the relationship between the tag and the Task
+        // Borra la relación entre Producto y sus variante.
         foreach ($variantesOriginales as $variante) {
             if (false === $producto->getVariantes()->contains($variante)) {
                 // remove the Task from the Tag
@@ -273,11 +172,14 @@ return $this->render('producto/new.html.twig', [
         }
 
         $this->getDoctrine()->getManager()->flush();
+
         return new JsonResponse(
             [
-                'status' => 'ok',
+                'messageType' => 'success',
+                'message' => 'Producto importado con éxito.',
+                'producto' => $producto,
             ],
-            JsonResponse::HTTP_CREATED
+            JsonResponse::HTTP_OK
         );
 
     }

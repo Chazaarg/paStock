@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VarianteRepository")
@@ -18,11 +19,13 @@ class Variante
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $nombre;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\VarianteTipo", inversedBy="variante")
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $varianteTipo;
 
@@ -33,11 +36,13 @@ class Variante
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
-    private $Cantidad;
+    private $cantidad;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $precio;
 
@@ -56,7 +61,7 @@ class Variante
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(?string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -89,12 +94,12 @@ class Variante
 
     public function getCantidad(): ?int
     {
-        return $this->Cantidad;
+        return $this->cantidad;
     }
 
-    public function setCantidad(int $Cantidad): self
+    public function setCantidad(?int $cantidad): self
     {
-        $this->Cantidad = $Cantidad;
+        $this->cantidad = $cantidad;
 
         return $this;
     }
@@ -104,10 +109,10 @@ class Variante
         return [
             'id'           => $this->id,
             'nombre'        => $this->nombre,
-            'cantidad' => $this->Cantidad ? $this->Cantidad : null,
+            'cantidad' => $this->cantidad,
             'precio' => $this->precio,
-            'variante_tipo' => $this->varianteTipo ? array('nombre' => $this->varianteTipo->getNombre(), 'id' => $this->varianteTipo->getId()) : null,
-            'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : null,
+            'variante_tipo' => $this->varianteTipo ? array('nombre' => $this->varianteTipo->getNombre(), 'id' => $this->varianteTipo->getId()) : "",
+            'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : "",
 
         ];
     }
@@ -117,7 +122,7 @@ class Variante
         return $this->precio;
     }
 
-    public function setPrecio(int $precio): self
+    public function setPrecio(?int $precio): self
     {
         $this->precio = $precio;
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductoRepository")
@@ -29,7 +30,7 @@ class Producto implements \JsonSerializable
     private $nombre;
 
     /**
-     * @Assert\NotBlank(message="Este campo es requerido.")
+     * @Assert\NotBlank(message="Este campo es requerido.", groups={"individual"})
      * @ORM\Column(type="float", nullable=true)
      */
     private $precio;
@@ -50,7 +51,7 @@ class Producto implements \JsonSerializable
     private $precioReal;
 
     /**
-     * @Assert\NotBlank(message="Este campo es requerido.")
+     * @Assert\NotBlank(message="Este campo es requerido.", groups={"individual"})
      * @ORM\Column(type="integer", nullable=true)
      */
     private $cantidad;
@@ -96,7 +97,7 @@ class Producto implements \JsonSerializable
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(?string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -225,15 +226,15 @@ class Producto implements \JsonSerializable
             'nombre' => $this->nombre,
             'cantidad' => $this->cantidad ? $this->cantidad : 0,
             'precio' => $this->precio ? $this->precio : 0,
-            'marca' => $this->marca ? array('nombre' => $this->marca->getNombre(), 'id' => $this->marca->getId()) : null,
-            'categoria' => $this->categoria ? array('nombre' => $this->categoria->getNombre(), 'id' => $this->categoria->getId()) : null,
-            'sub_categoria' => $this->subCategoria ? array('nombre' => $this->subCategoria->getNombre(), 'id' => $this->subCategoria->getId()) : null,
-            'updated_at' => $this->updatedAt ? $this->updatedAt : null,
-            'created_at' => $this->createdAt ? $this->createdAt : null,
-            'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : null,
-            'precio_compra' => $this->precioCompra ? $this->precioCompra : null,
-            'precio_real' => $this->precioReal ? $this->precioReal : null,
-            'descripcion' => $this->descripcion ? $this->descripcion : null,
+            'marca' => $this->marca ? array('nombre' => $this->marca->getNombre(), 'id' => $this->marca->getId()) : "",
+            'categoria' => $this->categoria ? array('nombre' => $this->categoria->getNombre(), 'id' => $this->categoria->getId()) : "",
+            'sub_categoria' => $this->subCategoria ? array('nombre' => $this->subCategoria->getNombre(), 'id' => $this->subCategoria->getId()) : "",
+            'updated_at' => $this->updatedAt ? $this->updatedAt : "",
+            'created_at' => $this->createdAt ? $this->createdAt : "",
+            'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : "",
+            'precio_compra' => $this->precioCompra ? $this->precioCompra : "",
+            'precio_real' => $this->precioReal ? $this->precioReal : "",
+            'descripcion' => $this->descripcion ? $this->descripcion : "",
         ];
     }
 
