@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Producto;
 use App\Entity\Variante;
-use App\Form\ProductoType;
-use App\Form\VarianteType;
 use App\Service\ProductoValidator;
 use App\Repository\ProductoRepository;
 use App\Repository\VarianteRepository;
@@ -15,13 +13,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/producto")
  */
 class ProductoController extends AbstractController
 {
+    private $productoValidator;
+    public function __construct(ProductoValidator $productoValidator){
+        $this->productoValidator = $productoValidator;
+    }
     /**
      * @Route("/", name="producto_index", methods="GET")
      */
@@ -64,7 +65,7 @@ class ProductoController extends AbstractController
     /**
      * @Route("/new", name="producto_new", methods="GET|POST")
      */
-    function new (Request $request, ProductoRepository $productoRepository, ProductoValidator $productoValidator): Response {
+    function new (Request $request, ProductoRepository $productoRepository): Response {
 
         //Agarro la data de $request y la decodifico.
 
@@ -78,7 +79,7 @@ class ProductoController extends AbstractController
         $producto->setCreatedAt(new \DateTime());
 
         //Valido el producto.
-        $err = $productoValidator->validarProducto($data, $producto);
+        $err = $this->productoValidator->validarProducto($data, $producto);
         if($err){
             return $err;
         }
@@ -90,7 +91,7 @@ class ProductoController extends AbstractController
         return new JsonResponse(
             [
                 'messageType' => 'success',
-                'message' => 'Producto importado con éxito.',
+                'message' => "Producto '". strtoupper($producto->getNombre()) ."' importado con éxito. Con ". count($producto->getVariantes()) . " variantes.",
                 'producto' => $producto,
             ],
             JsonResponse::HTTP_OK
@@ -130,7 +131,7 @@ class ProductoController extends AbstractController
     /**
      * @Route("/{id}/edit", name="producto_edit", methods="GET|POST|PUT")
      */
-    public function edit(Request $request, Producto $producto, $id, ValidatorInterface $validator, ProductoValidator $productoValidator): Response
+    public function edit(Request $request, Producto $producto, $id): Response
     {
         $variantesOriginales = new ArrayCollection();
 
@@ -146,7 +147,7 @@ class ProductoController extends AbstractController
         );
 
         //Valido el producto.
-        $err = $productoValidator->validarProducto($data, $producto);
+        $err = $this->productoValidator->validarProducto($data, $producto);
 
         if($err){
             return $err;
@@ -176,7 +177,7 @@ class ProductoController extends AbstractController
         return new JsonResponse(
             [
                 'messageType' => 'success',
-                'message' => 'Producto importado con éxito.',
+                'message' => "Producto '". strtoupper($producto->getNombre()) ."' importado con éxito. Con ". count($producto->getVariantes()) . " variantes.",
                 'producto' => $producto,
             ],
             JsonResponse::HTTP_OK

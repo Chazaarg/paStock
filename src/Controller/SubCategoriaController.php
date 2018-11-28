@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\SubCategoria;
 use App\Entity\Categoria;
+use App\Entity\SubCategoria;
 use App\Form\SubCategoriaType;
 use App\Repository\SubCategoriaRepository;
+use App\Service\DefaultValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/subcategoria")
@@ -26,7 +27,7 @@ class SubCategoriaController extends AbstractController
 
         $subCategorias = [];
 
-        foreach ($subCategoriasRepository as $subCategoria){
+        foreach ($subCategoriasRepository as $subCategoria) {
 
             $subCategorias[] = $subCategoria->jsonSerialize();
 
@@ -41,18 +42,21 @@ class SubCategoriaController extends AbstractController
     /**
      * @Route("/new", name="sub_categoria_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request, DefaultValidator $defaultValidator): Response {
         $data = json_decode(
             $request->getContent(),
             true
         );
-    
+
         $subCategorium = new SubCategoria();
         $form = $this->createForm(SubCategoriaType::class, $subCategorium);
 
         $form->submit($data);
-        
+
+        $err = $defaultValidator->validar($subCategorium);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if (false === $form->isValid()) {
             return new JsonResponse(
@@ -63,15 +67,19 @@ class SubCategoriaController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-            $em->persist($subCategorium);
-            $em->flush();
+        $em->persist($subCategorium);
+        $em->flush();
 
         return new JsonResponse(
-                
-                    $subCategorium->jsonSerialize()
-                ,
-                JsonResponse::HTTP_CREATED
-            );
+
+            [
+                'subcategoria' => $subCategorium->jsonSerialize(),
+                'messageType' => 'success',
+                'message' => "Subcategoria '" . strtoupper($subCategorium->getNombre()) . "' creada",
+            ]
+            ,
+            JsonResponse::HTTP_CREATED
+        );
     }
 
     /**
@@ -79,18 +87,17 @@ class SubCategoriaController extends AbstractController
      */
     public function show(SubCategoria $subCategorium): Response
     {
-       
-        $categoria = $this->getDoctrine()
-        ->getRepository(Categoria::class)
-        ->findOneBy(
-            ['id' => $subCategorium->getCategoria()->getId()]
-        );
 
+        $categoria = $this->getDoctrine()
+            ->getRepository(Categoria::class)
+            ->findOneBy(
+                ['id' => $subCategorium->getCategoria()->getId()]
+            );
 
         return $this->render('sub_categoria/show.html.twig', [
             'sub_categorium' => $subCategorium,
             'categoria' => $categoria,
-            ]);
+        ]);
     }
 
     /**
@@ -100,10 +107,10 @@ class SubCategoriaController extends AbstractController
     {
 
         $categoria = $this->getDoctrine()
-        ->getRepository(Categoria::class)
-        ->findOneBy(
-            ['id' => $subCategorium->getCategoria()->getId()]
-        );
+            ->getRepository(Categoria::class)
+            ->findOneBy(
+                ['id' => $subCategorium->getCategoria()->getId()]
+            );
 
         $form = $this->createForm(SubCategoriaType::class, $subCategorium);
         $form->handleRequest($request);
@@ -126,7 +133,7 @@ class SubCategoriaController extends AbstractController
      */
     public function delete(Request $request, SubCategoria $subCategorium): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$subCategorium->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $subCategorium->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($subCategorium);
             $em->flush();

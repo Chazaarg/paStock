@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VarianteTipoRepository")
+ * @UniqueEntity("nombre", message ="El tipo de variante ingresado ya existe.")
  */
 class VarianteTipo
 {
@@ -20,6 +23,7 @@ class VarianteTipo
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $nombre;
 

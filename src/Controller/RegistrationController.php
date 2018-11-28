@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Service\DefaultValidator;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/registration", name="registration")
      */
-    public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request, ValidatorInterface $validator)
+    public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request, DefaultValidator $defaultValidator)
     {
         //Convierto en ARRAY el usuario que venga del formulario.
         $data = (array) json_decode($request->getContent());
@@ -43,34 +44,9 @@ class RegistrationController extends AbstractController
         $user->setPassword($password);
 
         //Valido el usuario.
-        $err = $validator->validate($user);
-
-        //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
-        //TODO: Que asocie el campo con su respectivo mensaje de error. (Cada error seguramente sea un objeto).
-        //TODO: Si el campo es válido, que se ponga color verde. O bien, que deje de estar rojo.
-        if (count($err) > 0) {
-
-            $errors = [];
-            foreach ($err as $error) {
-
-                $errors[] = [
-                    'value' => $error->getPropertyPath(),
-                    'message' => $error->getMessage(),
-                    'status' => 'error',
-
-                ];
-
-            }
-
-            return new JsonResponse(
-                [
-                    'messageType' => 'error',
-                    'message' => 'Ha habido un error.',
-                    'errors' => $errors,
-                ],
-                JsonResponse::HTTP_BAD_REQUEST
-            );
-
+        $err = $defaultValidator->validar($user);
+        if($err){
+            return new JsonResponse ($err, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         //Codifico la contraseña del usuario.

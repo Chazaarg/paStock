@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Marca;
 use App\Form\MarcaType;
 use App\Repository\MarcaRepository;
+use App\Service\DefaultValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +41,7 @@ class MarcaController extends AbstractController
     /**
      * @Route("/new", name="marca_new", methods="GET|POST")
      */
-    function new (Request $request): Response {
+    function new (Request $request, DefaultValidator $defaultValidator): Response {
         $data = json_decode(
             $request->getContent(),
             true
@@ -51,11 +52,16 @@ class MarcaController extends AbstractController
 
         $form->submit($data);
 
+        $err = $defaultValidator->validar($marca);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
         if (false === $form->isValid()) {
             return new JsonResponse(
                 [
                     'status' => 'error',
-                ]
+                ], JsonResponse::HTTP_BAD_REQUEST
             );
         }
 
@@ -64,9 +70,11 @@ class MarcaController extends AbstractController
         $em->flush();
 
         return new JsonResponse(
-
-            $marca->jsonSerialize()
-            ,
+            [
+                'marca' => $marca->jsonSerialize(),
+                'messageType' => 'success',
+                'message' => "Marca '" . strtoupper($marca->getNombre()) . "' creada",
+            ],
             JsonResponse::HTTP_CREATED
         );
 

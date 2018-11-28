@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\Categoria;
 use App\Form\CategoriaType;
 use App\Repository\CategoriaRepository;
+use App\Service\DefaultValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/categoria")
@@ -25,7 +26,7 @@ class CategoriaController extends AbstractController
 
         $categorias = [];
 
-        foreach ($categoriasRepository as $categoria){
+        foreach ($categoriasRepository as $categoria) {
 
             $categorias[] = $categoria->jsonSerialize();
 
@@ -35,25 +36,27 @@ class CategoriaController extends AbstractController
             $categorias,
             JsonResponse::HTTP_OK
         );
-        
+
     }
 
     /**
      * @Route("/new", name="categoria_new", methods="GET|POST")
      */
-    public function new(Request $request): Response
-    {
+    function new (Request $request, DefaultValidator $defaultValidator): Response {
         $data = json_decode(
             $request->getContent(),
             true
         );
-    
+
         $categorium = new Categoria();
         $form = $this->createForm(CategoriaType::class, $categorium);
 
         $form->submit($data);
-       
-        
+
+        $err = $defaultValidator->validar($categorium);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if (false === $form->isValid()) {
             return new JsonResponse(
@@ -64,15 +67,18 @@ class CategoriaController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-            $em->persist($categorium);
-            $em->flush();
+        $em->persist($categorium);
+        $em->flush();
 
         return new JsonResponse(
-                
-                    $categorium->jsonSerialize(),
-                
-                JsonResponse::HTTP_CREATED
-            );
+            [
+                'categoria' => $categorium->jsonSerialize(),
+                'messageType' => 'success',
+                'message' => "Categoria '" . strtoupper($categorium->getNombre()) . "' creada",
+            ],
+
+            JsonResponse::HTTP_CREATED
+        );
     }
 
     /**
@@ -108,7 +114,7 @@ class CategoriaController extends AbstractController
      */
     public function delete(Request $request, Categoria $categorium): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$categorium->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $categorium->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($categorium);
             $em->flush();

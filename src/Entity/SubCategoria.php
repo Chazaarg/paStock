@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SubCategoriaRepository")
+ * @UniqueEntity("nombre", message ="La categoria ingresada ya existe.")
  */
 class SubCategoria
 {
@@ -20,11 +23,13 @@ class SubCategoria
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $nombre;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Categoria", inversedBy="subCategoria")
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $categoria;
 

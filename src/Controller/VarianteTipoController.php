@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\VarianteTipo;
 use App\Form\VarianteTipo1Type;
 use App\Repository\VarianteTipoRepository;
+use App\Service\DefaultValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,17 +41,21 @@ class VarianteTipoController extends AbstractController
     /**
      * @Route("/new", name="variante_tipo_new", methods="GET|POST")
      */
-    function new (Request $request): Response {
+    function new (Request $request, DefaultValidator $defaultValidator): Response {
         $data = json_decode(
             $request->getContent(),
             true
         );
-        dump($data);
 
         $varianteTipo = new VarianteTipo();
         $form = $this->createForm(VarianteTipo1Type::class, $varianteTipo);
 
         $form->submit($data);
+
+        $err = $defaultValidator->validar($varianteTipo);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if (false === $form->isValid()) {
             return new JsonResponse(
@@ -66,7 +71,11 @@ class VarianteTipoController extends AbstractController
 
         return new JsonResponse(
 
-            $varianteTipo->jsonSerialize()
+            [
+                'varianteTipo' => $varianteTipo->jsonSerialize(),
+                'messageType' => 'success',
+                'message' => 'Tipo de variante: ' . strtoupper($varianteTipo->getNombre()) . ' creado',
+            ]
             ,
             JsonResponse::HTTP_CREATED
         );
