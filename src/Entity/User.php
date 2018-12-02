@@ -44,6 +44,11 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="Este campo es requerido.")
+     * @Assert\Email(
+     *     message = "El email '{{ value }}' no es válido.",
+     *     checkMX = true,
+     *     checkHost = true
+     * )
      */
     private $email;
 
