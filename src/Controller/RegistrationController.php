@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Service\DefaultValidator;
 use App\Security\LoginFormAuthenticator;
+use App\Service\DefaultValidator;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -36,6 +35,7 @@ class RegistrationController extends AbstractController
         $username = $data['username'];
         $email = $data['email'];
         $password = $data['password'];
+        $passwordVerifyIsValid = $data['passwordVerifyIsValid'];
 
         //Creo el usuario.
         $user = new User();
@@ -43,10 +43,41 @@ class RegistrationController extends AbstractController
         $user->setEmail($email);
         $user->setPassword($password);
 
+        //Antes que nada verifico que las contraseñas ingresadas coincidan.
+        $passVerifyFullErr = null;
+        $passVerifyErr = null;
+
+        if (!$passwordVerifyIsValid) {
+            //Este array es para acumularlo junto con otros errores.
+            $passVerifyErr = [
+                "value" => "passwordRepeat",
+                "message" => "La contraseña ingresada no coincide.",
+                "status" => "error",
+            ];
+            //Este array es por si no hay otros errores.
+            $passVerifyFullErr = [
+                'messageType' => 'error',
+                'message' => 'Ha habido un error.',
+                'errors' => [$passVerifyErr],
+            ];
+
+        }
+
         //Valido el usuario.
         $err = $defaultValidator->validar($user);
-        if($err){
-            return new JsonResponse ($err, JsonResponse::HTTP_BAD_REQUEST);
+        if ($err) {
+
+            //Si hay más errores, entonces acumulo el error de la verificación de contraseña, si es que está.
+            if ($passVerifyErr) {
+                array_push($err['errors'], $passVerifyErr);
+            }
+
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+
+        } else if ($passVerifyErr) {
+
+            //Si no hay más errores, entonces devuelvo solamente el error de verificación de contraseña.
+            return new JsonResponse($passVerifyFullErr, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         //Codifico la contraseña del usuario.
@@ -60,6 +91,8 @@ class RegistrationController extends AbstractController
         $data['password'] = $password;
 
         $form = $this->createForm(UserType::class, $user);
+        //Saco el verifypassword antes de hacer el submit.
+        $data = array_slice($data, 0, 3);
 
         $form->submit($data);
 
@@ -72,16 +105,15 @@ class RegistrationController extends AbstractController
             // authenticate the user and use onAuthenticationSuccess on the authenticator
 
             $guardHandler->authenticateUserAndHandleSuccess(
-                $user,          // the User object you just created
+                $user, // the User object you just created
                 $request,
                 $authenticator, // authenticator whose onAuthenticationSuccess you want to use
-                'main'          // the name of your firewall in security.yaml
+                'main' // the name of your firewall in security.yaml
             );
-            
 
             return new JsonResponse([
                 'user' => [
-                    'username' => $username, 'email' => $email, 'roles' => $user->getRoles(), 'id' =>$user->getId()
+                    'username' => $username, 'email' => $email, 'roles' => $user->getRoles(), 'id' => $user->getId(),
                 ],
                 'message' => '¡Registrado!',
                 'messageType' => 'success',
@@ -89,7 +121,7 @@ class RegistrationController extends AbstractController
             ]);
 
         } else {
-            throw new JsonResponse(
+            return new JsonResponse(
                 [
                     'message' => 'Hubo un error',
                     'messageType' => 'error',

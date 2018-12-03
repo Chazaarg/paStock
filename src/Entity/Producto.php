@@ -228,7 +228,7 @@ class Producto implements \JsonSerializable
             'precio' => $this->precio ? $this->precio : 0,
             'marca' => $this->marca ? array('nombre' => $this->marca->getNombre(), 'id' => $this->marca->getId()) : "",
             'categoria' => $this->categoria ? array('nombre' => $this->categoria->getNombre(), 'id' => $this->categoria->getId()) : "",
-            'sub_categoria' => $this->subCategoria ? array('nombre' => $this->subCategoria->getNombre(), 'id' => $this->subCategoria->getId()) : "",
+            'sub_categoria' => $this->subCategoria ? array('nombre' => $this->subCategoria->getNombre(), 'id' => $this->subCategoria->getId()) : null,
             'updated_at' => $this->updatedAt ? $this->updatedAt : "",
             'created_at' => $this->createdAt ? $this->createdAt : "",
             'codigo_de_barras' => $this->codigoDeBarras ? $this->codigoDeBarras : "",
