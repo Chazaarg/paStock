@@ -133,12 +133,15 @@ class SubCategoriaController extends AbstractController
      */
     public function delete(Request $request, SubCategoria $subCategorium): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $subCategorium->getId(), $request->request->get('_token'))) {
+        dump($this);
+        die;
             $em = $this->getDoctrine()->getManager();
             $em->remove($subCategorium);
             $em->flush();
-        }
-
-        return $this->redirectToRoute('sub_categoria_index');
+            
+            return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }

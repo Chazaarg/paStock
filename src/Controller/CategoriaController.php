@@ -114,12 +114,18 @@ class CategoriaController extends AbstractController
      */
     public function delete(Request $request, Categoria $categorium): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $categorium->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($categorium);
+        $em = $this->getDoctrine()->getManager();
+        foreach($categorium->getSubcategoria() as $subcategoria){
+            $em->remove($subcategoria);
             $em->flush();
         }
+        
+            $em->remove($categorium);
+            $em->flush();
 
-        return $this->redirectToRoute('categoria_index');
+        return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }
