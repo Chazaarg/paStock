@@ -17,6 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MarcaController extends AbstractController
 {
+    private $defaultValidator;
+    public function __construct(DefaultValidator $defaultValidator)
+    {
+        $this->defaultValidator = $defaultValidator;
+    }
     /**
      * @Route("/", name="marca_index", methods="GET")
      */
@@ -41,7 +46,7 @@ class MarcaController extends AbstractController
     /**
      * @Route("/new", name="marca_new", methods="GET|POST")
      */
-    function new (Request $request, DefaultValidator $defaultValidator): Response {
+    function new (Request $request): Response {
         $data = json_decode(
             $request->getContent(),
             true
@@ -52,7 +57,7 @@ class MarcaController extends AbstractController
 
         $form->submit($data);
 
-        $err = $defaultValidator->validar($marca);
+        $err = $this->defaultValidator->validar($marca);
         if ($err) {
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
         }
@@ -89,23 +94,38 @@ class MarcaController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="marca_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="marca_edit", methods="PUT")
      */
     public function edit(Request $request, Marca $marca): Response
     {
+
+        //La data es el nombre, que es lo único editable.
+        $nombre = $request->getContent();
+
         $form = $this->createForm(MarcaType::class, $marca);
-        $form->handleRequest($request);
+        $form->submit(['nombre' => $nombre]);
+
+        //Lo valido.
+        $err = $this->defaultValidator->validar($marca);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('marca_edit', ['id' => $marca->getId()]);
+            return new JsonResponse(
+                [
+                    'marca' => $marca->jsonSerialize(),
+                    'messageType' => 'success',
+                    'message' => "Marca '" . strtoupper($marca->getNombre()) . "' editada",
+                ],
+    
+                JsonResponse::HTTP_CREATED
+            );
         }
 
-        return $this->render('marca/edit.html.twig', [
-            'marca' => $marca,
-            'form' => $form->createView(),
-        ]);
+    
     }
 
     /**
@@ -113,12 +133,21 @@ class MarcaController extends AbstractController
      */
     public function delete(Request $request, Marca $marca): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $marca->getId(), $request->request->get('_token'))) {
+        //Si algún producto contiene la MARCA a eliminar, se la quito.
+        if ($marca->getProductos()) {
+            foreach ($marca->getProductos() as $producto) {
+                $producto->setMarca(null);
+
+            }
+        }
+        
             $em = $this->getDoctrine()->getManager();
             $em->remove($marca);
             $em->flush();
-        }
-
-        return $this->redirectToRoute('marca_index');
+        
+            return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }

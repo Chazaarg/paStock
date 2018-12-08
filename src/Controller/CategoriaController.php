@@ -17,6 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CategoriaController extends AbstractController
 {
+    private $defaultValidator;
+    public function __construct(DefaultValidator $defaultValidator)
+    {
+        $this->defaultValidator = $defaultValidator;
+    }
+
     /**
      * @Route("/", name="categoria_index", methods="GET")
      */
@@ -42,7 +48,7 @@ class CategoriaController extends AbstractController
     /**
      * @Route("/new", name="categoria_new", methods="GET|POST")
      */
-    function new (Request $request, DefaultValidator $defaultValidator): Response {
+    function new (Request $request): Response {
         $data = json_decode(
             $request->getContent(),
             true
@@ -53,7 +59,7 @@ class CategoriaController extends AbstractController
 
         $form->submit($data);
 
-        $err = $defaultValidator->validar($categorium);
+        $err = $this->defaultValidator->validar($categorium);
         if ($err) {
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
         }
@@ -90,23 +96,37 @@ class CategoriaController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="categoria_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="categoria_edit", methods="PUT")
      */
     public function edit(Request $request, Categoria $categorium): Response
     {
+        //La data es el nombre, que es lo único editable.
+        $nombre = $request->getContent();
+        
+
         $form = $this->createForm(CategoriaType::class, $categorium);
-        $form->handleRequest($request);
+        $form->submit(['nombre' => $nombre]);
+
+
+        //Lo valido.
+        $err = $this->defaultValidator->validar($categorium);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('categoria_edit', ['id' => $categorium->getId()]);
+            return new JsonResponse(
+                [
+                    'categoria' => $categorium->jsonSerialize(),
+                    'messageType' => 'success',
+                    'message' => "Categoria '" . strtoupper($categorium->getNombre()) . "' editada",
+                ],
+    
+                JsonResponse::HTTP_CREATED
+            );
         }
-
-        return $this->render('categoria/edit.html.twig', [
-            'categorium' => $categorium,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
@@ -114,18 +134,40 @@ class CategoriaController extends AbstractController
      */
     public function delete(Request $request, Categoria $categorium): Response
     {
+
         $em = $this->getDoctrine()->getManager();
-        foreach($categorium->getSubcategoria() as $subcategoria){
+
+        //Elimino las subcategorias de la categoría a remover.
+        foreach ($categorium->getSubcategoria() as $subcategoria) {
+
+            //Si algún producto contiene la subcategoría a eliminar, se la quito.
+            if ($subcategoria->getProductos()) {
+                foreach ($subcategoria->getProductos() as $producto) {
+                    $producto->setSubCategoria(null);
+
+                }
+            }
+
             $em->remove($subcategoria);
             $em->flush();
+
         }
-        
-            $em->remove($categorium);
-            $em->flush();
+
+        //Si algún producto contiene la categoría a eliminar, se la quito.
+        if ($categorium->getProductos()) {
+            foreach ($categorium->getProductos() as $producto) {
+                $producto->setCategoria(null);
+
+            }
+        }
+
+        //Finalmente remuevo la categoría.
+        $em->remove($categorium);
+        $em->flush();
 
         return new JsonResponse(
-                null,
-                JsonResponse::HTTP_NO_CONTENT
-            );
+            null,
+            JsonResponse::HTTP_NO_CONTENT
+        );
     }
 }

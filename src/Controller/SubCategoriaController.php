@@ -18,6 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SubCategoriaController extends AbstractController
 {
+    private $defaultValidator;
+    public function __construct(DefaultValidator $defaultValidator)
+    {
+        $this->defaultValidator = $defaultValidator;
+    }
+
     /**
      * @Route("/", name="sub_categoria_index", methods="GET")
      */
@@ -42,7 +48,7 @@ class SubCategoriaController extends AbstractController
     /**
      * @Route("/new", name="sub_categoria_new", methods="GET|POST")
      */
-    function new (Request $request, DefaultValidator $defaultValidator): Response {
+    function new (Request $request): Response {
         $data = json_decode(
             $request->getContent(),
             true
@@ -53,7 +59,7 @@ class SubCategoriaController extends AbstractController
 
         $form->submit($data);
 
-        $err = $defaultValidator->validar($subCategorium);
+        $err = $this->defaultValidator->validar($subCategorium);
         if ($err) {
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
         }
@@ -101,31 +107,42 @@ class SubCategoriaController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="sub_categoria_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="sub_categoria_edit", methods="PUT")
      */
     public function edit(Request $request, SubCategoria $subCategorium): Response
     {
-
         $categoria = $this->getDoctrine()
-            ->getRepository(Categoria::class)
-            ->findOneBy(
-                ['id' => $subCategorium->getCategoria()->getId()]
-            );
+        ->getRepository(Categoria::class)
+        ->findOneBy(
+            ['id' => $subCategorium->getCategoria()->getId()]
+        );
+        
+        //La data es el nombre, que es lo único editable.
+        $nombre = $request->getContent();
 
         $form = $this->createForm(SubCategoriaType::class, $subCategorium);
-        $form->handleRequest($request);
+        $form->submit(['nombre' => $nombre, 'categoria' => $categoria->getId()]);
+
+        //Lo valido.
+        $err = $this->defaultValidator->validar($subCategorium);
+        if ($err) {
+            return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('sub_categoria_edit', ['id' => $subCategorium->getId()]);
+            return new JsonResponse(
+                [
+                    'subcategoria' => $subCategorium->jsonSerialize(),
+                    'messageType' => 'success',
+                    'message' => "Categoria '" . strtoupper($subCategorium->getNombre()) . "' editada",
+                ],
+
+                JsonResponse::HTTP_CREATED
+            );
         }
 
-        return $this->render('sub_categoria/edit.html.twig', [
-            'sub_categorium' => $subCategorium,
-            'form' => $form->createView(),
-            'categoria' => $categoria,
-        ]);
     }
 
     /**
@@ -133,15 +150,23 @@ class SubCategoriaController extends AbstractController
      */
     public function delete(Request $request, SubCategoria $subCategorium): Response
     {
-        dump($this);
-        die;
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($subCategorium);
-            $em->flush();
-            
-            return new JsonResponse(
-                null,
-                JsonResponse::HTTP_NO_CONTENT
-            );
+
+        //Si algún producto contiene la subcategoría a eliminar, se la quito.
+        if ($subCategorium->getProductos()) {
+            foreach ($subCategorium->getProductos() as $producto) {
+                $producto->setSubCategoria(null);
+
+            }
+        }
+
+        //Finalmente remuevo la subcategoría.
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($subCategorium);
+        $em->flush();
+
+        return new JsonResponse(
+            null,
+            JsonResponse::HTTP_NO_CONTENT
+        );
     }
 }
