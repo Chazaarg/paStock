@@ -35,7 +35,7 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @AcmeAssert\Password
      * @Assert\NotBlank(message="Este campo es requerido.")
      */
@@ -52,7 +52,12 @@ class User implements UserInterface
      */
     private $email;
 
-    public function getId(): ?int
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $googleId;
+
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -133,6 +138,18 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): self
+    {
+        $this->googleId = $googleId;
 
         return $this;
     }
