@@ -56,55 +56,54 @@ class ProductoType extends AbstractType
                 'allow_delete' => true,
             ))
         ;
-/*
-$builder->get('categoria')->addEventListener(
-FormEvents::POST_SUBMIT,
-function(FormEvent $event){
-$form = $event->getForm();
-
-$form->getParent()->add('SubCategoria', EntityType::Class, array(
-'class' => SubCategoria::class,
-'placeholder' => 'Seleccione subcategoria',
-'choices' => $form->getData()->getSubCategoria()
-
-));
-}
-);
-
-$builder->addEventListener(
-FormEvents::POST_SET_DATA,
-function(FormEvent $event){
-$form = $event->getForm();
-$data = $event->getData();
-$subCategoria = $data->getSubcategoria();
-
-if($subCategoria){
-$form->get('categoria')->setData($subCategoria->getCategoria());
-
-$form->add('SubCategoria', EntityType::Class, array(
-'class' => SubCategoria::class,
-'placeholder' => 'Seleccione subcategoria',
-'choices' => $subCategoria->getCategoria()->getSubcategoria(),
-'required' => false,
-
-));
-
-}
-else{
-$form->add('SubCategoria', EntityType::Class, array(
-'class' => SubCategoria::class,
-'placeholder' => 'Seleccione subcategoria',
-'choices' => [],
-'required' => false,
-
-));
-
-}
-
-}
-);
- */
-
+        /*
+        $builder->get('categoria')->addEventListener(
+        FormEvents::POST_SUBMIT,
+        function(FormEvent $event){
+        $form = $event->getForm();
+        
+        $form->getParent()->add('SubCategoria', EntityType::Class, array(
+        'class' => SubCategoria::class,
+        'placeholder' => 'Seleccione subcategoria',
+        'choices' => $form->getData()->getSubCategoria()
+        
+        ));
+        }
+        );
+        
+        $builder->addEventListener(
+        FormEvents::POST_SET_DATA,
+        function(FormEvent $event){
+        $form = $event->getForm();
+        $data = $event->getData();
+        $subCategoria = $data->getSubcategoria();
+        
+        if($subCategoria){
+        $form->get('categoria')->setData($subCategoria->getCategoria());
+        
+        $form->add('SubCategoria', EntityType::Class, array(
+        'class' => SubCategoria::class,
+        'placeholder' => 'Seleccione subcategoria',
+        'choices' => $subCategoria->getCategoria()->getSubcategoria(),
+        'required' => false,
+        
+        ));
+        
+        }
+        else{
+        $form->add('SubCategoria', EntityType::Class, array(
+        'class' => SubCategoria::class,
+        'placeholder' => 'Seleccione subcategoria',
+        'choices' => [],
+        'required' => false,
+        
+        ));
+        
+        }
+        
+        }
+        );
+         */
     }
 
     public function configureOptions(OptionsResolver $resolver)

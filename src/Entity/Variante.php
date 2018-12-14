@@ -51,6 +51,12 @@ class Variante
      */
     private $codigoDeBarras;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="variantes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +143,18 @@ class Variante
     public function setCodigoDeBarras(?string $codigoDeBarras): self
     {
         $this->codigoDeBarras = $codigoDeBarras;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

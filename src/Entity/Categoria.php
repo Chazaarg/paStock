@@ -37,6 +37,12 @@ class Categoria
      */
     private $subCategoria;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categorias")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->productos = new ArrayCollection();
@@ -133,6 +139,18 @@ class Categoria
             'id'           => $this->id,
             'nombre'        => $this->nombre
         ];
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }

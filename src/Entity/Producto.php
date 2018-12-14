@@ -82,6 +82,12 @@ class Producto implements \JsonSerializable
      */
     private $descripcion;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="productos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->variantes = new ArrayCollection();
@@ -258,6 +264,18 @@ class Producto implements \JsonSerializable
     public function setDescripcion(?string $descripcion): self
     {
         $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
