@@ -15,6 +15,7 @@ class VarianteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('user')
             ->add('nombre')
             ->add('cantidad')
             ->add('precio')

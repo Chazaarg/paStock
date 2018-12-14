@@ -16,6 +16,7 @@ class ProductoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('user')
             ->add('nombre')
             ->add('precio')
             ->add('descripcion')
@@ -61,34 +62,34 @@ class ProductoType extends AbstractType
         FormEvents::POST_SUBMIT,
         function(FormEvent $event){
         $form = $event->getForm();
-        
+
         $form->getParent()->add('SubCategoria', EntityType::Class, array(
         'class' => SubCategoria::class,
         'placeholder' => 'Seleccione subcategoria',
         'choices' => $form->getData()->getSubCategoria()
-        
+
         ));
         }
         );
-        
+
         $builder->addEventListener(
         FormEvents::POST_SET_DATA,
         function(FormEvent $event){
         $form = $event->getForm();
         $data = $event->getData();
         $subCategoria = $data->getSubcategoria();
-        
+
         if($subCategoria){
         $form->get('categoria')->setData($subCategoria->getCategoria());
-        
+
         $form->add('SubCategoria', EntityType::Class, array(
         'class' => SubCategoria::class,
         'placeholder' => 'Seleccione subcategoria',
         'choices' => $subCategoria->getCategoria()->getSubcategoria(),
         'required' => false,
-        
+
         ));
-        
+
         }
         else{
         $form->add('SubCategoria', EntityType::Class, array(
@@ -96,11 +97,11 @@ class ProductoType extends AbstractType
         'placeholder' => 'Seleccione subcategoria',
         'choices' => [],
         'required' => false,
-        
+
         ));
-        
+
         }
-        
+
         }
         );
          */

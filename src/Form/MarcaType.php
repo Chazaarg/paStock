@@ -12,6 +12,7 @@ class MarcaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('user')
             ->add('nombre')
             ->add('origen', null, array(
                 'required' => false,
