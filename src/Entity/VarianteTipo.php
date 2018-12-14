@@ -38,9 +38,10 @@ class VarianteTipo
      */
     private $user;
 
-    public function __construct()
+    public function __construct($user)
     {
         $this->variante = new ArrayCollection();
+        $this->user = $user;
     }
 
     public function getId(): ?int
@@ -92,16 +93,16 @@ class VarianteTipo
     }
     
     public function __toString()
-        {
-            return $this->nombre;
-        }
+    {
+        return $this->nombre;
+    }
     public function jsonSerialize(): array
-        {
-            return [
+    {
+        return [
                 'id'           => $this->id,
                 'nombre'        => $this->nombre,
             ];
-        }
+    }
 
     public function getUser(): ?User
     {
@@ -110,8 +111,6 @@ class VarianteTipo
 
     public function setUser(?User $user): self
     {
-        $this->user = $user;
-
         return $this;
     }
 }

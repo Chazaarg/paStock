@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/subcategoria")
@@ -19,9 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SubCategoriaController extends AbstractController
 {
     private $defaultValidator;
-    public function __construct(DefaultValidator $defaultValidator)
+    public function __construct(DefaultValidator $defaultValidator, Security $security)
     {
         $this->defaultValidator = $defaultValidator;
+        $this->security = $security;
     }
 
     /**
@@ -34,9 +36,7 @@ class SubCategoriaController extends AbstractController
         $subCategorias = [];
 
         foreach ($subCategoriasRepository as $subCategoria) {
-
             $subCategorias[] = $subCategoria->jsonSerialize();
-
         }
 
         return new JsonResponse(
@@ -48,13 +48,16 @@ class SubCategoriaController extends AbstractController
     /**
      * @Route("/new", name="sub_categoria_new", methods="GET|POST")
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-        $subCategorium = new SubCategoria();
+        $user = $this->security->getUser();
+
+        $subCategorium = new SubCategoria($user);
         $form = $this->createForm(SubCategoriaType::class, $subCategorium);
 
         $form->submit($data);
@@ -82,8 +85,7 @@ class SubCategoriaController extends AbstractController
                 'subcategoria' => $subCategorium->jsonSerialize(),
                 'messageType' => 'success',
                 'message' => "Subcategoria '" . strtoupper($subCategorium->getNombre()) . "' creada",
-            ]
-            ,
+            ],
             JsonResponse::HTTP_CREATED
         );
     }
@@ -93,7 +95,6 @@ class SubCategoriaController extends AbstractController
      */
     public function show(SubCategoria $subCategorium): Response
     {
-
         $categoria = $this->getDoctrine()
             ->getRepository(Categoria::class)
             ->findOneBy(
@@ -142,7 +143,6 @@ class SubCategoriaController extends AbstractController
                 JsonResponse::HTTP_CREATED
             );
         }
-
     }
 
     /**
@@ -155,7 +155,6 @@ class SubCategoriaController extends AbstractController
         if ($subCategorium->getProductos()) {
             foreach ($subCategorium->getProductos() as $producto) {
                 $producto->setSubCategoria(null);
-
             }
         }
 

@@ -43,10 +43,11 @@ class Categoria
      */
     private $user;
 
-    public function __construct()
+    public function __construct($user)
     {
         $this->productos = new ArrayCollection();
         $this->subCategoria = new ArrayCollection();
+        $this->user = $user;
     }
 
     public function getId(): ?int
@@ -148,9 +149,6 @@ class Categoria
 
     public function setUser(?User $user): self
     {
-        $this->user = $user;
-
         return $this;
     }
-
 }

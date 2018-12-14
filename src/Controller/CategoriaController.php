@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/categoria")
@@ -18,9 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoriaController extends AbstractController
 {
     private $defaultValidator;
-    public function __construct(DefaultValidator $defaultValidator)
+    private $security;
+    
+    public function __construct(DefaultValidator $defaultValidator, Security $security)
     {
         $this->defaultValidator = $defaultValidator;
+        $this->security = $security;
     }
 
     /**
@@ -33,28 +37,28 @@ class CategoriaController extends AbstractController
         $categorias = [];
 
         foreach ($categoriasRepository as $categoria) {
-
             $categorias[] = $categoria->jsonSerialize();
-
         }
 
         return new JsonResponse(
             $categorias,
             JsonResponse::HTTP_OK
         );
-
     }
 
     /**
      * @Route("/new", name="categoria_new", methods="GET|POST")
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $data = json_decode(
             $request->getContent(),
             true
         );
+        
+        $user = $this->security->getUser();
 
-        $categorium = new Categoria();
+        $categorium = new Categoria($user);
         $form = $this->createForm(CategoriaType::class, $categorium);
 
         $form->submit($data);
@@ -134,7 +138,6 @@ class CategoriaController extends AbstractController
      */
     public function delete(Request $request, Categoria $categorium): Response
     {
-
         $em = $this->getDoctrine()->getManager();
 
         //Elimino las subcategorias de la categoría a remover.
@@ -144,20 +147,17 @@ class CategoriaController extends AbstractController
             if ($subcategoria->getProductos()) {
                 foreach ($subcategoria->getProductos() as $producto) {
                     $producto->setSubCategoria(null);
-
                 }
             }
 
             $em->remove($subcategoria);
             $em->flush();
-
         }
 
         //Si algún producto contiene la categoría a eliminar, se la quito.
         if ($categorium->getProductos()) {
             foreach ($categorium->getProductos() as $producto) {
                 $producto->setCategoria(null);
-
             }
         }
 

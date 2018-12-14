@@ -7,22 +7,26 @@ use App\Form\ProductoType;
 use App\Form\VarianteType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Security;
 
-class ProductoValidator{
-
+class ProductoValidator
+{
     private $validator;
     private $formFactory;
-    public function __construct(ValidatorInterface $validator, $formFactory)
+    private $security;
+    public function __construct(ValidatorInterface $validator, $formFactory, Security $security)
     {
         $this->validator = $validator;
         $this->formFactory = $formFactory;
+        $this->security = $security;
     }
     
     public function validarProducto($data, $producto)
-    {   
+    {
         $producto->setUpdatedAt(new \DateTime());
+        $user = $this->security->getUser();
 
-        //Ingreso al producto en un FORMTYPE para validarlo.   
+        //Ingreso al producto en un FORMTYPE para validarlo.
         $form = $this->formFactory->create(ProductoType::class, $producto);
 
         //Submit data decodificada.
@@ -36,24 +40,22 @@ class ProductoValidator{
         $formGroup = "individual";
 
         //Si el producto tiene variantes...
-        if(sizeOf($form->getData()->getVariantes()) > 0)
-        {
-            //Agarro las variantes ingresadas al formulario y les indexo el producto creado.
+        if (sizeOf($form->getData()->getVariantes()) > 0) {
+            //Agarro las variantes ingresadas al formulario y les indexo el producto creado y el usuario.
             foreach ($form->getData()->getVariantes() as $variante) {
                 $variante->setProducto($producto);
+                $variante->setUser($user);
             };
 
             //Valido las variantes directamente de lo que me venga de data.
-            foreach ($data['variantes'] as $variante)
-            {
-                //Por cada variante, creo su objeto y lo ingreso en un FORMTYPE para validarlo. 
+            foreach ($data['variantes'] as $variante) {
+                //Por cada variante, creo su objeto y lo ingreso en un FORMTYPE para validarlo.
                 $productoVariante = new Variante();
                 $formVariante = $this->formFactory->create(VarianteType::class, $productoVariante);
                 $formVariante->submit($variante);
 
-                //Ingreso la validación en la variable de error 
+                //Ingreso la validación en la variable de error
                 $errVariante[] = $this->validator->validate($productoVariante);
-
             }
 
             //Me aseguro de que en la variable errVariante no quede ningún array vacío en caso de no haber ningún error.
@@ -75,15 +77,14 @@ class ProductoValidator{
 
             //En caso de que el producto tenga variantes, lo único que tengo que validar es el nombre del producto.
             $formGroup = null;
-
         }
 
         //Valido el producto en general. El formGroup determina si valido como producto individual o con variantes.
-        $err = $this->validator->validate($producto,null,["Default",$formGroup]);
+        $err = $this->validator->validate($producto, null, ["Default",$formGroup]);
 
         //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
 
-        if(count($err) > 0 || count($errVariante) > 0){
+        if (count($err) > 0 || count($errVariante) > 0) {
 
             //Producto.
             foreach ($err as $error) {
@@ -126,17 +127,5 @@ class ProductoValidator{
                 ]
             );
         }
-
-
-
-
-
-
-
-        
     }
 }
-
-
-
-?>

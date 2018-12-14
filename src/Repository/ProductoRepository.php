@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Producto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method Producto|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,22 +20,21 @@ class ProductoRepository extends ServiceEntityRepository
         parent::__construct($registry, Producto::class);
     }
 
-//    /**
-//     * @return Producto[] Returns an array of Producto objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Producto[] Returns an array of Producto objects
+     */
+    
+    public function findByUser($user)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user->getId())
             ->orderBy('p.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Producto

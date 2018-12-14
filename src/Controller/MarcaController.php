@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/marca")
@@ -18,9 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class MarcaController extends AbstractController
 {
     private $defaultValidator;
-    public function __construct(DefaultValidator $defaultValidator)
+    public function __construct(DefaultValidator $defaultValidator, Security $security)
     {
         $this->defaultValidator = $defaultValidator;
+        $this->security = $security;
     }
     /**
      * @Route("/", name="marca_index", methods="GET")
@@ -32,9 +34,7 @@ class MarcaController extends AbstractController
         $marcas = [];
 
         foreach ($marcasRepository as $marca) {
-
             $marcas[] = $marca->jsonSerialize();
-
         }
 
         return new JsonResponse(
@@ -46,13 +46,16 @@ class MarcaController extends AbstractController
     /**
      * @Route("/new", name="marca_new", methods="GET|POST")
      */
-    function new (Request $request): Response {
+    public function new(Request $request): Response
+    {
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-        $marca = new Marca();
+        $user = $this->security->getUser();
+
+        $marca = new Marca($user);
         $form = $this->createForm(MarcaType::class, $marca);
 
         $form->submit($data);
@@ -66,7 +69,8 @@ class MarcaController extends AbstractController
             return new JsonResponse(
                 [
                     'status' => 'error',
-                ], JsonResponse::HTTP_BAD_REQUEST
+                ],
+                JsonResponse::HTTP_BAD_REQUEST
             );
         }
 
@@ -82,7 +86,6 @@ class MarcaController extends AbstractController
             ],
             JsonResponse::HTTP_CREATED
         );
-
     }
 
     /**
@@ -124,8 +127,6 @@ class MarcaController extends AbstractController
                 JsonResponse::HTTP_CREATED
             );
         }
-
-    
     }
 
     /**
@@ -137,15 +138,14 @@ class MarcaController extends AbstractController
         if ($marca->getProductos()) {
             foreach ($marca->getProductos() as $producto) {
                 $producto->setMarca(null);
-
             }
         }
         
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($marca);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($marca);
+        $em->flush();
         
-            return new JsonResponse(
+        return new JsonResponse(
                 null,
                 JsonResponse::HTTP_NO_CONTENT
             );

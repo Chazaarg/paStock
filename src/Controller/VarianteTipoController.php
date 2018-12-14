@@ -11,12 +11,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/variante-tipo")
  */
 class VarianteTipoController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     /**
      * @Route("/", name="variante_tipo_index", methods="GET")
      */
@@ -27,9 +35,7 @@ class VarianteTipoController extends AbstractController
         $variantes = [];
 
         foreach ($varianteTiposRepository as $variante) {
-
             $variantes[] = $variante->jsonSerialize();
-
         }
 
         return new JsonResponse(
@@ -41,13 +47,16 @@ class VarianteTipoController extends AbstractController
     /**
      * @Route("/new", name="variante_tipo_new", methods="GET|POST")
      */
-    function new (Request $request, DefaultValidator $defaultValidator): Response {
+    public function new(Request $request, DefaultValidator $defaultValidator): Response
+    {
         $data = json_decode(
             $request->getContent(),
             true
         );
 
-        $varianteTipo = new VarianteTipo();
+        $user = $this->security->getUser();
+
+        $varianteTipo = new VarianteTipo($user);
         $form = $this->createForm(VarianteTipo1Type::class, $varianteTipo);
 
         $form->submit($data);
@@ -75,8 +84,7 @@ class VarianteTipoController extends AbstractController
                 'varianteTipo' => $varianteTipo->jsonSerialize(),
                 'messageType' => 'success',
                 'message' => 'Tipo de variante: ' . strtoupper($varianteTipo->getNombre()) . ' creado',
-            ]
-            ,
+            ],
             JsonResponse::HTTP_CREATED
         );
     }

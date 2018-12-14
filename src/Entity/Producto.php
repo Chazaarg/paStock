@@ -88,8 +88,9 @@ class Producto implements \JsonSerializable
      */
     private $user;
 
-    public function __construct()
+    public function __construct($user)
     {
+        $this->user = $user;
         $this->variantes = new ArrayCollection();
     }
 
@@ -275,8 +276,6 @@ class Producto implements \JsonSerializable
 
     public function setUser(?User $user): self
     {
-        $this->user = $user;
-
         return $this;
     }
 }

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/producto")
@@ -20,7 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductoController extends AbstractController
 {
     private $productoValidator;
-    public function __construct(ProductoValidator $productoValidator){
+    private $security;
+    public function __construct(ProductoValidator $productoValidator, Security $security)
+    {
+        $this->security = $security;
         $this->productoValidator = $productoValidator;
     }
     /**
@@ -28,12 +32,14 @@ class ProductoController extends AbstractController
      */
     public function index(ProductoRepository $productoRepository, VarianteRepository $variantesRepository): Response
     {
+        //Esto de abajo cuando tenga todo bajo un mismo puerto lo voy a usar.
+        //$user = $this->security->getUser();
+        //$productos = $productoRepository->findByUser($user);
+        
         $productos = $productoRepository->findAll();
-
         $productoVariante = [];
 
         foreach ($productos as $producto) {
-
             $variantesRepository = $this->getDoctrine()->getRepository(Variante::class)->findBy(
                 ['producto' => $producto->getId()]
             );
@@ -41,19 +47,14 @@ class ProductoController extends AbstractController
             $variantes = [];
 
             foreach ($variantesRepository as $variante) {
-
                 $variantes[] = $variante->jsonSerialize();
-
             }
 
             if ($variantes != null) {
-
                 $variantes = array("variantes" => $variantes);
-
             }
 
             $productoVariante[] = array_merge($producto->jsonSerialize(), $variantes);
-
         }
 
         return new JsonResponse(
@@ -65,7 +66,8 @@ class ProductoController extends AbstractController
     /**
      * @Route("/new", name="producto_new", methods="GET|POST")
      */
-    function new (Request $request, ProductoRepository $productoRepository): Response {
+    public function new(Request $request, ProductoRepository $productoRepository): Response
+    {
 
         //Agarro la data de $request y la decodifico.
 
@@ -73,14 +75,16 @@ class ProductoController extends AbstractController
             $request->getContent(),
             true
         );
+        
+        $user = $this->security->getUser();
 
         //Creo un nuevo producto
-        $producto = new Producto();
+        $producto = new Producto($user);
         $producto->setCreatedAt(new \DateTime());
 
         //Valido el producto.
         $err = $this->productoValidator->validarProducto($data, $producto);
-        if($err){
+        if ($err) {
             return $err;
         }
 
@@ -111,13 +115,10 @@ class ProductoController extends AbstractController
 
         $variantes = [];
         foreach ($variantesRepository as $variante) {
-
             $variantes[] = $variante->jsonSerialize();
-
         }
         if ($variantes != null) {
             $variantes = array("variantes" => $variantes);
-
         }
 
         $array = array_merge($repository->jsonSerialize(), $variantes);
@@ -149,7 +150,7 @@ class ProductoController extends AbstractController
         //Valido el producto.
         $err = $this->productoValidator->validarProducto($data, $producto);
 
-        if($err){
+        if ($err) {
             return $err;
         }
 
@@ -182,7 +183,6 @@ class ProductoController extends AbstractController
             ],
             JsonResponse::HTTP_OK
         );
-
     }
 
     /**
