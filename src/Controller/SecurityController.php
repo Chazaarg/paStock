@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/api/login", name="login")
      */
     public function login(Request $request)
     {
@@ -33,7 +33,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/user", name="user")
+     * @Route("/api/user", name="user")
      */
     public function index()
     {

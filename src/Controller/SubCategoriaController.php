@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @Route("/subcategoria")
+ * @Route("/api/subcategoria")
  */
 class SubCategoriaController extends AbstractController
 {
@@ -88,23 +88,6 @@ class SubCategoriaController extends AbstractController
             ],
             JsonResponse::HTTP_CREATED
         );
-    }
-
-    /**
-     * @Route("/{id}", name="sub_categoria_show", methods="GET")
-     */
-    public function show(SubCategoria $subCategorium): Response
-    {
-        $categoria = $this->getDoctrine()
-            ->getRepository(Categoria::class)
-            ->findOneBy(
-                ['id' => $subCategorium->getCategoria()->getId()]
-            );
-
-        return $this->render('sub_categoria/show.html.twig', [
-            'sub_categorium' => $subCategorium,
-            'categoria' => $categoria,
-        ]);
     }
 
     /**

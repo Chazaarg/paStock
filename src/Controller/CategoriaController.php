@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @Route("/categoria")
+ * @Route("/api/categoria")
  */
 class CategoriaController extends AbstractController
 {
@@ -89,14 +89,6 @@ class CategoriaController extends AbstractController
 
             JsonResponse::HTTP_CREATED
         );
-    }
-
-    /**
-     * @Route("/{id}", name="categoria_show", methods="GET")
-     */
-    public function show(Categoria $categorium): Response
-    {
-        return $this->render('categoria/show.html.twig', ['categorium' => $categorium]);
     }
 
     /**

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @Route("/variante-tipo")
+ * @Route("/api/variante-tipo")
  */
 class VarianteTipoController extends AbstractController
 {
@@ -87,14 +87,6 @@ class VarianteTipoController extends AbstractController
             ],
             JsonResponse::HTTP_CREATED
         );
-    }
-
-    /**
-     * @Route("/{id}", name="variante_tipo_show", methods="GET")
-     */
-    public function show(VarianteTipo $varianteTipo): Response
-    {
-        return $this->render('variante_tipo/show.html.twig', ['variante_tipo' => $varianteTipo]);
     }
 
     /**

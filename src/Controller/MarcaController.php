@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @Route("/marca")
+ * @Route("/api/marca")
  */
 class MarcaController extends AbstractController
 {
@@ -86,14 +86,6 @@ class MarcaController extends AbstractController
             ],
             JsonResponse::HTTP_CREATED
         );
-    }
-
-    /**
-     * @Route("/{id}", name="marca_show", methods="GET")
-     */
-    public function show(Marca $marca): Response
-    {
-        return $this->render('marca/show.html.twig', ['marca' => $marca]);
     }
 
     /**

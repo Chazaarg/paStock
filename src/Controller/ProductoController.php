@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @Route("/producto")
+ * @Route("/api/producto")
  */
 class ProductoController extends AbstractController
 {

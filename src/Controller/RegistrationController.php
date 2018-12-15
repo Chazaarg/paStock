@@ -24,7 +24,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/registration", name="registration")
+     * @Route("/api/registration", name="registration")
      */
     public function register(LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, ObjectManager $manager, Request $request, DefaultValidator $defaultValidator)
     {
