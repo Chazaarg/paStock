@@ -4,16 +4,16 @@ Encore.setOutputPath("public/build/")
   .setPublicPath("/build")
   .autoProvidejQuery()
 
-  .addEntry("app", ["babel-polyfill", "./assets/js/app.js"])
+  .addEntry("index", ["babel-polyfill", "./assets/js/index.js"])
   .cleanupOutputBeforeBuild()
   .enableBuildNotifications()
   .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
   .enableSassLoader()
-  .configureBabel(function(babelConfig) {
-    babelConfig.presets.push("env");
-  })
-  .enableReactPreset();
+  .enableReactPreset()
+  .configureBabel(config => {
+    config.presets.push("stage-1");
+  });
 
 // uncomment if you use TypeScript
 //.enableTypeScriptLoader()

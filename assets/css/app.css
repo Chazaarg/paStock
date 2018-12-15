@@ -1,0 +1,49 @@
+.spinner {
+  margin-top: 10vh;
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 80% !important;
+  }
+}
+
+/* Organizar Categorias */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: relative;
+  float: right;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+#sideNavContainer {
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenavcontainer */
+}
+
+/* Cambiar el color de la X */
+.sidenav div.closebtn:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  display: block;
+  color: #818181;
+  top: 0;
+  right: 25px;
+  font-size: 1.4rem;
+  margin-left: 50px;
+  transition: 0.3s;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}
