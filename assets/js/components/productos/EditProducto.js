@@ -362,6 +362,12 @@ class EditProducto extends Component {
         </div>
 
         <Loader loaded={isFetching}>
+          {//Cuando cargue el nombre del producto, lo pongo como título de la página. Si tiene marca, entonces pongo los dos.
+          nombre
+            ? marca.nombre
+              ? (document.title = nombre + " " + marca.nombre)
+              : (document.title = nombre)
+            : null}
           <form onSubmit={this.onSubmit}>
             <ProductoDefault
               nombre={nombre}

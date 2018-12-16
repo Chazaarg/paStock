@@ -27,6 +27,10 @@ class ShowProducto extends Component {
     return (
       <div>
         <Loader loaded={isFetching}>
+          {//Cuando cargue el producto, le cambio el título a la página
+          producto.nombre
+            ? (document.title = producto.nombre + " " + producto.marca)
+            : null}
           <div className="row">
             <div className="col-9">
               <h1>

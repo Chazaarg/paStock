@@ -10,6 +10,7 @@ class NotFound extends Component {
     notifyUser(null, null, null);
   }
   render() {
+    document.title = "Página no encontrada";
     return (
       <div>
         <h1 className="display-4">

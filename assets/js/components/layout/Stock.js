@@ -3,6 +3,7 @@ import Productos from "../productos/Productos";
 import Nuevo from "./Nuevo";
 
 export default () => {
+  document.title = "Stock";
   return (
     <React.Fragment>
       <div className="row pt-4 pb-2">

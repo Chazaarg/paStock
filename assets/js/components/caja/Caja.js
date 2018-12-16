@@ -5,6 +5,8 @@ import VentaCaja from "./VentaCaja";
 
 class Caja extends Component {
   render() {
+    document.title = "Caja";
+
     return (
       <React.Fragment>
         <ClienteVendedor />

@@ -27,6 +27,8 @@ class Login extends Component {
   };
   onChange = e => this.setState({ [e.target.name]: e.target.value });
   render() {
+    document.title = "Login";
+
     const { message, messageType, errors } = this.props.notify;
     return (
       <div>

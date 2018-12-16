@@ -38,6 +38,7 @@ class OrganizarMarcas extends Component {
   };
 
   render() {
+    document.title = "Organizar Marcas";
     const { marcas, notify, updateMarca, deleteMarca } = this.props;
 
     return (

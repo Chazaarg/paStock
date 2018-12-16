@@ -244,6 +244,7 @@ class NewProducto extends Component {
   };
 
   render() {
+    document.title = "Nuevo Producto";
     const {
       nombre,
       cantidad,

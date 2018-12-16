@@ -67,6 +67,8 @@ class Register extends Component {
   };
 
   render() {
+    document.title = "Registrarse";
+
     const { message, messageType, errors } = this.props.notify;
 
     return (

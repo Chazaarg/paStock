@@ -104,6 +104,8 @@ class OrganizarCategorias extends Component {
   };
 
   render() {
+    document.title = "Organizar Categorias";
+
     const { sideNav, categoria } = this.state;
     const {
       categorias,
