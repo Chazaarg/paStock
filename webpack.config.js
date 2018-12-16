@@ -2,22 +2,37 @@ var Encore = require("@symfony/webpack-encore");
 
 Encore.setOutputPath("public/build/")
   .setPublicPath("/build")
-  .autoProvidejQuery()
 
+  //React App
   .addEntry("index", ["babel-polyfill", "./assets/js/index.js"])
+
+  //Custom CSS style.
+  .addStyleEntry("app", "./assets/css/app.css")
+
+  //Imported CSS style.
+  .addStyleEntry("global", "./assets/css/global.scss")
+
+  //Config
   .cleanupOutputBeforeBuild()
   .enableBuildNotifications()
   .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
-  .enableSassLoader()
-  .enableReactPreset()
+
+  //Babel config. So it compiles arrow function, spread, etc.
   .configureBabel(config => {
     config.presets.push("stage-1");
-  });
+  })
+
+  //sass/scss
+  .enableSassLoader()
+
+  //JQuery
+  .autoProvidejQuery()
+
+  //React
+  .enableReactPreset();
 
 // uncomment if you use TypeScript
 //.enableTypeScriptLoader()
-
-// uncomment if you're having problems with a jQuery plugin
 
 module.exports = Encore.getWebpackConfig();
