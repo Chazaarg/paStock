@@ -78,12 +78,19 @@ export const updateProducto = producto => async dispatch => {
       messageType: res.data.messageType
     });
   } catch (error) {
-    dispatch({
-      type: NOTIFY_USER,
-      message: error.response.data.message,
-      messageType: error.response.data.messageType,
-      errors: error.response.data.errors
-    });
+    error.response.status === 404
+      ? dispatch({
+          type: NOTIFY_USER,
+          message: error.response.status,
+          messageType: "error",
+          errors: error.response.status
+        })
+      : dispatch({
+          type: NOTIFY_USER,
+          message: error.response.data.message,
+          messageType: error.response.data.messageType,
+          errors: error.response.data.errors
+        });
   }
 };
 
@@ -310,12 +317,20 @@ export const getMarcas = () => async dispatch => {
 };
 
 export const getProducto = id => async dispatch => {
-  const res = await axios.get(`/api/producto/${id}`);
-
-  dispatch({
-    type: FETCH_PRODUCTO,
-    payload: res.data
-  });
+  try {
+    const res = await axios.get(`/api/producto/${id}`);
+    dispatch({
+      type: FETCH_PRODUCTO,
+      payload: res.data
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.status,
+      messageType: "error",
+      errors: error.response.status
+    });
+  }
 };
 export const getVarianteTipos = () => async dispatch => {
   const res = await axios.get("/api/variante-tipo");

@@ -30,7 +30,8 @@ class VarianteTipoController extends AbstractController
      */
     public function index(VarianteTipoRepository $varianteTipoRepository): Response
     {
-        $varianteTiposRepository = $varianteTipoRepository->findAllAsc();
+        $user = $this->security->getUser()->getId();
+        $varianteTiposRepository = $varianteTipoRepository->findByUser($user);
 
         $variantes = [];
 
@@ -94,6 +95,11 @@ class VarianteTipoController extends AbstractController
      */
     public function edit(Request $request, VarianteTipo $varianteTipo): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($varianteTipo->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
+
         $form = $this->createForm(VarianteTipo1Type::class, $varianteTipo);
         $form->handleRequest($request);
 
@@ -114,6 +120,10 @@ class VarianteTipoController extends AbstractController
      */
     public function delete(Request $request, VarianteTipo $varianteTipo): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($varianteTipo->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
         if ($this->isCsrfTokenValid('delete' . $varianteTipo->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($varianteTipo);

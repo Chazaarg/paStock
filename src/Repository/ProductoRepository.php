@@ -28,9 +28,8 @@ class ProductoRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.user = :user')
-            ->setParameter('user', $user->getId())
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC')//Del más nuevo al más viejo
             ->getQuery()
             ->getResult()
         ;

@@ -19,10 +19,24 @@ class CategoriaRepository extends ServiceEntityRepository
         parent::__construct($registry, Categoria::class);
     }
 
-//    /**
-//     * @return Categoria[] Returns an array of Categoria objects
-//     */
+    /**
+     * @return Categoria[] Returns an array of Categoria objects
+     */
 
+    public function findByUser($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+    /*
     public function findAllAsc()
             {
                 return $this->createQueryBuilder('m')
@@ -31,6 +45,7 @@ class CategoriaRepository extends ServiceEntityRepository
                     ->getResult()
                 ;
             }
+    */
             
     /*
     public function findByExampleField($value)

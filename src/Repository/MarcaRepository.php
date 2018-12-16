@@ -19,10 +19,21 @@ class MarcaRepository extends ServiceEntityRepository
         parent::__construct($registry, Marca::class);
     }
 
-//    /**
-//     * @return Marca[] Returns an array of Marca objects
-//     */
+    /**
+     * @return Marca[] Returns an array of Marca objects
+     */
 
+    public function findByUser($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    /*
     public function findAllAsc()
         {
             return $this->createQueryBuilder('m')
@@ -31,6 +42,7 @@ class MarcaRepository extends ServiceEntityRepository
                 ->getResult()
             ;
         }
+    */
 
     /*
     public function findByExampleField($value)

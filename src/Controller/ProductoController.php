@@ -32,11 +32,9 @@ class ProductoController extends AbstractController
      */
     public function index(ProductoRepository $productoRepository, VarianteRepository $variantesRepository): Response
     {
-        //Esto de abajo cuando tenga todo bajo un mismo puerto lo voy a usar.
-        //$user = $this->security->getUser();
-        //$productos = $productoRepository->findByUser($user);
+        $user = $this->security->getUser()->getId();
+        $productos = $productoRepository->findByUser($user);
         
-        $productos = $productoRepository->findAll();
         $productoVariante = [];
 
         foreach ($productos as $producto) {
@@ -107,6 +105,11 @@ class ProductoController extends AbstractController
      */
     public function show(Producto $producto, ProductoRepository $productoRepository, $id): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($producto->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
+
         $repository = $this->getDoctrine()->getRepository(Producto::class)->find($id);
 
         $variantesRepository = $this->getDoctrine()->getRepository(Variante::class)->findBy(
@@ -134,6 +137,10 @@ class ProductoController extends AbstractController
      */
     public function edit(Request $request, Producto $producto, $id): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($producto->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
         $variantesOriginales = new ArrayCollection();
 
         // Crea un ArrayCollection de las actuales variantes en la DB
@@ -190,6 +197,11 @@ class ProductoController extends AbstractController
      */
     public function delete(Request $request, Producto $producto, $id): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($producto->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
 
         if (sizeOf($producto->getVariantes()) !== 0) {

@@ -31,7 +31,8 @@ class SubCategoriaController extends AbstractController
      */
     public function index(SubCategoriaRepository $subCategoriaRepository): Response
     {
-        $subCategoriasRepository = $subCategoriaRepository->findAllAsc();
+        $user = $this->security->getUser()->getId();
+        $subCategoriasRepository = $subCategoriaRepository->findByUser($user);
 
         $subCategorias = [];
 
@@ -95,6 +96,11 @@ class SubCategoriaController extends AbstractController
      */
     public function edit(Request $request, SubCategoria $subCategorium): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($subCategorium->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
+
         $categoria = $this->getDoctrine()
         ->getRepository(Categoria::class)
         ->findOneBy(
@@ -133,6 +139,10 @@ class SubCategoriaController extends AbstractController
      */
     public function delete(Request $request, SubCategoria $subCategorium): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($subCategorium->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
 
         //Si algún producto contiene la subcategoría a eliminar, se la quito.
         if ($subCategorium->getProductos()) {

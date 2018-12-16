@@ -41,7 +41,7 @@ class Routes extends Component {
   }
   render() {
     const { isAuthenticated } = this.state;
-    const { usuario } = this.props;
+    const { usuario, notify } = this.props;
 
     const PrivateRoute = ({ component: Component, ...rest }) =>
       //Este ternary hace esperar a que el usuario cargue, esté logueado o no.
@@ -81,13 +81,13 @@ class Routes extends Component {
               <PrivateRoute exact path="/caja" component={Caja} />
               <PrivateRoute
                 exact
-                path="/producto/:id/show" //El /show no tendría que estar.
-                component={ShowProducto}
+                path="/producto/:id/show"
+                component={notify.errors === 404 ? NotFound : ShowProducto}
               />
               <PrivateRoute
                 exact
-                path="/producto/:id/edit" //El /edit no tendría que estar.
-                component={EditProducto}
+                path="/producto/:id/edit"
+                component={notify.errors === 404 ? NotFound : EditProducto}
               />
               <PrivateRoute exact path="/producto" component={Stock} />
               <PrivateRoute
@@ -113,11 +113,14 @@ class Routes extends Component {
 }
 
 Routes.propTypes = {
-  usuario: PropTypes.object.isRequired
+  notify: PropTypes.object.isRequired,
+  usuario: PropTypes.object.isRequired,
+  getUsuario: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  usuario: state.usuario.usuario
+  usuario: state.usuario.usuario,
+  notify: state.notify
 });
 
 export default connect(

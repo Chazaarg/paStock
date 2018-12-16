@@ -32,7 +32,9 @@ class CategoriaController extends AbstractController
      */
     public function index(CategoriaRepository $categoriaRepository): Response
     {
-        $categoriasRepository = $categoriaRepository->findAllAsc();
+        $user = $this->security->getUser()->getId();
+        $categoriasRepository = $categoriaRepository->findByUser($user);
+
 
         $categorias = [];
 
@@ -96,6 +98,10 @@ class CategoriaController extends AbstractController
      */
     public function edit(Request $request, Categoria $categorium): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($categorium->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
         //La data es el nombre, que es lo único editable.
         $nombre = $request->getContent();
         
@@ -130,6 +136,10 @@ class CategoriaController extends AbstractController
      */
     public function delete(Request $request, Categoria $categorium): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($categorium->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
         $em = $this->getDoctrine()->getManager();
 
         //Elimino las subcategorias de la categoría a remover.

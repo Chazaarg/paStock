@@ -19,9 +19,21 @@ class VarianteTipoRepository extends ServiceEntityRepository
         parent::__construct($registry, VarianteTipo::class);
     }
 
-//    /**
-//     * @return VarianteTipo[] Returns an array of VarianteTipo objects
-//     */
+    /**
+     * @return VarianteTipo[] Returns an array of VarianteTipo objects
+     */
+    public function findByUser($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /*
     public function findAllAsc()
         {
             return $this->createQueryBuilder('m')
@@ -30,6 +42,7 @@ class VarianteTipoRepository extends ServiceEntityRepository
                 ->getResult()
             ;
         }
+    */
     /*
     public function findByExampleField($value)
     {

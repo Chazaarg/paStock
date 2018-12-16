@@ -19,9 +19,26 @@ class SubCategoriaRepository extends ServiceEntityRepository
         parent::__construct($registry, SubCategoria::class);
     }
 
-//    /**
-//     * @return SubCategoria[] Returns an array of SubCategoria objects
-//     */
+    /**
+     * @return SubCategoria[] Returns an array of SubCategoria objects
+     */
+
+    public function findByUser($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+
+
+
+    /*
     public function findAllAsc()
             {
                 return $this->createQueryBuilder('m')
@@ -30,6 +47,7 @@ class SubCategoriaRepository extends ServiceEntityRepository
                     ->getResult()
                 ;
             }
+    */
     /*
     public function findByExampleField($value)
     {

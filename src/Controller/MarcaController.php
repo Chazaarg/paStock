@@ -29,7 +29,8 @@ class MarcaController extends AbstractController
      */
     public function index(MarcaRepository $marcaRepository): Response
     {
-        $marcasRepository = $marcaRepository->findAllAsc();
+        $user = $this->security->getUser()->getId();
+        $marcasRepository = $marcaRepository->findByUser($user);
 
         $marcas = [];
 
@@ -93,6 +94,10 @@ class MarcaController extends AbstractController
      */
     public function edit(Request $request, Marca $marca): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($marca->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
 
         //La data es el nombre, que es lo único editable.
         $nombre = $request->getContent();
@@ -126,6 +131,11 @@ class MarcaController extends AbstractController
      */
     public function delete(Request $request, Marca $marca): Response
     {
+        $user = $this->security->getUser()->getId();
+        if ($marca->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
+        }
+
         //Si algún producto contiene la MARCA a eliminar, se la quito.
         if ($marca->getProductos()) {
             foreach ($marca->getProductos() as $producto) {
