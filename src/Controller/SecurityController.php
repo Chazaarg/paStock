@@ -15,7 +15,6 @@ class SecurityController extends AbstractController
      */
     public function login(Request $request)
     {
-        
         $user = $this->getUser();
         $roles = $user->getRoles();
         $name = $user->getUsername();
@@ -23,7 +22,7 @@ class SecurityController extends AbstractController
         $id = $user->getID();
 
         $role = [];
-        foreach ($roles as $rol){
+        foreach ($roles as $rol) {
             $role += ['rol' => $rol];
         }
 
@@ -45,7 +44,7 @@ class SecurityController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        if ($user === null){
+        if ($user === null) {
             return new JsonResponse(['user' => 'anonymous']);
         }
 
@@ -55,7 +54,7 @@ class SecurityController extends AbstractController
         $id = $user->getID();
 
         $role = [];
-        foreach ($roles as $rol){
+        foreach ($roles as $rol) {
             $role += ['rol' => $rol];
         }
 
@@ -64,9 +63,10 @@ class SecurityController extends AbstractController
         return new JsonResponse(['id' => $id,'roles' => $role, 'username' => $name, 'email' => $email]);
     }
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/api/logout", name="app_logout")
      */
-    public function logout(){
+    public function logout()
+    {
         return new JsonResponse(JsonResponse::HTTP_OK);
     }
 }

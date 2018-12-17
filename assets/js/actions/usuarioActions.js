@@ -25,7 +25,7 @@ export const login = user => async dispatch => {
 };
 
 export const logOut = () => async dispatch => {
-  const res = await axios.get("/logout");
+  const res = await axios.get("/api/logout");
 
   dispatch({
     type: LOG_OUT,

@@ -66,6 +66,10 @@ class Register extends Component {
     }
   };
 
+  onGoogleClick = e => {
+    e.preventDefault();
+    window.location.replace("/api/connect/google");
+  };
   render() {
     document.title = "Registrarse";
 
@@ -134,6 +138,17 @@ class Register extends Component {
                     className="btn btn-dark btn-block"
                   />
                 </form>
+                <div className="row  pt-3">
+                  <div className="col-6">
+                    <button
+                      className="btn btn-success"
+                      onClick={this.onGoogleClick}
+                    >
+                      Ingresar con Google
+                    </button>
+                  </div>
+                  <div className="col-6" />
+                </div>
               </div>
             </div>
           </div>

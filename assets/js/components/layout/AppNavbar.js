@@ -8,7 +8,6 @@ class AppNavbar extends Component {
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logOut();
-    //TODO: Que esto me redireccione a alguna parte.
   };
 
   render() {

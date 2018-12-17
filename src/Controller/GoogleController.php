@@ -12,7 +12,7 @@ class GoogleController extends Controller
     /**
      * Link to this controller to start the "connect" process
      *
-     * @Route("/connect/google", name="connect_google_start")
+     * @Route("/api/connect/google", name="connect_google_start")
      */
     public function connectAction(ClientRegistry $clientRegistry)
     {
@@ -20,9 +20,7 @@ class GoogleController extends Controller
         // will redirect to Facebook!
         return $clientRegistry
             ->getClient('google') // key used in config/packages/knpu_oauth2_client.yaml
-            ->redirect([
-            'profile', 'email' // the scopes you want to access
-            ])
+            ->redirect()
         ;
     }
 
@@ -30,13 +28,14 @@ class GoogleController extends Controller
      * After going to Facebook, you're redirected back here
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
-     *
-     * @Route("/connect/google/check", name="connect_google_check")
+     * @Route("/api/connect/google/check", name="connect_google_check")
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
         // ** if you want to *authenticate* the user, then
         // leave this method blank and create a Guard authenticator
         // (read below)
+        return $this->redirectToRoute('home');
     }
 }
