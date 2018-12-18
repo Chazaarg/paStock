@@ -50,6 +50,13 @@ class AppNavbar extends Component {
 
                 <ul className="navbar-nav mr-0">
                   <li className="nav-item">
+                    <Link to="/contact" className="nav-link">
+                      Contacto
+                    </Link>
+                  </li>
+                </ul>
+                <ul className="navbar-nav mr-0">
+                  <li className="nav-item">
                     <a href="#!" className="nav-link">
                       {usuario.username}
                     </a>
@@ -71,6 +78,11 @@ class AppNavbar extends Component {
               <React.Fragment>
                 <span />
                 <ul className="navbar-nav mr-0">
+                  <li className="nav-item">
+                    <Link to="/contact" className="nav-link">
+                      Contact
+                    </Link>
+                  </li>
                   <li className="nav-item">
                     <Link to="/login" className="nav-link">
                       Login

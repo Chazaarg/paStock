@@ -14,6 +14,7 @@ import ShowProducto from "../components/productos/ShowProducto";
 import NewProducto from "../components/productos/NewProducto";
 import EditProducto from "../components/productos/EditProducto";
 import NotFound from "../components/pages/NotFound";
+import Contact from "../components/pages/Contact";
 import Login from "../components/pages/Login";
 import OrganizarMarcas from "../components/organizar/OrganizarMarcas";
 import OrganizarCategorias from "../components/organizar/OrganizarCategorias";
@@ -101,6 +102,7 @@ class Routes extends Component {
                 path="/categoria"
                 component={OrganizarCategorias}
               />
+              <Route exact path="/contact" component={Contact} />
               <AnonymousRoute exact path="/login" component={Login} />
               <AnonymousRoute exact path="/register" component={Register} />
               <Route component={NotFound} />
