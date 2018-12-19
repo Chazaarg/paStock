@@ -86,18 +86,21 @@ const ProductoAlert = props => {
           });
         });
       }
-    }
-    //Si hay errores en los Modal...
-    else {
+    } else {
       if (errors !== null) {
-        let modalInputs = document.getElementsByClassName("modalInput");
-        modalInputs = Array.from(modalInputs);
-        modalInputs.forEach((input, idx) => {
+        //Si hay errores en los modal...
+        let inputs = document.getElementsByClassName("modalInput");
+        if (inputs.length === 0) {
+          //Si hay errores en send mail...
+          inputs = document.getElementsByClassName("form-control");
+        }
+        inputs = Array.from(inputs);
+        inputs.forEach((input, idx) => {
           //Primero me aseguro de eliminar errores y mensajes anteriores del DOM.
           if (input.classList.contains("is-invalid")) {
             input.classList.remove("is-invalid");
             input.parentElement.removeChild(
-              input.parentElement.getElementsByClassName("text-danger")[idx]
+              document.getElementsByClassName("text-danger")[idx]
             );
           }
           //Creo el elemento small que contendrá el mensaje de error.

@@ -5,7 +5,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DefaultValidator
 {
-
     private $validator;
     public function __construct(ValidatorInterface $validator)
     {
@@ -19,13 +18,29 @@ class DefaultValidator
 
         //Si me da errores, entonces por cada uno de ellos me dice qué campo (values) es el que tiene el error.
         if (count($err) > 0) {
-
             $errors = [];
-            foreach ($err as $error) {
 
+            //Desde contact.js, los inputs vienen en este formato: children[name].data. Este switch es una solución rápida a eso.
+            foreach ($err as $error) {
+                $fixedValue = null;
+                switch ($error->getPropertyPath()) {
+                    case 'children[name].data':
+                    $fixedValue = 'name';
+                        break;
+                    case 'children[email].data':
+                    $fixedValue = 'email';
+                        break;
+                    case 'children[message].data':
+                    $fixedValue = 'message';
+                        break;
+                    
+                    default:
+                    $fixedValue = $error->getPropertyPath();
+                        break;
+                }
                 $errors[] =
                     [
-                    'value' => $error->getPropertyPath(),
+                    'value' => $fixedValue,
                     'message' => $error->getMessage(),
                     'status' => 'error'
                 ];
@@ -36,6 +51,5 @@ class DefaultValidator
                 'errors' => $errors,
             ];
         }
-
     }
 }

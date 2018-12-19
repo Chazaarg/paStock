@@ -66,3 +66,22 @@ export const getUsuario = () => async dispatch => {
     payload: res.data
   });
 };
+
+export const sendEmail = mail => async dispatch => {
+  try {
+    const res = await axios.post("/api/contact", mail);
+    dispatch({
+      type: NOTIFY_USER,
+      message: res.data.message,
+      messageType: res.data.messageType,
+      errors: res.data.errors
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.data.message,
+      messageType: error.response.data.messageType,
+      errors: error.response.data.errors
+    });
+  }
+};

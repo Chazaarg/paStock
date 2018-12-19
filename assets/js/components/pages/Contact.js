@@ -1,4 +1,10 @@
 import React, { Component } from "react";
+import { notifyUser } from "../../actions/notifyActions";
+import { sendEmail } from "../../actions/usuarioActions";
+
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import ProductoAlert from "../layout/ProductoAlert";
 
 class Contact extends Component {
   state = {
@@ -6,16 +12,62 @@ class Contact extends Component {
     email: "",
     message: ""
   };
+
+  componentWillUnmount() {
+    //Esto hace un clear a notify cada vez que cambie de ruta.
+    const { message } = this.props.notify;
+    const { notifyUser } = this.props;
+
+    message && notifyUser(null, null, null);
+  }
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
+  onSubmit = e => {
+    e.preventDefault();
+    const { name, email, message } = this.state;
+    const mail = {
+      name,
+      email,
+      message
+    };
+
+    this.props.sendEmail(mail).then(() => {
+      if (this.props.notify.messageType === "success") {
+        this.setState = {
+          name: "",
+          email: "",
+          message: ""
+        };
+      }
+
+      //Luego de unos segundos borro el mensaje
+      setTimeout(() => {
+        this.props.notifyUser(null, null, null);
+      }, 10000);
+      window.scrollTo(0, 0);
+    });
+  };
   render() {
+    document.title = "Contacto";
+
+    const { notify } = this.props;
+
     return (
       <section id="contact">
         <h1 className="section-header">CONTACTO</h1>
+        {notify.message ? (
+          <div className="m-auto" style={{ maxWidth: "23rem" }}>
+            <ProductoAlert
+              message={notify.message}
+              messageType={notify.messageType}
+              errors={notify.errors}
+            />
+          </div>
+        ) : null}
 
         <div className="contact-wrapper">
-          <form className="form-horizontal" role="form">
+          <form className="form-horizontal" onSubmit={this.onSubmit} noValidate>
             <div className="form-group">
               <div className="col-sm-12">
                 <input
@@ -108,4 +160,18 @@ class Contact extends Component {
     );
   }
 }
-export default Contact;
+
+Contact.propTypes = {
+  notifyUser: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
+  notify: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  notify: state.notify
+});
+
+export default connect(
+  mapStateToProps,
+  { notifyUser, sendEmail }
+)(Contact);
