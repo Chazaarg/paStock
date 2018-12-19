@@ -19,6 +19,7 @@ export const LOG_IN = "LOG_IN";
 export const FETCH_USER = "FETCH_USER";
 export const LOG_OUT = "LOG_OUT";
 export const NOTIFY_USER = "NOTIFY_USER";
+export const NOTIFY_404 = "NOTIFY_404";
 export const REGISTER_USER = "REGISTER_USER";
 export const ADD_VARIANTETIPO = "ADD_VARIANTETIPO";
 export const UPDATE_SUBCATEGORIA = "UPDATE_SUBCATEGORIA";

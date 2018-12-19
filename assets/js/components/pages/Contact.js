@@ -72,7 +72,7 @@ class Contact extends Component {
               <div className="col-sm-12">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control contact"
                   id="name"
                   placeholder="NOMBRE"
                   name="name"
@@ -85,7 +85,7 @@ class Contact extends Component {
               <div className="col-sm-12">
                 <input
                   type="email"
-                  className="form-control"
+                  className="form-control contact"
                   id="email"
                   placeholder="EMAIL"
                   name="email"
@@ -95,7 +95,7 @@ class Contact extends Component {
             </div>
 
             <textarea
-              className="form-control"
+              className="form-control contact"
               rows="10"
               placeholder="MENSAJE"
               name="message"

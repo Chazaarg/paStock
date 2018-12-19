@@ -1,9 +1,10 @@
-import { NOTIFY_USER } from "../actions/types";
+import { NOTIFY_USER, NOTIFY_404 } from "../actions/types";
 
 const initialState = {
   errors: null,
   message: null,
-  messageType: null
+  messageType: null,
+  notFound: false
 };
 
 export default function(state = initialState, action) {
@@ -14,6 +15,11 @@ export default function(state = initialState, action) {
         errors: action.errors,
         message: action.message,
         messageType: action.messageType
+      };
+    case NOTIFY_404:
+      return {
+        ...state,
+        notFound: action.notFound
       };
     default:
       return state;

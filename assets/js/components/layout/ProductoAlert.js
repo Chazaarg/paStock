@@ -91,17 +91,23 @@ const ProductoAlert = props => {
         //Si hay errores en los modal...
         let inputs = document.getElementsByClassName("modalInput");
         if (inputs.length === 0) {
-          //Si hay errores en send mail...
-          inputs = document.getElementsByClassName("form-control");
+          //Si hay errores en contact...
+          inputs = document.getElementsByClassName("contact");
         }
         inputs = Array.from(inputs);
         inputs.forEach((input, idx) => {
           //Primero me aseguro de eliminar errores y mensajes anteriores del DOM.
           if (input.classList.contains("is-invalid")) {
             input.classList.remove("is-invalid");
-            input.parentElement.removeChild(
-              document.getElementsByClassName("text-danger")[idx]
-            );
+            if (input.classList.contains("contact")) {
+              input.parentElement.removeChild(
+                document.getElementsByClassName("text-danger")[idx]
+              );
+            } else {
+              input.parentElement.removeChild(
+                input.parentElement.getElementsByClassName("text-danger")[0]
+              );
+            }
           }
           //Creo el elemento small que contendrá el mensaje de error.
           const small = document.createElement("small");

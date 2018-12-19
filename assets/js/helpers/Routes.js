@@ -83,12 +83,12 @@ class Routes extends Component {
               <PrivateRoute
                 exact
                 path="/producto/:id/show"
-                component={notify.errors === 404 ? NotFound : ShowProducto}
+                component={notify ? NotFound : ShowProducto}
               />
               <PrivateRoute
                 exact
                 path="/producto/:id/edit"
-                component={notify.errors === 404 ? NotFound : EditProducto}
+                component={notify ? NotFound : EditProducto}
               />
               <PrivateRoute exact path="/producto" component={Stock} />
               <PrivateRoute
@@ -115,14 +115,14 @@ class Routes extends Component {
 }
 
 Routes.propTypes = {
-  notify: PropTypes.object.isRequired,
+  notify: PropTypes.bool.isRequired,
   usuario: PropTypes.object.isRequired,
   getUsuario: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   usuario: state.usuario.usuario,
-  notify: state.notify
+  notify: state.notify.notFound
 });
 
 export default connect(

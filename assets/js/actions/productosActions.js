@@ -18,7 +18,8 @@ import {
   UPDATE_CATEGORIA,
   UPDATE_SUBCATEGORIA,
   UPDATE_MARCA,
-  DELETE_MARCA
+  DELETE_MARCA,
+  NOTIFY_404
 } from "./types";
 import axios from "axios";
 
@@ -80,10 +81,8 @@ export const updateProducto = producto => async dispatch => {
   } catch (error) {
     error.response.status === 404
       ? dispatch({
-          type: NOTIFY_USER,
-          message: error.response.status,
-          messageType: "error",
-          errors: error.response.status
+          type: NOTIFY_404,
+          notFound: true
         })
       : dispatch({
           type: NOTIFY_USER,
@@ -325,10 +324,8 @@ export const getProducto = id => async dispatch => {
     });
   } catch (error) {
     dispatch({
-      type: NOTIFY_USER,
-      message: error.response.status,
-      messageType: "error",
-      errors: error.response.status
+      type: NOTIFY_404,
+      notFound: true
     });
   }
 };

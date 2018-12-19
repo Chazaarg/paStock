@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { notifyUser } from "../../actions/notifyActions";
+import { notify404 } from "../../actions/notifyActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 class NotFound extends Component {
   componentWillUnmount() {
     //Esto hace un clear a notify cada vez que cambie de ruta.
-    const { notifyUser } = this.props;
-    notifyUser(null, null, null);
+    const { notify404 } = this.props;
+    notify404(false);
   }
   render() {
     document.title = "Página no encontrada";
@@ -23,10 +23,10 @@ class NotFound extends Component {
 }
 
 NotFound.propTypes = {
-  notifyUser: PropTypes.func.isRequired
+  notify404: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
-  { notifyUser }
+  { notify404 }
 )(NotFound);
