@@ -100,9 +100,10 @@ const ProductoAlert = props => {
           if (input.classList.contains("is-invalid")) {
             input.classList.remove("is-invalid");
             if (input.classList.contains("contact")) {
-              input.parentElement.removeChild(
-                document.getElementsByClassName("text-danger")[idx]
-              );
+              const textDanger = document.querySelectorAll(".text-danger")[idx];
+              if (textDanger) {
+                textDanger.parentElement.removeChild(textDanger);
+              }
             } else {
               input.parentElement.removeChild(
                 input.parentElement.getElementsByClassName("text-danger")[0]

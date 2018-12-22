@@ -2,18 +2,65 @@ import React, { Component } from "react";
 
 class VentaCaja extends Component {
   render() {
+    const {
+      total,
+      descuento,
+      onChange,
+      ventaTipo,
+      aplicarDescuento
+    } = this.props;
     return (
-      <React.Fragment>
-        <div className="row-12 d-flex justify-content-center">
-          <div className="col-4">Tipo de venta</div>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "0",
+          backgroundColor: "#fff",
+          width: "80%",
+          paddingBottom: "2%"
+        }}
+      >
+        <div
+          className="row d-flex justify-content-center pt-3"
+          style={{
+            borderTop: "1px solid black"
+          }}
+        >
+          <div className="col-4 form-group">
+            <select
+              name="ventaTipo"
+              onChange={onChange}
+              value={ventaTipo}
+              className="form-control col-8"
+            >
+              <option>Tipo de pago</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+            </select>
+          </div>
           <div className="col-4 form-group">
             <label htmlFor="total">Total</label>
-            <input className="form-control" type="text" name="total" />
+            <input
+              className="form-control"
+              type="number"
+              name="total"
+              value={total}
+              readOnly
+            />
           </div>
           <div className="col-4">
-            <div className="row">
+            <div className="row d-flex justify-content-between">
               <label htmlFor="descuento">Descuento</label>
-              <input className="form-control" type="text" name="descuento" />
+              <button className="btn btn-link p-0" onClick={aplicarDescuento}>
+                Aplicar
+              </button>
+            </div>
+            <div className="row">
+              <input
+                className="form-control"
+                type="number"
+                name="descuento"
+                id="descuento"
+              />
             </div>
           </div>
         </div>
@@ -28,7 +75,7 @@ class VentaCaja extends Component {
             </button>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
