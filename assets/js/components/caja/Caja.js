@@ -15,6 +15,7 @@ class Caja extends Component {
   state = {
     productos: [
       {
+        id: "",
         codigoDeBarras: "",
         nombre: "",
         cantidad: 0,
@@ -33,7 +34,7 @@ class Caja extends Component {
     this.props.getVendedores();
     this.props.getClientes();
   }
-
+  //Descuento, ventaTipo
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -46,7 +47,13 @@ class Caja extends Component {
       let setProducto;
       this.props.productos.map(dbProducto => {
         if (e.target.value === dbProducto.codigo_de_barras)
-          setProducto = dbProducto;
+          setProducto = {
+            id: dbProducto.id,
+            nombre: dbProducto.nombre,
+            precio: dbProducto.precio,
+            codigoDeBarras: dbProducto.codigo_de_barras,
+            cantidad: dbProducto.cantidad
+          };
       });
 
       if (setProducto) {
@@ -82,8 +89,9 @@ class Caja extends Component {
   };
   handleRemoveProducto = idx => e => {
     //Si es la única fila, entonces vacía la seleccionada.
+
     if (
-      e.target.parentElement.previousSibling.previousSibling === null &&
+      e.target.parentElement.previousSibling === null &&
       e.target.parentElement.nextSibling === null
     ) {
       this.setState({
@@ -114,37 +122,14 @@ class Caja extends Component {
     ) {
       this.handleAddProducto();
     }
-
-    let total = 0;
-    this.state.productos.map(producto => {
-      total += Math.round(Number(producto.precio)) * producto.cantidad;
-    });
-    if (this.state.ventaTipo === "Efectivo") {
-      total = Math.round(total / 1.15);
-    }
-
-    this.setState({ total });
-  };
-
-  aplicarDescuento = e => {
-    let input = document.getElementById("descuento");
-
-    //Al total le sumo el descuento anterior.
-    let total = Number(this.state.total) + Number(this.state.descuento);
-
-    //Y le resto el nuevo.
-    total = total - input.value;
-
-    this.setState({
-      total,
-      descuento: input.value
-    });
   };
 
   onClienteVendedorChange = item => {
     this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
   };
   onSubmit = e => {
+    const totalInput = document.getElementById("total").value;
+    this.setState({ total: totalInput });
     e.preventDefault();
     const {
       productos,
@@ -168,7 +153,7 @@ class Caja extends Component {
       cliente: cliente.id,
       vendedor: vendedor.id,
       formaDePago: ventaTipo,
-      descuento,
+      descuento: descuento ? descuento : 0,
       total
     };
     const data = { venta, ventaDetalle };
@@ -177,14 +162,7 @@ class Caja extends Component {
 
   render() {
     document.title = "Caja";
-    const {
-      productos,
-      total,
-      descuento,
-      ventaTipo,
-      cliente,
-      vendedor
-    } = this.state;
+    const { productos, descuento, ventaTipo, cliente, vendedor } = this.state;
     const inputs = Array.from(document.getElementsByClassName("form-control"));
 
     if (inputs) {
@@ -215,11 +193,10 @@ class Caja extends Component {
 
         <VentaCaja
           onSubmit={this.onSubmit.bind(this)}
-          total={total}
           descuento={descuento}
           onChange={this.onChange.bind(this)}
+          productos={productos}
           ventaTipo={ventaTipo}
-          aplicarDescuento={this.aplicarDescuento.bind(this)}
         />
       </React.Fragment>
     );

@@ -49,7 +49,7 @@ export default function ProductoCaja(props) {
           onChange={onProductoChange(idx)}
         />
       </div>
-      <div className="col-2 form-group">
+      <div className="form-group" style={{ maxWidth: "8,333rem" }}>
         <input
           type="number"
           value={precio}

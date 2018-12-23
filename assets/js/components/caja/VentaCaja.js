@@ -2,13 +2,23 @@ import React, { Component } from "react";
 
 class VentaCaja extends Component {
   render() {
-    const {
-      total,
-      onChange,
-      ventaTipo,
-      aplicarDescuento,
-      onSubmit
-    } = this.props;
+    const { onChange, ventaTipo, descuento, onSubmit, productos } = this.props;
+
+    //Total
+    let total = 0;
+
+    //Por cada producto, se multiplica la cantidad y el precio y se le suma al total.
+    productos.forEach(producto => {
+      total += producto.cantidad * producto.precio;
+    });
+
+    //Si se paga en efectivo, se resta un 15 por ciento y se redondea.
+    if (ventaTipo == 2) {
+      total = total - Math.round(total * 0.15);
+    }
+    //Se le resta el descuento al total.
+    total -= descuento;
+
     return (
       <div
         style={{
@@ -16,6 +26,7 @@ class VentaCaja extends Component {
           bottom: "0",
           backgroundColor: "#fff",
           width: "80%",
+          height: "17vh",
           paddingBottom: "2%"
         }}
       >
@@ -43,6 +54,7 @@ class VentaCaja extends Component {
               className="form-control"
               type="number"
               name="total"
+              id="total"
               value={total}
               readOnly
             />
@@ -50,16 +62,14 @@ class VentaCaja extends Component {
           <div className="col-4">
             <div className="row d-flex justify-content-between">
               <label htmlFor="descuento">Descuento</label>
-              <button className="btn btn-link p-0" onClick={aplicarDescuento}>
-                Aplicar
-              </button>
             </div>
             <div className="row">
               <input
                 className="form-control"
                 type="number"
                 name="descuento"
-                id="descuento"
+                onChange={onChange}
+                value={descuento}
               />
             </div>
           </div>

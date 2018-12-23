@@ -26,17 +26,18 @@ class ProductosCaja extends Component {
             <h4 style={{ fontSize: "1.4rem" }}>&nbsp;&nbsp;Precio</h4>
           </div>
         </div>
-
-        {productos.map((producto, idx) => (
-          <ProductoCaja
-            handleRemoveProducto={handleRemoveProducto}
-            key={idx}
-            idx={idx}
-            producto={producto}
-            onProductoChange={onProductoChange}
-            onCodigoDeBarrasChange={onCodigoDeBarrasChange}
-          />
-        ))}
+        <div className="row-12" style={{ overflow: "auto", height: "50vh" }}>
+          {productos.map((producto, idx) => (
+            <ProductoCaja
+              handleRemoveProducto={handleRemoveProducto}
+              key={idx}
+              idx={idx}
+              producto={producto}
+              onProductoChange={onProductoChange}
+              onCodigoDeBarrasChange={onCodigoDeBarrasChange}
+            />
+          ))}
+        </div>
       </div>
     );
   }
