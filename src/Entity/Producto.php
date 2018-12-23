@@ -88,10 +88,16 @@ class Producto implements \JsonSerializable
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\VentaDetalle", mappedBy="producto")
+     */
+    private $ventaDetalles;
+
     public function __construct($user)
     {
         $this->user = $user;
         $this->variantes = new ArrayCollection();
+        $this->ventaDetalles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -276,6 +282,37 @@ class Producto implements \JsonSerializable
 
     public function setUser(?User $user): self
     {
+        return $this;
+    }
+
+    /**
+     * @return Collection|VentaDetalle[]
+     */
+    public function getVentaDetalles(): Collection
+    {
+        return $this->ventaDetalles;
+    }
+
+    public function addVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if (!$this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles[] = $ventaDetalle;
+            $ventaDetalle->setProducto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if ($this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles->removeElement($ventaDetalle);
+            // set the owning side to null (unless already changed)
+            if ($ventaDetalle->getProducto() === $this) {
+                $ventaDetalle->setProducto(null);
+            }
+        }
+
         return $this;
     }
 }

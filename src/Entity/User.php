@@ -89,6 +89,31 @@ class User implements UserInterface
      */
     private $varianteTipos;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cliente", mappedBy="user")
+     */
+    private $clientes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Vendedor", mappedBy="user")
+     */
+    private $vendedors;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FormaDePago", mappedBy="user")
+     */
+    private $formaDePagos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Venta", mappedBy="user")
+     */
+    private $ventas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\VentaDetalle", mappedBy="user")
+     */
+    private $ventaDetalles;
+
     public function __construct()
     {
         $this->productos = new ArrayCollection();
@@ -97,6 +122,11 @@ class User implements UserInterface
         $this->subCategorias = new ArrayCollection();
         $this->variantes = new ArrayCollection();
         $this->varianteTipos = new ArrayCollection();
+        $this->clientes = new ArrayCollection();
+        $this->vendedors = new ArrayCollection();
+        $this->formaDePagos = new ArrayCollection();
+        $this->ventas = new ArrayCollection();
+        $this->ventaDetalles = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -376,6 +406,161 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($varianteTipo->getUser() === $this) {
                 $varianteTipo->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cliente[]
+     */
+    public function getClientes(): Collection
+    {
+        return $this->clientes;
+    }
+
+    public function addCliente(Cliente $cliente): self
+    {
+        if (!$this->clientes->contains($cliente)) {
+            $this->clientes[] = $cliente;
+            $cliente->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCliente(Cliente $cliente): self
+    {
+        if ($this->clientes->contains($cliente)) {
+            $this->clientes->removeElement($cliente);
+            // set the owning side to null (unless already changed)
+            if ($cliente->getUser() === $this) {
+                $cliente->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Vendedor[]
+     */
+    public function getVendedors(): Collection
+    {
+        return $this->vendedors;
+    }
+
+    public function addVendedor(Vendedor $vendedor): self
+    {
+        if (!$this->vendedors->contains($vendedor)) {
+            $this->vendedors[] = $vendedor;
+            $vendedor->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVendedor(Vendedor $vendedor): self
+    {
+        if ($this->vendedors->contains($vendedor)) {
+            $this->vendedors->removeElement($vendedor);
+            // set the owning side to null (unless already changed)
+            if ($vendedor->getUser() === $this) {
+                $vendedor->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FormaDePago[]
+     */
+    public function getFormaDePagos(): Collection
+    {
+        return $this->formaDePagos;
+    }
+
+    public function addFormaDePago(FormaDePago $formaDePago): self
+    {
+        if (!$this->formaDePagos->contains($formaDePago)) {
+            $this->formaDePagos[] = $formaDePago;
+            $formaDePago->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormaDePago(FormaDePago $formaDePago): self
+    {
+        if ($this->formaDePagos->contains($formaDePago)) {
+            $this->formaDePagos->removeElement($formaDePago);
+            // set the owning side to null (unless already changed)
+            if ($formaDePago->getUser() === $this) {
+                $formaDePago->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Venta[]
+     */
+    public function getVentas(): Collection
+    {
+        return $this->ventas;
+    }
+
+    public function addVenta(Venta $venta): self
+    {
+        if (!$this->ventas->contains($venta)) {
+            $this->ventas[] = $venta;
+            $venta->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVenta(Venta $venta): self
+    {
+        if ($this->ventas->contains($venta)) {
+            $this->ventas->removeElement($venta);
+            // set the owning side to null (unless already changed)
+            if ($venta->getUser() === $this) {
+                $venta->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|VentaDetalle[]
+     */
+    public function getVentaDetalles(): Collection
+    {
+        return $this->ventaDetalles;
+    }
+
+    public function addVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if (!$this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles[] = $ventaDetalle;
+            $ventaDetalle->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if ($this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles->removeElement($ventaDetalle);
+            // set the owning side to null (unless already changed)
+            if ($ventaDetalle->getUser() === $this) {
+                $ventaDetalle->setUser(null);
             }
         }
 
