@@ -26,7 +26,9 @@ class Caja extends Component {
     descuento: 0,
     ventaTipo: "",
     cliente: "",
-    vendedor: ""
+    vendedor: JSON.parse(localStorage.getItem("vendedor"))
+      ? JSON.parse(localStorage.getItem("vendedor"))
+      : ""
   };
 
   componentDidMount() {
@@ -125,6 +127,13 @@ class Caja extends Component {
   };
 
   onClienteVendedorChange = item => {
+    //Asigno al vendedor al LocalStorage
+    if (item.nombre === "vendedor") {
+      localStorage.setItem(
+        "vendedor",
+        JSON.stringify({ id: item.value, nombre: item.label })
+      );
+    }
     this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
   };
   onSubmit = e => {
