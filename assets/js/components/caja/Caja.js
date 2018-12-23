@@ -4,7 +4,11 @@ import ProductosCaja from "./ProductosCaja";
 import VentaCaja from "./VentaCaja";
 import { connect } from "react-redux";
 import { getProductos } from "../../actions/productosActions";
-import { getClientes, getVendedores } from "../../actions/ventaActions";
+import {
+  getClientes,
+  getVendedores,
+  addVenta
+} from "../../actions/ventaActions";
 import PropTypes from "prop-types";
 
 class Caja extends Component {
@@ -137,9 +141,38 @@ class Caja extends Component {
     });
   };
 
-  //Es un objeto Select y necesita de dos onChange
   onClienteVendedorChange = item => {
     this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
+  };
+  onSubmit = e => {
+    e.preventDefault();
+    const {
+      productos,
+      total,
+      descuento,
+      ventaTipo,
+      cliente,
+      vendedor
+    } = this.state;
+    let ventaDetalle = [];
+    productos.forEach(producto => {
+      ventaDetalle = [
+        ...ventaDetalle,
+        {
+          producto: producto.id,
+          cantidad: producto.cantidad
+        }
+      ];
+    });
+    const venta = {
+      cliente: cliente.id,
+      vendedor: vendedor.id,
+      formaDePago: ventaTipo,
+      descuento,
+      total
+    };
+    const data = { venta, ventaDetalle };
+    this.props.addVenta(data);
   };
 
   render() {
@@ -181,6 +214,7 @@ class Caja extends Component {
         />
 
         <VentaCaja
+          onSubmit={this.onSubmit.bind(this)}
           total={total}
           descuento={descuento}
           onChange={this.onChange.bind(this)}
@@ -196,7 +230,8 @@ Caja.propTypes = {
   productos: PropTypes.array.isRequired,
   getProductos: PropTypes.func.isRequired,
   getClientes: PropTypes.func.isRequired,
-  getVendedores: PropTypes.func.isRequired
+  getVendedores: PropTypes.func.isRequired,
+  addVenta: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -207,5 +242,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProductos, getClientes, getVendedores }
+  { getProductos, getClientes, getVendedores, addVenta }
 )(Caja);

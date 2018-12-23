@@ -82,8 +82,6 @@ class VentaController extends AbstractController
             }
     
             if (false === $form->isValid()) {
-                dump($form->getErrors());
-                die;
                 return new JsonResponse(
                     [
                         'status' => 'error',

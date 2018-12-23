@@ -4,10 +4,10 @@ class VentaCaja extends Component {
   render() {
     const {
       total,
-      descuento,
       onChange,
       ventaTipo,
-      aplicarDescuento
+      aplicarDescuento,
+      onSubmit
     } = this.props;
     return (
       <div
@@ -33,8 +33,8 @@ class VentaCaja extends Component {
               className="form-control col-8"
             >
               <option>Tipo de pago</option>
-              <option value="Efectivo">Efectivo</option>
-              <option value="Tarjeta">Tarjeta</option>
+              <option value={2}>Efectivo</option>
+              <option value={1}>Tarjeta</option>
             </select>
           </div>
           <div className="col-4 form-group">
@@ -68,6 +68,7 @@ class VentaCaja extends Component {
           <div className="col-4">
             <button
               type="submit"
+              onClick={onSubmit}
               className="btn btn-success pt-2 pb-2"
               style={{ width: "100%" }}
             >
