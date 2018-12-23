@@ -4,6 +4,7 @@ import ProductosCaja from "./ProductosCaja";
 import VentaCaja from "./VentaCaja";
 import { connect } from "react-redux";
 import { getProductos } from "../../actions/productosActions";
+import { getClientes, getVendedores } from "../../actions/ventaActions";
 import PropTypes from "prop-types";
 
 class Caja extends Component {
@@ -18,11 +19,15 @@ class Caja extends Component {
     ],
     total: 0,
     descuento: 0,
-    ventaTipo: ""
+    ventaTipo: "",
+    cliente: "",
+    vendedor: ""
   };
 
   componentDidMount() {
     this.props.getProductos();
+    this.props.getVendedores();
+    this.props.getClientes();
   }
 
   onChange = e => {
@@ -132,9 +137,21 @@ class Caja extends Component {
     });
   };
 
+  //Es un objeto Select y necesita de dos onChange
+  onClienteVendedorChange = item => {
+    this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
+  };
+
   render() {
     document.title = "Caja";
-    const { productos, total, descuento, ventaTipo } = this.state;
+    const {
+      productos,
+      total,
+      descuento,
+      ventaTipo,
+      cliente,
+      vendedor
+    } = this.state;
     const inputs = Array.from(document.getElementsByClassName("form-control"));
 
     if (inputs) {
@@ -148,7 +165,13 @@ class Caja extends Component {
 
     return (
       <React.Fragment>
-        <ClienteVendedor />
+        <ClienteVendedor
+          clientes={this.props.clientes}
+          vendedores={this.props.vendedores}
+          cliente={cliente}
+          vendedor={vendedor}
+          onClienteVendedorChange={this.onClienteVendedorChange.bind(this)}
+        />
 
         <ProductosCaja
           onProductoChange={this.onProductoChange.bind(this)}
@@ -171,14 +194,18 @@ class Caja extends Component {
 
 Caja.propTypes = {
   productos: PropTypes.array.isRequired,
-  getProductos: PropTypes.func.isRequired
+  getProductos: PropTypes.func.isRequired,
+  getClientes: PropTypes.func.isRequired,
+  getVendedores: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  productos: state.producto.productos
+  productos: state.producto.productos,
+  clientes: state.venta.clientes,
+  vendedores: state.venta.vendedores
 });
 
 export default connect(
   mapStateToProps,
-  { getProductos }
+  { getProductos, getClientes, getVendedores }
 )(Caja);

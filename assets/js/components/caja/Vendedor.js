@@ -1,69 +1,79 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { addVendedor } from "../../actions/ventaActions";
 
-export default function Vendedor() {
-  return (
-    <div className="col-5">
-      <div className="form-row">
-        <div className="form-group col-10">
-          <input
-            type="text"
-            className="form-control"
-            id="nombreCliente"
-            placeholder="Nombre"
-          />
+class Vendedor extends Component {
+  state = {
+    nombre: "",
+    apellido: "",
+    apodo: ""
+  };
+  onChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  onSubmit = e => {
+    e.preventDefault();
+    this.props.addVendedor(this.state);
+  };
+  render() {
+    const { nombre, apellido, apodo } = this.state;
+    return (
+      <div className="col-5">
+        <div className="form-row">
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={nombre}
+              placeholder="Nombre"
+              onChange={this.onChange}
+              name="nombre"
+            />
+          </div>
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={apellido}
+              placeholder="Apellido"
+              onChange={this.onChange}
+              name="apellido"
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={apodo}
+              placeholder="Apodo"
+              onChange={this.onChange}
+              name="apodo"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={this.onSubmit}
+          >
+            Agregar Vendedor
+          </button>
         </div>
       </div>
-      <div className="form-row">
-        <div className="form-group col-10">
-          <input
-            type="text"
-            className="form-control"
-            id="telefonoCliente"
-            placeholder="Teléfono"
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="emailCliente"
-            placeholder="Email"
-          />
-        </div>
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="dniCliente"
-            placeholder="DNI"
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="direccionCliente"
-            placeholder="Dirección"
-          />
-        </div>
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="localidadCliente"
-            placeholder="Localidad"
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <button className="btn btn-secondary" id="agregarCliente" type="button">
-          Agregar Cliente
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }
 }
+Vendedor.propTypes = {
+  addVendedor: PropTypes.func.isRequired
+};
+export default connect(
+  null,
+  { addVendedor }
+)(Vendedor);

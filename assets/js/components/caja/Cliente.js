@@ -1,42 +1,117 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { addCliente } from "../../actions/ventaActions";
 
-export default function Cliente() {
-  return (
-    <div className="col-5">
-      <div className="form-row">
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="inputAddress"
-            placeholder="Nombre"
-          />
-        </div>
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="inputAddress2"
-            placeholder="Apellido"
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group col-5">
-          <input
-            type="text"
-            className="form-control"
-            id="inputAddress2"
-            placeholder="Apodo"
-          />
-        </div>
-      </div>
+class Cliente extends Component {
+  state = {
+    nombre: "",
+    telefono: "",
+    email: "",
+    dni: "",
+    direccion: "",
+    localidad: ""
+  };
+  onChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
 
-      <div className="form-row">
-        <button className="btn btn-secondary" type="button">
-          Agregar Vendedor
-        </button>
+  onSubmit = e => {
+    e.preventDefault();
+    this.props.addCliente(this.state);
+  };
+
+  render() {
+    const { nombre, telefono, email, dni, direccion, localidad } = this.state;
+    return (
+      <div className="col-5">
+        <div className="form-row">
+          <div className="form-group col-10">
+            <input
+              type="text"
+              className="form-control"
+              value={nombre}
+              placeholder="Nombre"
+              onChange={this.onChange}
+              name="nombre"
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-10">
+            <input
+              type="text"
+              className="form-control"
+              value={telefono}
+              placeholder="Teléfono"
+              name="telefono"
+              onChange={this.onChange}
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={email}
+              placeholder="Email"
+              onChange={this.onChange}
+              name="email"
+            />
+          </div>
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={dni}
+              placeholder="DNI"
+              onChange={this.onChange}
+              name="dni"
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={direccion}
+              placeholder="Dirección"
+              onChange={this.onChange}
+              name="direccion"
+            />
+          </div>
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={localidad}
+              placeholder="Localidad"
+              onChange={this.onChange}
+              name="localidad"
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <button
+            className="btn btn-secondary"
+            onClick={this.onSubmit}
+            type="button"
+          >
+            Agregar Cliente
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
+Cliente.propTypes = {
+  addCliente: PropTypes.func.isRequired
+};
+export default connect(
+  null,
+  { addCliente }
+)(Cliente);

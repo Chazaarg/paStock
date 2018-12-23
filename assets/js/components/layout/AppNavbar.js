@@ -14,6 +14,20 @@ class AppNavbar extends Component {
     const { isAuthenticated } = this.props;
     const { usuario } = this.props;
 
+    const script = document.createElement("script");
+    script.src = "https://code.jquery.com/jquery-3.3.1.slim.min.js";
+    document.head.appendChild(script);
+
+    const script2 = document.createElement("script");
+    script2.src =
+      "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js";
+    document.head.appendChild(script2);
+
+    const script3 = document.createElement("script");
+    script3.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js";
+    document.head.appendChild(script3);
+
     return (
       <nav className="navbar navbar-expand-md navbar-light bg-light ml-auto">
         <div className="container">
