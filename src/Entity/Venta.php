@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VentaRepository")
@@ -31,6 +33,7 @@ class Venta
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cliente", inversedBy="ventas")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $cliente;
 
@@ -43,6 +46,7 @@ class Venta
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FormaDePago", inversedBy="ventas")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $formaDePago;
 

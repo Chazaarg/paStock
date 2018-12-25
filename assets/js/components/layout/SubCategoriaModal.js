@@ -21,9 +21,7 @@ class SubCategoriaModal extends Component {
   state = {
     modal: false,
     nombre: "",
-    categoria: { id: undefined, label: undefined },
-    selectStyle: "",
-    selectTheme: ""
+    categoria: { id: undefined, label: undefined }
   };
 
   toggle = () => {
@@ -65,31 +63,6 @@ class SubCategoriaModal extends Component {
           this.props.newProp("sub_categoria");
           this.toggle();
         }
-        //Si hay error, verifico. Uso el state para personalizar el Select
-        else {
-          if (this.props.notify.errors) {
-            this.props.notify.errors.forEach(error => {
-              if (error.value === "categoria") {
-                this.setState({
-                  selectStyle: {
-                    control: (base, state) => ({
-                      ...base,
-                      borderColor: "red"
-                    })
-                  },
-                  selectTheme: theme => ({
-                    ...theme,
-                    borderRadius: 0,
-                    colors: {
-                      ...theme.colors,
-                      primary: "red"
-                    }
-                  })
-                });
-              }
-            });
-          }
-        }
       }
     });
   };
@@ -126,8 +99,6 @@ class SubCategoriaModal extends Component {
                   onChange={this.onChange}
                   options={optionsCategoria}
                   placeholder="Seleccione una categoria..."
-                  styles={this.state.selectStyle}
-                  theme={this.state.selectTheme}
                   className="modalInput"
                   id="categoria"
                 />

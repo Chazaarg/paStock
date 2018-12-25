@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VentaDetalleRepository")
@@ -25,11 +26,13 @@ class VentaDetalle
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Producto", inversedBy="ventaDetalles")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Introduzca un producto válido.")
      */
     private $producto;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $cantidad;
 
@@ -38,6 +41,12 @@ class VentaDetalle
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="Este campo es requerido.")
+     */
+    private $precio;
     
     public function __construct($user)
     {
@@ -93,6 +102,18 @@ class VentaDetalle
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPrecio(): ?float
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(float $precio): self
+    {
+        $this->precio = $precio;
 
         return $this;
     }

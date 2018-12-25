@@ -4,6 +4,7 @@ import ProductosCaja from "./ProductosCaja";
 import VentaCaja from "./VentaCaja";
 import { connect } from "react-redux";
 import { getProductos } from "../../actions/productosActions";
+import { notifyUser } from "../../actions/notifyActions";
 import {
   getClientes,
   getVendedores,
@@ -154,7 +155,8 @@ class Caja extends Component {
         ...ventaDetalle,
         {
           producto: producto.id,
-          cantidad: producto.cantidad
+          cantidad: producto.cantidad,
+          precio: producto.precio
         }
       ];
     });
@@ -201,6 +203,7 @@ class Caja extends Component {
         />
 
         <VentaCaja
+          notify={this.props.notify}
           onSubmit={this.onSubmit.bind(this)}
           descuento={descuento}
           onChange={this.onChange.bind(this)}
@@ -223,7 +226,8 @@ Caja.propTypes = {
 const mapStateToProps = state => ({
   productos: state.producto.productos,
   clientes: state.venta.clientes,
-  vendedores: state.venta.vendedores
+  vendedores: state.venta.vendedores,
+  notify: state.notify
 });
 
 export default connect(

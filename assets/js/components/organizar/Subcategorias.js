@@ -38,10 +38,11 @@ const Subcategorias = props => {
       tableHead.style.fontSize = "1.4rem";
 
       //Elimino el botón si es que lo contiene.
-      let tableHeadbtn = tableHead.children.item(1);
-      if (tableHeadbtn) {
-        tableHeadbtn.remove();
-      }
+      Array.from(tableHead.children).forEach(el => {
+        if (el.classList.contains("closebtn")) {
+          el.remove();
+        }
+      });
 
       //Y le agrego el botón para cerrar el sideNav.
       tableHead.appendChild(btnClose);

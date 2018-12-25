@@ -1,8 +1,16 @@
 import React, { Component } from "react";
+import ProductoAlert from "../layout/ProductoAlert";
 
 class VentaCaja extends Component {
   render() {
-    const { onChange, ventaTipo, descuento, onSubmit, productos } = this.props;
+    const {
+      onChange,
+      ventaTipo,
+      descuento,
+      onSubmit,
+      productos,
+      notify
+    } = this.props;
 
     //Total
     let total = 0;
@@ -75,6 +83,13 @@ class VentaCaja extends Component {
           </div>
         </div>
         <div className="row d-flex justify-content-end">
+          {notify.message ? (
+            <ProductoAlert
+              message={notify.message}
+              messageType={notify.messageType}
+              errors={notify.errors}
+            />
+          ) : null}
           <div className="col-4">
             <button
               type="submit"

@@ -37,7 +37,7 @@ export default function(state = initState, action) {
     case ADD_VENTA:
       return {
         ...state,
-        venta: [action.payload, ...state.venta]
+        ventas: [action.payload, ...state.ventas]
       };
     default:
       return state;

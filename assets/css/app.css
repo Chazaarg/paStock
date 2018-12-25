@@ -14,7 +14,6 @@
 
 .sidenav {
   height: 100%; /* 100% Full-height */
-  width: 0; /* 0 width - change this with JavaScript */
   position: relative;
   float: right;
   overflow-x: hidden; /* Disable horizontal scroll */
@@ -49,6 +48,12 @@
   .sidenav a {
     font-size: 18px;
   }
+}
+
+/* Esto es indicar un error en los Selects */
+div.modalInput.is-invalid > div:first-of-type {
+  border-color: red !important;
+  box-shadow: none !important;
 }
 
 /*                              -------------------- #contact Page -------------------- */

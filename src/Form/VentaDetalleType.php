@@ -14,6 +14,7 @@ class VentaDetalleType extends AbstractType
         $builder
             ->add('cantidad')
             ->add('producto')
+            ->add('precio')
         ;
     }
 
