@@ -11,8 +11,10 @@ export default function CajaAlert(props) {
   const productoInputs = Array.from(
     document.getElementsByClassName("productoInput")
   );
+  /* ------------------- INPUTS ------------------- */
+  const inputs = Array.from(document.getElementsByClassName("form-control"));
 
-  //Antes que nada, me aseguro de quitarles el error.
+  //Antes que nada, me aseguro de quitarles el error. (Son los inputs de venta más los Selects)
   ventaInputs.forEach(ventaInput => {
     if (ventaInput.classList.contains("is-invalid")) {
       ventaInput.classList.remove("is-invalid");
@@ -25,16 +27,17 @@ export default function CajaAlert(props) {
       }
     }
   });
-  //Antes que nada, me aseguro de quitarles el error.
-  productoInputs.forEach(productoInput => {
-    if (productoInput.classList.contains("is-invalid")) {
-      productoInput.classList.remove("is-invalid");
-      const errMesage = productoInput.parentElement.getElementsByClassName(
+  //Antes que nada, me aseguro de quitarles el error. (Son el resto de los inputs).
+  inputs.forEach(input => {
+    if (input.classList.contains("is-invalid")) {
+      input.classList.remove("is-invalid");
+      input.title = "";
+      const errMesage = input.parentElement.getElementsByClassName(
         "text-danger"
       )[0];
 
       if (errMesage) {
-        productoInput.parentElement.removeChild(errMesage);
+        input.parentElement.removeChild(errMesage);
       }
     }
   });
@@ -89,6 +92,40 @@ export default function CajaAlert(props) {
 
         doblePar += 4;
       });
+    } else {
+      //Comportamiento de los fomularios Cliente/Vendedor en caso de error.
+      if (errors[0].for === "cliente") {
+        const clienteInputs = Array.from(
+          document
+            .querySelector(".cliente")
+            .getElementsByClassName("form-control")
+        );
+
+        clienteInputs.forEach(clienteInput => {
+          errors.forEach(error => {
+            if (clienteInput.name === error.value) {
+              clienteInput.classList.add("is-invalid");
+              clienteInput.title = error.message;
+            }
+          });
+        });
+      } else if (errors[0].for === "vendedor") {
+        const vendedorInputs = Array.from(
+          document
+            .querySelector(".vendedor")
+            .getElementsByClassName("form-control")
+        );
+
+        vendedorInputs.forEach(vendedorInput => {
+          errors.forEach(error => {
+            if (vendedorInput.name === error.value) {
+              vendedorInput.classList.add("is-invalid");
+              vendedorInput.title = error.message;
+            }
+          });
+        });
+      }
+      return null;
     }
   }
 

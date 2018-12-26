@@ -21,7 +21,7 @@ class Vendedor extends Component {
   render() {
     const { nombre, apellido, apodo } = this.state;
     return (
-      <div className="col-5">
+      <div className="col-5 vendedor">
         <div className="form-row">
           <div className="form-group col-5">
             <input

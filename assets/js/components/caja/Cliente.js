@@ -6,6 +6,7 @@ import { addCliente } from "../../actions/ventaActions";
 class Cliente extends Component {
   state = {
     nombre: "",
+    apellido: "",
     telefono: "",
     email: "",
     dni: "",
@@ -24,11 +25,19 @@ class Cliente extends Component {
   };
 
   render() {
-    const { nombre, telefono, email, dni, direccion, localidad } = this.state;
+    const {
+      nombre,
+      apellido,
+      telefono,
+      email,
+      dni,
+      direccion,
+      localidad
+    } = this.state;
     return (
-      <div className="col-5">
+      <div className="col-5 cliente">
         <div className="form-row">
-          <div className="form-group col-10">
+          <div className="form-group col-5">
             <input
               type="text"
               className="form-control"
@@ -36,6 +45,16 @@ class Cliente extends Component {
               placeholder="Nombre"
               onChange={this.onChange}
               name="nombre"
+            />
+          </div>
+          <div className="form-group col-5">
+            <input
+              type="text"
+              className="form-control"
+              value={apellido}
+              placeholder="Apellido"
+              onChange={this.onChange}
+              name="apellido"
             />
           </div>
         </div>

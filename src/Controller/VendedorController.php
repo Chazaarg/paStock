@@ -61,6 +61,7 @@ class VendedorController extends AbstractController
 
         $err = $this->defaultValidator->validar($vendedor);
         if ($err) {
+            $err["errors"][0]["for"] = "vendedor";
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
         }
 

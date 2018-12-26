@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ClienteRepository")
@@ -19,12 +20,18 @@ class Cliente
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $nombre;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Email(
+     *     message = "El email {{ value }} no es válido.",
+     *     checkMX = true,
+     *     checkHost = true
+     * )
      */
     private $email;
 
@@ -59,6 +66,12 @@ class Cliente
      */
     private $ventas;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Este campo es requerido.")
+     */
+    private $apellido;
+
     public function __construct($user)
     {
         $this->user = $user;
@@ -75,7 +88,7 @@ class Cliente
         return $this->nombre;
     }
 
-    public function setNombre(?string $nombre): self
+    public function setNombre(string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -189,11 +202,24 @@ class Cliente
         return [
             'id' => $this->id,
             'nombre' => $this->nombre,
+            'apellido' => $this->apellido,
             "email" => $this->email,
             "direccion" => $this->direccion,
             "localidad" => $this->localidad,
             "telefono" => $this->telefono,
             "dni" => $this->dni,
         ];
+    }
+
+    public function getApellido(): ?string
+    {
+        return $this->apellido;
+    }
+
+    public function setApellido(string $apellido): self
+    {
+        $this->apellido = $apellido;
+
+        return $this;
     }
 }

@@ -61,6 +61,7 @@ class ClienteController extends AbstractController
 
         $err = $this->defaultValidator->validar($cliente);
         if ($err) {
+            $err["errors"][0]["for"] = "cliente";
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
         }
 
