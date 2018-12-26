@@ -25,6 +25,12 @@ export default function ClienteVendedor(props) {
       label: cliente.nombre
     }))
   ];
+
+  //Quito la opción de cliente genérico ya que no es necesaria.
+  optionsCliente = optionsCliente.filter(
+    optionCliente => optionCliente.value !== 1
+  );
+
   return (
     <section className="accordion col-12" id="ClienteVendedor">
       <div className="row">
@@ -33,6 +39,12 @@ export default function ClienteVendedor(props) {
         </div>
         <div className="col-5">
           <label id="clienteInput">Cliente</label>
+          &nbsp;
+          <i
+            className="far fa-question-circle"
+            title="De no escoger ningún cliente, se seleccionará uno genérico. "
+            style={{ fontSize: "0.6rem", cursor: "help" }}
+          />
         </div>
       </div>
       <div className="d-flex bd-highlight mb-3">

@@ -47,6 +47,11 @@ class VentaDetalle
      * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $precio;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Variante", inversedBy="ventaDetalles")
+     */
+    private $variante;
     
     public function __construct($user)
     {
@@ -114,6 +119,18 @@ class VentaDetalle
     public function setPrecio(float $precio): self
     {
         $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getVariante(): ?Variante
+    {
+        return $this->variante;
+    }
+
+    public function setVariante(?Variante $variante): self
+    {
+        $this->variante = $variante;
 
         return $this;
     }

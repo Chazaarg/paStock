@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,6 +58,16 @@ class Variante
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\VentaDetalle", mappedBy="variante")
+     */
+    private $ventaDetalles;
+
+    public function __construct()
+    {
+        $this->ventaDetalles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +167,37 @@ class Variante
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|VentaDetalle[]
+     */
+    public function getVentaDetalles(): Collection
+    {
+        return $this->ventaDetalles;
+    }
+
+    public function addVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if (!$this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles[] = $ventaDetalle;
+            $ventaDetalle->setVariante($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVentaDetalle(VentaDetalle $ventaDetalle): self
+    {
+        if ($this->ventaDetalles->contains($ventaDetalle)) {
+            $this->ventaDetalles->removeElement($ventaDetalle);
+            // set the owning side to null (unless already changed)
+            if ($ventaDetalle->getVariante() === $this) {
+                $ventaDetalle->setVariante(null);
+            }
+        }
 
         return $this;
     }

@@ -57,18 +57,18 @@ class Caja extends Component {
             precio: dbProducto.precio,
             codigoDeBarras: dbProducto.codigo_de_barras,
             cantidad: dbProducto.cantidad,
-            variante: false
+            variante: ""
           };
         else if (dbProducto.variantes) {
           dbProducto.variantes.forEach(variante => {
             if (e.target.value === variante.codigo_de_barras) {
               setProducto = {
-                id: variante.id,
+                id: dbProducto.id,
                 nombre: variante.nombre,
                 precio: variante.precio,
                 codigoDeBarras: variante.codigo_de_barras,
                 cantidad: variante.cantidad,
-                variante: true
+                variante: variante.id
               };
             }
           });
@@ -106,7 +106,7 @@ class Caja extends Component {
               precio: dbProducto.precio,
               codigoDeBarras: dbProducto.codigo_de_barras,
               cantidad: dbProducto.cantidad,
-              variante: false
+              variante: ""
             };
         } else if (e.nombre === "variante") {
           let varId = e.value.replace("var", "");
@@ -115,12 +115,12 @@ class Caja extends Component {
             dbProducto.variantes.forEach(variante => {
               if (varId === variante.id) {
                 setProducto = {
-                  id: variante.id,
+                  id: dbProducto.id,
                   nombre: variante.nombre,
                   precio: variante.precio,
                   codigoDeBarras: variante.codigo_de_barras,
                   cantidad: variante.cantidad,
-                  variante: true
+                  variante: variante.id
                 };
               }
             });
@@ -222,11 +222,11 @@ class Caja extends Component {
       ];
     });
     const venta = {
-      cliente: cliente.id,
+      cliente: cliente.id ? cliente.id : 1,
       vendedor: vendedor.id,
       formaDePago: ventaTipo,
       descuento: descuento ? descuento : 0,
-      total
+      total: totalInput
     };
     const data = { venta, ventaDetalle };
     this.props.addVenta(data).then(() => {

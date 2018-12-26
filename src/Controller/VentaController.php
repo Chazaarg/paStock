@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\VentaDetalle;
 use App\Entity\Producto;
+use App\Entity\Variante;
 use App\Form\VentaDetalleType;
 use App\Entity\Venta;
 use App\Form\VentaType;
@@ -76,15 +77,11 @@ class VentaController extends AbstractController
 
         //Valido cada detalle.
         foreach ($data['ventaDetalle'] as $detalle) {
-            dump($data["ventaDetalle"]);
-            die;
             $ventaDetalles[$i] = new VentaDetalle($user);
             $ventaDetalles[$i]->setVenta($ventum);
             $form = $this->createForm(VentaDetalleType::class, $ventaDetalles[$i]);
             $form->submit($detalle);
-
-
-
+           
             //Si tiene errores, almaceno solamente esos en la variable $errProducto. Si no, dejo un array vacío que es igual a una fila de producto en el FrontEnd.
             $errProducto = [];
 
@@ -123,17 +120,36 @@ class VentaController extends AbstractController
                 $em->persist($ventaDetalle);
                 $em->flush();
             }
-            //Edito el producto con su nueva cantidad.
-            $producto = $this->getDoctrine()
-    ->getRepository(Producto::class)
-    ->find($detalle["producto"]);
-            $cantInicial = $producto->getCantidad();
-            $cantNueva = $cantInicial - $detalle["cantidad"];
-            $producto->setCantidad($cantNueva);
 
-            //Lo persisto en la base de datos.
-            $em->persist($producto);
-            $em->flush();
+            //Edito el producto con su nueva cantidad.
+
+            //Si se trata de una variante...
+            if ($detalle['variante']) {
+                $variante = $this->getDoctrine()
+                ->getRepository(Variante::class)
+                ->find($detalle["variante"]);
+
+                $cantInicial = $variante->getCantidad();
+                $cantNueva = $cantInicial - $detalle["cantidad"];
+                $variante->setCantidad($cantNueva);
+
+                //Lo persisto en la base de datos.
+                $em->persist($variante);
+                $em->flush();
+            } else {
+                //Si se trata de un producto individual...
+                
+                $producto = $this->getDoctrine()
+                ->getRepository(Producto::class)
+                ->find($detalle["producto"]);
+                $cantInicial = $producto->getCantidad();
+                $cantNueva = $cantInicial - $detalle["cantidad"];
+                $producto->setCantidad($cantNueva);
+
+                //Lo persisto en la base de datos.
+                $em->persist($producto);
+                $em->flush();
+            }
         }
         return new JsonResponse(
             [
