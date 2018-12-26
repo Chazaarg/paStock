@@ -168,7 +168,31 @@ class Caja extends Component {
       total
     };
     const data = { venta, ventaDetalle };
-    this.props.addVenta(data);
+    this.props.addVenta(data).then(() => {
+      //Clear state if success
+      if (this.props.notify.messageType === "success") {
+        this.setState({
+          productos: [
+            {
+              id: "",
+              codigoDeBarras: "",
+              nombre: "",
+              cantidad: 0,
+              precio: 0
+            }
+          ],
+          total: 0,
+          descuento: 0,
+          ventaTipo: "",
+          cliente: ""
+        });
+      }
+      window.scrollTo(0, 0);
+      //Luego de unos segundos borro el mensaje
+      setTimeout(() => {
+        this.props.notifyUser(null, null, null);
+      }, 10000);
+    });
   };
 
   render() {
@@ -220,7 +244,8 @@ Caja.propTypes = {
   getProductos: PropTypes.func.isRequired,
   getClientes: PropTypes.func.isRequired,
   getVendedores: PropTypes.func.isRequired,
-  addVenta: PropTypes.func.isRequired
+  addVenta: PropTypes.func.isRequired,
+  notifyUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -232,5 +257,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProductos, getClientes, getVendedores, addVenta }
+  { getProductos, getClientes, getVendedores, addVenta, notifyUser }
 )(Caja);

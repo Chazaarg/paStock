@@ -17,7 +17,7 @@ import {
   updateSubcategoria
 } from "../../actions/productosActions";
 import Categorias from "./Categorias";
-import ProductoAlert from "../layout/ProductoAlert";
+import ProductoAlert from "../alert/ProductoAlert";
 
 class OrganizarCategorias extends Component {
   state = {

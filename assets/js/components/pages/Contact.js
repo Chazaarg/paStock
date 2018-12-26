@@ -4,7 +4,7 @@ import { sendEmail } from "../../actions/usuarioActions";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import ProductoAlert from "../layout/ProductoAlert";
+import ProductoAlert from "../alert/ProductoAlert";
 
 class Contact extends Component {
   state = {

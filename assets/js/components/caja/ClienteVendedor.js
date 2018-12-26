@@ -27,11 +27,20 @@ export default function ClienteVendedor(props) {
   ];
   return (
     <section className="accordion col-12" id="ClienteVendedor">
+      <div className="row">
+        <div className="col-5">
+          <label id="vendedorInput">Vendedor</label>
+        </div>
+        <div className="col-5">
+          <label id="clienteInput">Cliente</label>
+        </div>
+      </div>
       <div className="d-flex bd-highlight mb-3">
-        <div className="col-5 p-2 bd-highlight">
+        <div className="col-5 bd-highligh pl-0">
           {/* Vendedor */}
           <Select
             name="vendedor"
+            id="vendedor"
             value={
               vendedor.id === undefined
                 ? null
@@ -44,14 +53,17 @@ export default function ClienteVendedor(props) {
             onChange={onClienteVendedorChange}
             options={optionsVendedor}
             placeholder="Seleccione un vendedor..."
+            className="ventaInput"
           />
+          &emsp;
         </div>
 
         {/* Cliente */}
 
-        <div className="col-5 p-2 bd-highlight">
+        <div className="col-5 bd-highlight pl-2">
           <Select
             name="cliente"
+            id="cliente"
             value={
               cliente.id === undefined
                 ? null
@@ -64,12 +76,14 @@ export default function ClienteVendedor(props) {
             onChange={onClienteVendedorChange}
             options={optionsCliente}
             placeholder="Seleccione un cliente..."
+            className="ventaInput"
           />
+          &emsp;
         </div>
 
         {/* collapseBTN */}
 
-        <div className="col-2 ml-auto p-2 bd-highlight" id="headingOne">
+        <div className="col-2 ml-auto bd-highlight" id="headingOne">
           <button
             className="btn btn-link"
             type="button"

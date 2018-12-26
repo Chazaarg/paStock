@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { login } from "../../actions/usuarioActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Alert from "../layout/Alert";
+import Alert from "../alert/Alert";
 import { notifyUser } from "../../actions/notifyActions";
 
 class Login extends Component {

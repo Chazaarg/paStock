@@ -14,7 +14,7 @@ import {
   deleteMarca
 } from "../../actions/productosActions";
 import Marcas from "./Marcas";
-import ProductoAlert from "../layout/ProductoAlert";
+import ProductoAlert from "../alert/ProductoAlert";
 
 class OrganizarMarcas extends Component {
   state = {};

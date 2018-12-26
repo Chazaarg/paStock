@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { registerUser } from "../../actions/usuarioActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Alert from "../layout/Alert";
+import Alert from "../alert/Alert";
 import { notifyUser } from "../../actions/notifyActions";
 
 class Register extends Component {

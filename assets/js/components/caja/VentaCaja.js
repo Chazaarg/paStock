@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ProductoAlert from "../layout/ProductoAlert";
+import CajaAlert from "../alert/CajaAlert";
 
 class VentaCaja extends Component {
   render() {
@@ -31,7 +31,7 @@ class VentaCaja extends Component {
       <div
         style={{
           position: "fixed",
-          bottom: "0",
+          bottom: "1%",
           backgroundColor: "#fff",
           width: "80%",
           height: "17vh",
@@ -45,11 +45,14 @@ class VentaCaja extends Component {
           }}
         >
           <div className="col-4 form-group">
+            <label htmlFor="formaDePago">Tipo de Pago</label>
+
             <select
               name="ventaTipo"
+              id="formaDePago"
               onChange={onChange}
               value={ventaTipo}
-              className="form-control col-8"
+              className="form-control col-8 ventaInput"
             >
               <option>Tipo de pago</option>
               <option value={2}>Efectivo</option>
@@ -59,13 +62,14 @@ class VentaCaja extends Component {
           <div className="col-4 form-group">
             <label htmlFor="total">Total</label>
             <input
-              className="form-control"
+              className="form-control ventaInput"
               type="number"
               name="total"
               id="total"
               value={total}
               readOnly
             />
+            &emsp;
           </div>
           <div className="col-4">
             <div className="row d-flex justify-content-between">
@@ -73,18 +77,19 @@ class VentaCaja extends Component {
             </div>
             <div className="row">
               <input
-                className="form-control"
+                className="form-control ventaInput"
                 type="number"
                 name="descuento"
+                id="descuento"
                 onChange={onChange}
                 value={descuento}
               />
             </div>
           </div>
         </div>
-        <div className="row d-flex justify-content-end">
+        <div className="row d-flex justify-content-end mb-1">
           {notify.message ? (
-            <ProductoAlert
+            <CajaAlert
               message={notify.message}
               messageType={notify.messageType}
               errors={notify.errors}

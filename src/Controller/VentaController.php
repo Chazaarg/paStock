@@ -84,10 +84,13 @@ class VentaController extends AbstractController
 
 
             //Si tiene errores, almaceno solamente esos en la variable $errProducto. Si no, dejo un array vacío que es igual a una fila de producto en el FrontEnd.
+            $errProducto = [];
 
-            $errProducto[] = $this->defaultValidator->validar($ventaDetalles[$i]);
-            if ($errProducto[$i]) {
-                $errProducto[$i] = $errProducto[$i]["errors"];
+            $errores[] = $this->defaultValidator->validar($ventaDetalles[$i]);
+            if ($errores[$i]) {
+                foreach ($errores as $error) {
+                    $errProducto[] = $error["errors"];
+                }
                 $err = true;
             }
             $i++;

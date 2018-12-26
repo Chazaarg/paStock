@@ -15,7 +15,7 @@ import ProductoVariantes from "./ProductoVariantes";
 import { createLoadingSelector } from "../../helpers/CreateLoadingSelector";
 import Loader from "react-loader";
 import { notifyUser } from "../../actions/notifyActions";
-import ProductoAlert from "../layout/ProductoAlert";
+import ProductoAlert from "../alert/ProductoAlert";
 
 class NewProducto extends Component {
   componentDidMount() {

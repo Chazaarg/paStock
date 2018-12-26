@@ -17,7 +17,7 @@ import ProductoIndividual from "./ProductoIndividual";
 import ProductoVariantes from "./ProductoVariantes";
 import { createLoadingSelector } from "../../helpers/CreateLoadingSelector";
 import Loader from "react-loader";
-import ProductoAlert from "../layout/ProductoAlert";
+import ProductoAlert from "../alert/ProductoAlert";
 import { notifyUser } from "../../actions/notifyActions";
 
 class EditProducto extends Component {

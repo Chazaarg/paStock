@@ -51,7 +51,8 @@
 }
 
 /* Esto es indicar un error en los Selects */
-div.modalInput.is-invalid > div:first-of-type {
+div.modalInput.is-invalid > div:first-of-type,
+div.ventaInput.is-invalid > div:first-of-type {
   border-color: red !important;
   box-shadow: none !important;
 }
