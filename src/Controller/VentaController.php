@@ -76,6 +76,8 @@ class VentaController extends AbstractController
 
         //Valido cada detalle.
         foreach ($data['ventaDetalle'] as $detalle) {
+            dump($data["ventaDetalle"]);
+            die;
             $ventaDetalles[$i] = new VentaDetalle($user);
             $ventaDetalles[$i]->setVenta($ventum);
             $form = $this->createForm(VentaDetalleType::class, $ventaDetalles[$i]);

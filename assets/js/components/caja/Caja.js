@@ -20,7 +20,8 @@ class Caja extends Component {
         codigoDeBarras: "",
         nombre: "",
         cantidad: 0,
-        precio: 0
+        precio: 0,
+        variante: ""
       }
     ],
     total: 0,
@@ -55,8 +56,23 @@ class Caja extends Component {
             nombre: dbProducto.nombre,
             precio: dbProducto.precio,
             codigoDeBarras: dbProducto.codigo_de_barras,
-            cantidad: dbProducto.cantidad
+            cantidad: dbProducto.cantidad,
+            variante: false
           };
+        else if (dbProducto.variantes) {
+          dbProducto.variantes.forEach(variante => {
+            if (e.target.value === variante.codigo_de_barras) {
+              setProducto = {
+                id: variante.id,
+                nombre: variante.nombre,
+                precio: variante.precio,
+                codigoDeBarras: variante.codigo_de_barras,
+                cantidad: variante.cantidad,
+                variante: true
+              };
+            }
+          });
+        }
       });
 
       if (setProducto) {
@@ -73,6 +89,50 @@ class Caja extends Component {
     const newProducto = this.state.productos.map((producto, sidx) => {
       if (idx !== sidx) return producto;
       return { ...producto, [e.target.name]: e.target.value };
+    });
+
+    this.setState({ productos: newProducto });
+  };
+  onProductoSelectChange = idx => e => {
+    const newProducto = this.state.productos.map((producto, sidx) => {
+      if (idx !== sidx) return producto;
+      let setProducto;
+      this.props.productos.map(dbProducto => {
+        if (e.nombre === "individual") {
+          if (e.value === dbProducto.id)
+            setProducto = {
+              id: dbProducto.id,
+              nombre: dbProducto.nombre,
+              precio: dbProducto.precio,
+              codigoDeBarras: dbProducto.codigo_de_barras,
+              cantidad: dbProducto.cantidad,
+              variante: false
+            };
+        } else if (e.nombre === "variante") {
+          let varId = e.value.replace("var", "");
+          varId = Number(varId);
+          if (dbProducto.variantes) {
+            dbProducto.variantes.forEach(variante => {
+              if (varId === variante.id) {
+                setProducto = {
+                  id: variante.id,
+                  nombre: variante.nombre,
+                  precio: variante.precio,
+                  codigoDeBarras: variante.codigo_de_barras,
+                  cantidad: variante.cantidad,
+                  variante: true
+                };
+              }
+            });
+          }
+        }
+      });
+
+      if (setProducto) {
+        return setProducto;
+      } else {
+        return { ...producto, producto: e.value };
+      }
     });
 
     this.setState({ productos: newProducto });
@@ -156,7 +216,8 @@ class Caja extends Component {
         {
           producto: producto.id,
           cantidad: producto.cantidad,
-          precio: producto.precio
+          precio: producto.precio,
+          variante: producto.variante
         }
       ];
     });
@@ -209,6 +270,15 @@ class Caja extends Component {
       });
     }
 
+    //Habilitar el Select para elegir el producto.
+
+    document.querySelectorAll("input.productoInput").forEach(productoInput => {
+      productoInput.addEventListener("dblclick", e => {
+        e.target.classList.add("d-none");
+        e.target.parentElement.firstChild.classList.remove("d-none");
+      });
+    });
+
     return (
       <React.Fragment>
         <ClienteVendedor
@@ -221,8 +291,10 @@ class Caja extends Component {
 
         <ProductosCaja
           onProductoChange={this.onProductoChange.bind(this)}
+          onProductoSelectChange={this.onProductoSelectChange.bind(this)}
           onCodigoDeBarrasChange={this.onCodigoDeBarrasChange.bind(this)}
           productos={productos}
+          dbProductos={this.props.productos}
           handleRemoveProducto={this.handleRemoveProducto.bind(this)}
         />
 

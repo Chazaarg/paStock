@@ -27,7 +27,20 @@ export default function CajaAlert(props) {
       }
     }
   });
-  //Antes que nada, me aseguro de quitarles el error. (Son el resto de los inputs).
+  //Antes que nada, me aseguro de quitarles el error. (Son los inputs de producto).
+  productoInputs.forEach(input => {
+    if (input.classList.contains("is-invalid")) {
+      input.classList.remove("is-invalid");
+      const errMesage = input.parentElement.getElementsByClassName(
+        "text-danger"
+      )[0];
+
+      if (errMesage) {
+        input.parentElement.removeChild(errMesage);
+      }
+    }
+  });
+  //Antes que nada, me aseguro de quitarles el error. (Son los inputs de Cliente/Vendedor).
   inputs.forEach(input => {
     if (input.classList.contains("is-invalid")) {
       input.classList.remove("is-invalid");

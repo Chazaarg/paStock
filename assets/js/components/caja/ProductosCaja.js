@@ -5,9 +5,11 @@ class ProductosCaja extends Component {
   render() {
     const {
       onProductoChange,
+      onProductoSelectChange,
       onCodigoDeBarrasChange,
       productos,
-      handleRemoveProducto
+      handleRemoveProducto,
+      dbProductos
     } = this.props;
 
     return (
@@ -29,11 +31,13 @@ class ProductosCaja extends Component {
         <div className="row-12" style={{ overflow: "auto", height: "50vh" }}>
           {productos.map((producto, idx) => (
             <ProductoCaja
+              dbProductos={dbProductos}
               handleRemoveProducto={handleRemoveProducto}
               key={idx}
               idx={idx}
               producto={producto}
               onProductoChange={onProductoChange}
+              onProductoSelectChange={onProductoSelectChange}
               onCodigoDeBarrasChange={onCodigoDeBarrasChange}
             />
           ))}

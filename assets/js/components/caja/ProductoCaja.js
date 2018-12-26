@@ -1,14 +1,50 @@
 import React from "react";
+import Select from "react-select";
 
 export default function ProductoCaja(props) {
-  const { nombre, precio, codigoDeBarras, cantidad } = props.producto;
+  const { nombre, precio, codigoDeBarras, cantidad, id } = props.producto;
 
   const {
     onProductoChange,
+    onProductoSelectChange,
     idx,
     onCodigoDeBarrasChange,
-    handleRemoveProducto
+    handleRemoveProducto,
+    dbProductos
   } = props;
+
+  let optionsProductos = [];
+  dbProductos.map(producto => {
+    if (!producto.variantes) {
+      optionsProductos = [
+        ...optionsProductos,
+        {
+          nombre: "individual",
+          value: producto.id,
+          label: producto.marca
+            ? producto.nombre + " - " + producto.marca.nombre
+            : producto.nombre
+        }
+      ];
+    } else {
+      producto.variantes.forEach(variante => {
+        optionsProductos = [
+          ...optionsProductos,
+          {
+            nombre: "variante",
+            value: "var" + variante.id,
+            label: producto.marca
+              ? producto.nombre +
+                " : " +
+                variante.nombre +
+                " - " +
+                producto.marca.nombre
+              : producto.nombre + " : " + variante.nombre
+          }
+        ];
+      });
+    }
+  });
 
   return (
     <div className="row-12 d-flex justify-content-start">
@@ -33,6 +69,25 @@ export default function ProductoCaja(props) {
         &emsp;
       </div>
       <div className="col-5 form-group">
+        <Select
+          name="producto"
+          id="producto"
+          value={
+            !id
+              ? null
+              : !props.producto.variante
+              ? {
+                  label: nombre,
+                  value: id,
+                  nombre: "producto"
+                }
+              : { label: nombre, value: "var" + id, nombre: "producto" }
+          }
+          onChange={onProductoSelectChange(idx)}
+          options={optionsProductos}
+          placeholder="Seleccione un producto..."
+          className="productoInput d-none"
+        />
         <input
           readOnly
           type="text"
@@ -40,7 +95,6 @@ export default function ProductoCaja(props) {
           className="form-control productoInput"
           name="nombre"
           id="producto"
-          onChange={onProductoChange(idx)}
         />
         &emsp;
       </div>
