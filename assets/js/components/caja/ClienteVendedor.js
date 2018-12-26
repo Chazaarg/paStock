@@ -47,7 +47,7 @@ export default function ClienteVendedor(props) {
           />
         </div>
       </div>
-      <div className="d-flex bd-highlight mb-3">
+      <div className="d-flex bd-highlight">
         <div className="col-5 bd-highligh pl-0">
           {/* Vendedor */}
           <Select

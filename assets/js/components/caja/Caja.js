@@ -136,6 +136,11 @@ class Caja extends Component {
     });
 
     this.setState({ productos: newProducto });
+
+    //Esconde el select.
+    const selectInput = document.querySelectorAll(".producto")[idx];
+    selectInput.classList.add("d-none");
+    selectInput.nextSibling.classList.remove("d-none");
   };
 
   handleAddProducto = () => {
@@ -178,8 +183,22 @@ class Caja extends Component {
   };
 
   onTab = e => {
+    if (e.target.name === "codigoDeBarras") {
+      //Si se pulsa ENTER en el código de barras
+      if (e.keyCode === 13) {
+        e.target.parentElement.nextSibling.nextSibling.firstChild.focus();
+      }
+      if (e.keyCode === 9) {
+        e.target.parentElement.nextSibling.firstChild.classList.remove(
+          "d-none"
+        );
+        e.target.parentElement.nextSibling.firstChild.nextSibling.classList.add(
+          "d-none"
+        );
+      }
+    }
     //Si se pulsa TAB y si se trata de la última fila.
-    if (
+    else if (
       e.which === 9 &&
       e.target.parentElement.parentElement.nextSibling === null
     ) {
@@ -201,14 +220,7 @@ class Caja extends Component {
     const totalInput = document.getElementById("total").value;
     this.setState({ total: totalInput });
     e.preventDefault();
-    const {
-      productos,
-      total,
-      descuento,
-      ventaTipo,
-      cliente,
-      vendedor
-    } = this.state;
+    const { productos, descuento, ventaTipo, cliente, vendedor } = this.state;
     let ventaDetalle = [];
     productos.forEach(producto => {
       ventaDetalle = [
@@ -217,7 +229,8 @@ class Caja extends Component {
           producto: producto.id,
           cantidad: producto.cantidad,
           precio: producto.precio,
-          variante: producto.variante
+          variante: producto.variante,
+          codigoDeBarras: producto.codigoDeBarras
         }
       ];
     });
@@ -258,13 +271,16 @@ class Caja extends Component {
 
   render() {
     document.title = "Caja";
+    document.body.style.overflow = "overlay";
     const { productos, descuento, ventaTipo, cliente, vendedor } = this.state;
     const inputs = Array.from(document.getElementsByClassName("form-control"));
 
     if (inputs) {
       inputs.forEach(input => {
         if (input.name === "precio") {
-          input.addEventListener("blur", this.onTab);
+          input.addEventListener("keydown", this.onTab);
+        }
+        if (input.name === "codigoDeBarras") {
           input.addEventListener("keydown", this.onTab);
         }
       });

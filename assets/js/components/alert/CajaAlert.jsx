@@ -93,7 +93,7 @@ export default function CajaAlert(props) {
                   const small = document.createElement("small");
                   small.innerHTML = error.message;
                   small.classList.add("float-right", "text-danger");
-
+                  console.log(productoInputs[i]);
                   if (productoInputs[i].id === error.value) {
                     productoInputs[i].classList.add("is-invalid");
                     productoInputs[i].parentElement.append(small);

@@ -86,7 +86,7 @@ export default function ProductoCaja(props) {
           onChange={onProductoSelectChange(idx)}
           options={optionsProductos}
           placeholder="Seleccione un producto..."
-          className="productoInput d-none"
+          className="productoInput d-none producto"
         />
         <input
           readOnly

@@ -81,6 +81,10 @@ class VentaController extends AbstractController
             $ventaDetalles[$i]->setVenta($ventum);
             $form = $this->createForm(VentaDetalleType::class, $ventaDetalles[$i]);
             $form->submit($detalle);
+
+            // dump($detalle);
+            // dump();
+           
            
             //Si tiene errores, almaceno solamente esos en la variable $errProducto. Si no, dejo un array vacío que es igual a una fila de producto en el FrontEnd.
             $errProducto = [];
@@ -92,6 +96,13 @@ class VentaController extends AbstractController
                 }
                 $err = true;
             }
+            if($detalle["codigoDeBarras"])
+            {
+            if ($detalle["codigoDeBarras"] !== $ventaDetalles[$i]->getProducto()->getCodigoDeBarras()) {
+                $errProducto[$i][] = ["value" => "codigoDeBarras", "message" => "El código de barras no coincide con el producto", "status" => "error"];
+                $err = true;
+            }
+        }
             $i++;
         }
 

@@ -28,7 +28,10 @@ class ProductosCaja extends Component {
             <h4 style={{ fontSize: "1.4rem" }}>&nbsp;&nbsp;Precio</h4>
           </div>
         </div>
-        <div className="row-12" style={{ overflow: "auto", height: "50vh" }}>
+        <div
+          className="row-12"
+          style={{ overflow: "auto", overflow: "overlay", height: "55vh" }}
+        >
           {productos.map((producto, idx) => (
             <ProductoCaja
               dbProductos={dbProductos}

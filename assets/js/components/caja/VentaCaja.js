@@ -30,80 +30,79 @@ class VentaCaja extends Component {
     return (
       <div
         style={{
-          position: "fixed",
-          bottom: "1%",
           backgroundColor: "#fff",
-          width: "80%",
-          height: "17vh",
-          paddingBottom: "2%"
+          height: "21vh"
         }}
+        className="d-flex align-items-end"
       >
-        <div
-          className="row d-flex justify-content-center pt-3"
-          style={{
-            borderTop: "1px solid black"
-          }}
-        >
-          <div className="col-4 form-group">
-            <label htmlFor="formaDePago">Tipo de Pago</label>
+        <div className="col-12">
+          <div
+            className="row d-flex justify-content-center pt-3"
+            style={{
+              borderTop: "1px solid black"
+            }}
+          >
+            <div className="col-4 form-group">
+              <label htmlFor="formaDePago">Tipo de Pago</label>
 
-            <select
-              name="ventaTipo"
-              id="formaDePago"
-              onChange={onChange}
-              value={ventaTipo}
-              className="form-control col-8 ventaInput"
-            >
-              <option>Tipo de pago</option>
-              <option value={2}>Efectivo</option>
-              <option value={1}>Tarjeta</option>
-            </select>
-          </div>
-          <div className="col-4 form-group">
-            <label htmlFor="total">Total</label>
-            <input
-              className="form-control ventaInput"
-              type="number"
-              name="total"
-              id="total"
-              value={total}
-              readOnly
-            />
-            &emsp;
-          </div>
-          <div className="col-4">
-            <div className="row d-flex justify-content-between">
-              <label htmlFor="descuento">Descuento</label>
+              <select
+                name="ventaTipo"
+                id="formaDePago"
+                onChange={onChange}
+                value={ventaTipo}
+                className="form-control col-8 ventaInput"
+              >
+                <option>Tipo de pago</option>
+                <option value={2}>Efectivo</option>
+                <option value={1}>Tarjeta</option>
+              </select>
             </div>
-            <div className="row">
+            <div className="col-4 form-group">
+              <label htmlFor="total">Total</label>
               <input
                 className="form-control ventaInput"
                 type="number"
-                name="descuento"
-                id="descuento"
-                onChange={onChange}
-                value={descuento}
+                name="total"
+                id="total"
+                value={total}
+                readOnly
               />
+              &emsp;
+            </div>
+            <div className="col-4">
+              <div className="row d-flex justify-content-between">
+                <label htmlFor="descuento">Descuento</label>
+              </div>
+              <div className="row">
+                <input
+                  className="form-control ventaInput"
+                  type="number"
+                  name="descuento"
+                  id="descuento"
+                  onChange={onChange}
+                  value={descuento}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="row d-flex justify-content-end mb-1">
-          {notify.message ? (
-            <CajaAlert
-              message={notify.message}
-              messageType={notify.messageType}
-              errors={notify.errors}
-            />
-          ) : null}
-          <div className="col-4">
-            <button
-              type="submit"
-              onClick={onSubmit}
-              className="btn btn-success pt-2 pb-2"
-              style={{ width: "100%" }}
-            >
-              VENDER
-            </button>
+          <div className="row d-flex justify-content-end mb-1">
+            {notify.message ? (
+              <CajaAlert
+                message={notify.message}
+                messageType={notify.messageType}
+                errors={notify.errors}
+              />
+            ) : null}
+            <div className="col-4">
+              <button
+                type="submit"
+                onClick={onSubmit}
+                className="btn btn-success pt-2 pb-2"
+                style={{ width: "100%" }}
+              >
+                VENDER
+              </button>
+            </div>
           </div>
         </div>
       </div>
