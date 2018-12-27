@@ -22,8 +22,6 @@ yarn-error.log
 ###< symfony/webpack-encore-pack ###
 .vscode/settings.json
 
-/src/Migrations
-
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 npm-debug.log
