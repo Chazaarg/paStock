@@ -28,3 +28,4 @@ export const FETCH_VENDEDORES = "FETCH_VENDEDORES";
 export const ADD_CLIENTE = "ADD_CLIENTE";
 export const ADD_VENDEDOR = "ADD_VENDEDOR";
 export const ADD_VENTA = "ADD_VENTA";
+export const FETCH_VENTAS = "FETCH_VENTAS";

@@ -4,6 +4,7 @@ import {
   ADD_CLIENTE,
   ADD_VENDEDOR,
   ADD_VENTA,
+  FETCH_VENTAS,
   NOTIFY_USER
 } from "../actions/types.js";
 import axios from "axios";
@@ -78,6 +79,13 @@ export const addVenta = venta => async dispatch => {
   }
 };
 
+export const getVentas = () => async dispatch => {
+  const res = await axios.get("/api/venta");
+  dispatch({
+    type: FETCH_VENTAS,
+    payload: res.data
+  });
+};
 export const getClientes = () => async dispatch => {
   const res = await axios.get("/api/cliente");
 

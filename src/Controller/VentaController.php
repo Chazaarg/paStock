@@ -9,6 +9,7 @@ use App\Form\VentaDetalleType;
 use App\Entity\Venta;
 use App\Form\VentaType;
 use App\Repository\VentaRepository;
+use App\Repository\VentaDetalleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,9 +34,35 @@ class VentaController extends AbstractController
     /**
      * @Route("/", name="venta_index", methods="GET")
      */
-    public function index(VentaRepository $ventaRepository): Response
+    public function index(VentaRepository $ventaRepository, VentaDetalleRepository $ventaDetalleRepository): Response
     {
-        return $this->render('venta/index.html.twig', ['ventas' => $ventaRepository->findAll()]);
+        $user = $this->security->getUser()->getId();
+        $ventas = $ventaRepository->findByUser($user);
+
+        $ventaVentaDetalle = [];
+
+        foreach ($ventas as $venta) {
+            $ventaDetalleRepository = $this->getDoctrine()->getRepository(VentaDetalle::class)->findBy(
+                ['venta' => $venta->getId()]
+            );
+
+            $ventaDetalles = [];
+
+            foreach ($ventaDetalleRepository as $ventaDetalle) {
+                $ventaDetalles[] = $ventaDetalle->jsonSerialize();
+            }
+
+            if ($ventaDetalles != null) {
+                $ventaDetalles = array("ventaDetalle" => $ventaDetalles);
+            }
+
+            $ventaVentaDetalle[] = array_merge($venta->jsonSerialize(), $ventaDetalles);
+        }
+
+        return new JsonResponse(
+            $ventaVentaDetalle,
+            JsonResponse::HTTP_OK
+        );
     }
 
     /**
@@ -54,6 +81,7 @@ class VentaController extends AbstractController
         //Primero registro la venta
         $user = $this->security->getUser();
         $ventum = new Venta($user);
+        $ventum->setCreatedAt(new \DateTime());
         $form = $this->createForm(VentaType::class, $ventum);
         
         $form->submit($data['venta']);
@@ -81,10 +109,6 @@ class VentaController extends AbstractController
             $ventaDetalles[$i]->setVenta($ventum);
             $form = $this->createForm(VentaDetalleType::class, $ventaDetalles[$i]);
             $form->submit($detalle);
-
-            // dump($detalle);
-            // dump();
-           
            
             //Si tiene errores, almaceno solamente esos en la variable $errProducto. Si no, dejo un array vacío que es igual a una fila de producto en el FrontEnd.
             $errProducto = [];
@@ -96,13 +120,12 @@ class VentaController extends AbstractController
                 }
                 $err = true;
             }
-            if($detalle["codigoDeBarras"])
-            {
-            if ($detalle["codigoDeBarras"] !== $ventaDetalles[$i]->getProducto()->getCodigoDeBarras()) {
-                $errProducto[$i][] = ["value" => "codigoDeBarras", "message" => "El código de barras no coincide con el producto", "status" => "error"];
-                $err = true;
+            if ($detalle["codigoDeBarras"] && $ventaDetalles[$i]->getProducto()->getCodigoDeBarras()) {
+                if ($detalle["codigoDeBarras"] !== $ventaDetalles[$i]->getProducto()->getCodigoDeBarras()) {
+                    $errProducto[$i][] = ["value" => "codigoDeBarras", "message" => "El código de barras no coincide con el producto", "status" => "error"];
+                    $err = true;
+                }
             }
-        }
             $i++;
         }
 

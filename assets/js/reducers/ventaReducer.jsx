@@ -3,7 +3,8 @@ import {
   FETCH_VENDEDORES,
   ADD_CLIENTE,
   ADD_VENDEDOR,
-  ADD_VENTA
+  ADD_VENTA,
+  FETCH_VENTAS
 } from "../actions/types.js";
 
 const initState = {
@@ -14,6 +15,11 @@ const initState = {
 
 export default function(state = initState, action) {
   switch (action.type) {
+    case FETCH_VENTAS:
+      return {
+        ...state,
+        ventas: action.payload
+      };
     case FETCH_CLIENTES:
       return {
         ...state,

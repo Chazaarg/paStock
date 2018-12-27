@@ -134,4 +134,15 @@ class VentaDetalle
 
         return $this;
     }
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'venta' => $this->venta,
+            'producto' => ["nombre" => $this->producto->getNombre(), "marca" =>  $this->producto->getMarca()->getNombre(), "id" => $this->producto->getId()],
+            "cantidad" => $this->cantidad,
+            "precio" => $this->precio,
+            "variante" => $this->variante ? ["nombre" => $this->variante->getNombre(), "varianteTipo" => $this->variante->getVarianteTipo()->getNombre(), "id" => $this->variante->getId()] : null
+        ];
+    }
 }

@@ -21,6 +21,7 @@ import OrganizarCategorias from "../components/organizar/OrganizarCategorias";
 import Register from "../components/pages/Register";
 import Caja from "../components/caja/Caja";
 import { getUsuario } from "../actions/usuarioActions";
+import Ventas from "../components/ventas/Ventas";
 
 class Routes extends Component {
   componentDidMount() {
@@ -80,6 +81,7 @@ class Routes extends Component {
           <div className="container">
             <Switch>
               <PrivateRoute exact path="/caja" component={Caja} />
+              <PrivateRoute exact path="/venta" component={Ventas} />
               <PrivateRoute
                 exact
                 path="/producto/:id/show"

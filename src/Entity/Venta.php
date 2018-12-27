@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,6 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Venta
 {
+    /**
+     * @var \DateTime $createdAt
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -143,6 +152,16 @@ class Venta
 
         return $this;
     }
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
 
     /**
      * @return Collection|VentaDetalle[]
@@ -173,5 +192,16 @@ class Venta
         }
 
         return $this;
+    }
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'cliente' => $this->cliente->getNombre() ." ". $this->cliente->getApellido(),
+            'vendedor' => $this->vendedor->getNombre() ." ". $this->vendedor->getApellido(),
+            "total" => $this->total,
+            "descuento" => $this->descuento,
+            "createdAt" => $this->createdAt
+        ];
     }
 }
