@@ -140,7 +140,9 @@ class Caja extends Component {
     //Esconde el select.
     const selectInput = document.querySelectorAll(".producto")[idx];
     selectInput.classList.add("d-none");
+    selectInput.classList.remove("productoInput");
     selectInput.nextSibling.classList.remove("d-none");
+    selectInput.nextSibling.classList.add("productoInput");
   };
 
   handleAddProducto = () => {
@@ -192,8 +194,14 @@ class Caja extends Component {
         e.target.parentElement.nextSibling.firstChild.classList.remove(
           "d-none"
         );
+        e.target.parentElement.nextSibling.firstChild.classList.add(
+          "productoInput"
+        );
         e.target.parentElement.nextSibling.firstChild.nextSibling.classList.add(
           "d-none"
+        );
+        e.target.parentElement.nextSibling.firstChild.nextSibling.classList.remove(
+          "productoInput"
         );
       }
     }
@@ -291,7 +299,9 @@ class Caja extends Component {
     document.querySelectorAll("input.productoInput").forEach(productoInput => {
       productoInput.addEventListener("dblclick", e => {
         e.target.classList.add("d-none");
+        e.target.classList.remove("productoInput");
         e.target.parentElement.firstChild.classList.remove("d-none");
+        e.target.parentElement.firstChild.classList.add("productoInput");
       });
     });
 

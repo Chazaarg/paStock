@@ -84,16 +84,15 @@ export default function CajaAlert(props) {
       let doblePar = 0;
 
       errors["productoError"].forEach(productoError => {
-        for (let i = 1; i < productoInputs.length; i++) {
+        for (let i = 0; i < productoInputs.length; i++) {
           //Tengo que agarrar inputs de 4 en 4.
-          if (i > doblePar && i < doblePar + 4) {
+          if (i >= doblePar && i < doblePar + 4) {
             productoError
               ? productoError.forEach(error => {
                   //Creo el elemento small que contendrá el mensaje de error.
                   const small = document.createElement("small");
                   small.innerHTML = error.message;
                   small.classList.add("float-right", "text-danger");
-                  console.log(productoInputs[i]);
                   if (productoInputs[i].id === error.value) {
                     productoInputs[i].classList.add("is-invalid");
                     productoInputs[i].parentElement.append(small);
