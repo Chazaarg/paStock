@@ -9,7 +9,8 @@ export default function ClienteVendedor(props) {
     cliente,
     vendedor,
     vendedores,
-    clientes
+    clientes,
+    newProp
   } = props;
   let [optionsVendedor] = [
     vendedores.map(vendedor => ({
@@ -122,8 +123,8 @@ export default function ClienteVendedor(props) {
           data-parent="#ClienteVendedor"
         >
           <div className="d-flex justify-content-start bd-highlight">
-            <Vendedor />
-            <Cliente />
+            <Vendedor newProp={newProp} />
+            <Cliente newProp={newProp} />
           </div>
         </div>
       </div>

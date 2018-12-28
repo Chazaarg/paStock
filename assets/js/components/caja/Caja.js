@@ -224,6 +224,39 @@ class Caja extends Component {
     }
     this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
   };
+
+  newProp = val => {
+    //Cuando se crea una nueva propiedad, se la selecciona en el input, buscando el último valor en el array que corresponda.
+    switch (val) {
+      case "cliente":
+        this.setState({
+          cliente: {
+            id: this.props.clientes[0].id,
+            nombre: this.props.clientes[0].nombre
+          }
+        });
+        break;
+      case "vendedor":
+        this.setState({
+          vendedor: {
+            id: this.props.vendedores[0].id,
+            nombre: this.props.vendedores[0].nombre
+          }
+        });
+        localStorage.setItem(
+          "vendedor",
+          JSON.stringify({
+            id: this.props.vendedores[0].id,
+            nombre: this.props.vendedores[0].nombre
+          })
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
   onSubmit = e => {
     const totalInput = document.getElementById("total").value;
     this.setState({ total: totalInput });
@@ -313,6 +346,7 @@ class Caja extends Component {
           cliente={cliente}
           vendedor={vendedor}
           onClienteVendedorChange={this.onClienteVendedorChange.bind(this)}
+          newProp={this.newProp.bind(this)}
         />
 
         <ProductosCaja
@@ -343,7 +377,8 @@ Caja.propTypes = {
   getClientes: PropTypes.func.isRequired,
   getVendedores: PropTypes.func.isRequired,
   addVenta: PropTypes.func.isRequired,
-  notifyUser: PropTypes.func.isRequired
+  notifyUser: PropTypes.func.isRequired,
+  notify: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -57,6 +57,10 @@ div.productoInput.is-invalid > div:first-of-type {
   border-color: red !important;
   box-shadow: none !important;
 }
+div.ventaInput.is-valid > div:first-of-type {
+  border-color: green !important;
+  box-shadow: none !important;
+}
 
 /*                              -------------------- #contact Page -------------------- */
 

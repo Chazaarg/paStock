@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addVendedor } from "../../actions/ventaActions";
+import { notifyUser } from "../../actions/notifyActions";
 
 class Vendedor extends Component {
   state = {
@@ -15,8 +16,29 @@ class Vendedor extends Component {
     });
   };
   onSubmit = e => {
+    const { addVendedor, notifyUser, newProp } = this.props;
+
     e.preventDefault();
-    this.props.addVendedor(this.state);
+    //Selecciona la nueva marca en el DOM.
+
+    addVendedor(this.state).then(() => {
+      if (this.props.notify.messageType === "success") {
+        newProp("vendedor");
+
+        this.setState({
+          nombre: "",
+          apellido: "",
+          apodo: ""
+        });
+        document.getElementById("vendedor").classList.add("is-valid");
+      }
+    });
+
+    //Luego de unos segundos borro el mensaje
+    setTimeout(() => {
+      notifyUser(null, null, null);
+      document.getElementById("cliente").classList.remove("is-valid");
+    }, 10000);
   };
   render() {
     const { nombre, apellido, apodo } = this.state;
@@ -71,9 +93,16 @@ class Vendedor extends Component {
   }
 }
 Vendedor.propTypes = {
+  notify: PropTypes.object.isRequired,
+  notifyUser: PropTypes.func.isRequired,
   addVendedor: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => ({
+  notify: state.notify
+});
+
 export default connect(
-  null,
-  { addVendedor }
+  mapStateToProps,
+  { addVendedor, notifyUser }
 )(Vendedor);

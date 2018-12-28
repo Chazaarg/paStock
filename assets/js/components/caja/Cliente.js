@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addCliente } from "../../actions/ventaActions";
+import { notifyUser } from "../../actions/notifyActions";
 
 class Cliente extends Component {
   state = {
@@ -20,8 +21,31 @@ class Cliente extends Component {
   };
 
   onSubmit = e => {
+    const { addCliente, notifyUser, newProp } = this.props;
     e.preventDefault();
-    this.props.addCliente(this.state);
+    //Selecciona la nueva marca en el DOM.
+    addCliente(this.state).then(() => {
+      if (this.props.notify.messageType === "success") {
+        newProp("cliente");
+
+        this.setState({
+          nombre: "",
+          apellido: "",
+          telefono: "",
+          email: "",
+          dni: "",
+          direccion: "",
+          localidad: ""
+        });
+        document.getElementById("cliente").classList.add("is-valid");
+      }
+    });
+
+    //Luego de unos segundos borro el mensaje
+    setTimeout(() => {
+      notifyUser(null, null, null);
+      document.getElementById("cliente").classList.remove("is-valid");
+    }, 10000);
   };
 
   render() {
@@ -128,9 +152,15 @@ class Cliente extends Component {
   }
 }
 Cliente.propTypes = {
+  notify: PropTypes.object.isRequired,
+  notifyUser: PropTypes.func.isRequired,
   addCliente: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => ({
+  notify: state.notify
+});
 export default connect(
-  null,
-  { addCliente }
+  mapStateToProps,
+  { addCliente, notifyUser }
 )(Cliente);
