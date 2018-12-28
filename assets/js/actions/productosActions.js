@@ -24,7 +24,7 @@ import {
 import axios from "axios";
 
 export const getProductos = () => async dispatch => {
-  const res = await axios.get("/api/producto");
+  const res = await axios.get("/api/producto/");
 
   dispatch({
     type: FETCH_PRODUCTOS,
@@ -94,7 +94,7 @@ export const updateProducto = producto => async dispatch => {
 };
 
 export const getCategorias = () => async dispatch => {
-  const res = await axios.get("/api/categoria");
+  const res = await axios.get("/api/categoria/");
 
   dispatch({
     type: FETCH_CATEGORIAS,
@@ -160,7 +160,7 @@ export const updateCategoria = categoria => async dispatch => {
 };
 
 export const getSubcategorias = () => async dispatch => {
-  const res = await axios.get("/api/subcategoria");
+  const res = await axios.get("/api/subcategoria/");
 
   dispatch({
     type: FETCH_SUBCATEGORIAS,
@@ -307,7 +307,7 @@ export const addVarianteTipo = varianteTipo => async dispatch => {
 };
 
 export const getMarcas = () => async dispatch => {
-  const res = await axios.get("/api/marca");
+  const res = await axios.get("/api/marca/");
 
   dispatch({
     type: FETCH_MARCAS,
@@ -330,7 +330,7 @@ export const getProducto = id => async dispatch => {
   }
 };
 export const getVarianteTipos = () => async dispatch => {
-  const res = await axios.get("/api/variante-tipo");
+  const res = await axios.get("/api/variante-tipo/");
 
   dispatch({
     type: FETCH_VARIANTETIPOS,

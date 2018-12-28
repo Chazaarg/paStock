@@ -80,14 +80,14 @@ export const addVenta = venta => async dispatch => {
 };
 
 export const getVentas = () => async dispatch => {
-  const res = await axios.get("/api/venta");
+  const res = await axios.get("/api/venta/");
   dispatch({
     type: FETCH_VENTAS,
     payload: res.data
   });
 };
 export const getClientes = () => async dispatch => {
-  const res = await axios.get("/api/cliente");
+  const res = await axios.get("/api/cliente/");
 
   dispatch({
     type: FETCH_CLIENTES,
@@ -96,7 +96,7 @@ export const getClientes = () => async dispatch => {
 };
 
 export const getVendedores = () => async dispatch => {
-  const res = await axios.get("/api/vendedor");
+  const res = await axios.get("/api/vendedor/");
 
   dispatch({
     type: FETCH_VENDEDORES,
