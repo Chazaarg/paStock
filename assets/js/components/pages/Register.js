@@ -103,6 +103,14 @@ class Register extends Component {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Contraseña</label>
+                    <i
+                      className="far fa-question-circle float-right mr-1"
+                      title="La contraseña debe tener mínimo 6 caracteres y contener una letra y un número."
+                      style={{
+                        fontSize: "1rem",
+                        cursor: "help"
+                      }}
+                    />
                     <input
                       id="passwordRegister"
                       type="password"

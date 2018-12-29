@@ -5,7 +5,7 @@ import { getVentas } from "../../actions/ventaActions";
 import PropTypes from "prop-types";
 import Loader from "react-loader";
 import BootstrapTable from "react-bootstrap-table-next";
-import ToolkitProvider from "react-bootstrap-table2-toolkit";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 const expandRow = {
@@ -69,7 +69,8 @@ const expandRow = {
 const columns = [
   {
     dataField: "ventaDetalle.length",
-    text: "Productos"
+    text: "Productos",
+    searchable: false
   },
   {
     dataField: "id",
@@ -79,6 +80,7 @@ const columns = [
   {
     dataField: "createdAt.date",
     text: "Fecha",
+    searchable: false,
     sort: true,
     formatter: cell => {
       const date = new Date(cell);
@@ -164,6 +166,7 @@ class Ventas extends Component {
       paginationTotalRenderer: customTotal,
       sizePerPageList: [10, 20, 30, { text: "Todos", value: ventas.length }]
     };
+    const { SearchBar } = Search;
 
     return (
       <div>
@@ -174,13 +177,22 @@ class Ventas extends Component {
             data={ventas}
             columns={columns}
             bootstrap4={true}
+            search={{ searchFormatted: true }}
           >
             {props => (
-              <BootstrapTable
-                expandRow={expandRow}
-                pagination={paginationFactory(options)}
-                {...props.baseProps}
-              />
+              <React.Fragment>
+                <hr />
+                <SearchBar
+                  {...props.searchProps}
+                  placeholder="Buscar ventas por: número, cliente o total"
+                />
+                <hr />
+                <BootstrapTable
+                  expandRow={expandRow}
+                  pagination={paginationFactory(options)}
+                  {...props.baseProps}
+                />
+              </React.Fragment>
             )}
           </ToolkitProvider>
         </Loader>

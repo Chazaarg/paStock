@@ -6,7 +6,7 @@ import { getProductos } from "../../actions/productosActions";
 import { createLoadingSelector } from "../../helpers/CreateLoadingSelector";
 import Loader from "react-loader";
 import BootstrapTable from "react-bootstrap-table-next";
-import ToolkitProvider from "react-bootstrap-table2-toolkit";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 class Productos extends Component {
@@ -102,6 +102,7 @@ class Productos extends Component {
       );
     };
 
+    const { SearchBar } = Search;
     const columns = [
       {
         dataField: "nombre",
@@ -118,17 +119,20 @@ class Productos extends Component {
         dataField: "productoCantidad",
         text: "Cantidad",
         isDummyField: true,
+        searchable: false,
         formatter: productoCantidadFormatter
       },
       {
         dataField: "productoPrecio",
         text: "Precio",
         isDummyField: true,
+        searchable: false,
         formatter: productoPrecioFormatter
       },
       {
         dataField: "variantes",
         text: "Variante",
+        searchable: false,
         formatter: varianteFormatter
       },
       {
@@ -141,6 +145,7 @@ class Productos extends Component {
         dataField: "detalles",
         text: "",
         isDummyField: true,
+        searchable: false,
         formatter: (cell, row) => {
           return (
             <Link
@@ -156,6 +161,7 @@ class Productos extends Component {
         dataField: "editar",
         text: "",
         isDummyField: true,
+        searchable: false,
         formatter: (cell, row) => {
           return (
             <Link
@@ -189,12 +195,21 @@ class Productos extends Component {
           data={productos}
           columns={columns}
           bootstrap4={true}
+          search={{ searchFormatted: true }}
         >
           {props => (
-            <BootstrapTable
-              pagination={paginationFactory(options)}
-              {...props.baseProps}
-            />
+            <React.Fragment>
+              <hr />
+              <SearchBar
+                {...props.searchProps}
+                placeholder="Buscar productos por: nombre, marca o categoria"
+              />
+              <hr />
+              <BootstrapTable
+                pagination={paginationFactory(options)}
+                {...props.baseProps}
+              />
+            </React.Fragment>
           )}
         </ToolkitProvider>
       </Loader>
