@@ -27,10 +27,10 @@ class Caja extends Component {
     total: 0,
     descuento: 0,
     ventaTipo: "",
-    cliente: "",
+    cliente: { id: undefined, nombre: undefined },
     vendedor: JSON.parse(localStorage.getItem("vendedor"))
       ? JSON.parse(localStorage.getItem("vendedor"))
-      : ""
+      : { id: undefined, nombre: undefined }
   };
 
   componentDidMount() {
@@ -214,15 +214,30 @@ class Caja extends Component {
     }
   };
 
-  onClienteVendedorChange = item => {
-    //Asigno al vendedor al LocalStorage
-    if (item.nombre === "vendedor") {
-      localStorage.setItem(
-        "vendedor",
-        JSON.stringify({ id: item.value, nombre: item.label })
-      );
-    }
-    this.setState({ [item.nombre]: { id: item.value, nombre: item.label } });
+  onClienteChange = item => {
+    this.setState({
+      cliente: {
+        id: item ? item.value : undefined,
+        nombre: item ? item.label : undefined
+      }
+    });
+  };
+
+  onVendedorChange = item => {
+    this.setState({
+      vendedor: {
+        id: item ? item.value : undefined,
+        nombre: item ? item.label : undefined
+      }
+    });
+    //Asigno al vendedor al localstorage
+    localStorage.setItem(
+      "vendedor",
+      JSON.stringify({
+        id: item ? item.value : undefined,
+        nombre: item ? item.label : undefined
+      })
+    );
   };
 
   newProp = val => {
@@ -299,7 +314,7 @@ class Caja extends Component {
           total: 0,
           descuento: 0,
           ventaTipo: "",
-          cliente: ""
+          cliente: { id: undefined, nombre: undefined }
         });
       }
       window.scrollTo(0, 0);
@@ -345,7 +360,8 @@ class Caja extends Component {
           vendedores={this.props.vendedores}
           cliente={cliente}
           vendedor={vendedor}
-          onClienteVendedorChange={this.onClienteVendedorChange.bind(this)}
+          onClienteChange={this.onClienteChange.bind(this)}
+          onVendedorChange={this.onVendedorChange.bind(this)}
           newProp={this.newProp.bind(this)}
         />
 

@@ -87,7 +87,7 @@ div.ventaInput.is-valid > div:first-of-type {
   margin: 0 auto;
   padding-top: 20px;
   position: relative;
-  max-width: 800px;
+  max-width: 850px;
 }
 
 /* Begin Left Contact Page */
@@ -175,7 +175,7 @@ div.ventaInput.is-valid > div:first-of-type {
 }
 
 .contact-text a:hover {
-  color: #fff;
+  color: #555;
   text-decoration: none;
 }
 

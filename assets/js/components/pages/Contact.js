@@ -120,7 +120,7 @@ class Contact extends Component {
               <li className="list-item">
                 <i className="fa fa-phone fa-2x">
                   <span className="contact-text phone">
-                    <a href="tel:1-212-555-5555" title="Give me a call">
+                    <a href="tel:1-212-555-5555" title="Llamame">
                       (015) 2314-6048
                     </a>
                   </span>
@@ -130,8 +130,8 @@ class Contact extends Component {
               <li className="list-item">
                 <i className="fa fa-envelope fa-2x">
                   <span className="contact-text gmail">
-                    <a href="mailto:#" title="Send me an email">
-                      pastock@gmail.com
+                    <a href="mailto:#" title="Enviame un mail">
+                      chazarreta.patricio@gmail.com
                     </a>
                   </span>
                 </i>
@@ -140,7 +140,7 @@ class Contact extends Component {
 
             <div className="author">Chazarreta Patricio</div>
             <hr style={{ borderColor: "#111" }} />
-            <ul className="social-media-list">
+            <ul className="social-media-list d-flex justify-content-between">
               <li>
                 <a
                   href="#"
@@ -151,6 +151,11 @@ class Contact extends Component {
                   }}
                 >
                   CV
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank" class="contact-icon">
+                  <i class="fas fa-globe" />
                 </a>
               </li>
             </ul>

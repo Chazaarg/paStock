@@ -5,7 +5,8 @@ import Select from "react-select";
 
 export default function ClienteVendedor(props) {
   const {
-    onClienteVendedorChange,
+    onClienteChange,
+    onVendedorChange,
     cliente,
     vendedor,
     vendedores,
@@ -52,18 +53,19 @@ export default function ClienteVendedor(props) {
         <div className="col-5 bd-highligh pl-0">
           {/* Vendedor */}
           <Select
+            isClearable
             name="vendedor"
             id="vendedor"
             value={
               vendedor.id === undefined
-                ? null
+                ? undefined
                 : {
                     label: vendedor.nombre,
                     value: vendedor.id,
                     nombre: "vendedor"
                   }
             }
-            onChange={onClienteVendedorChange}
+            onChange={onVendedorChange}
             options={optionsVendedor}
             placeholder="Seleccione un vendedor..."
             className="ventaInput"
@@ -75,6 +77,7 @@ export default function ClienteVendedor(props) {
 
         <div className="col-5 bd-highlight pl-2">
           <Select
+            isClearable
             name="cliente"
             id="cliente"
             value={
@@ -86,7 +89,7 @@ export default function ClienteVendedor(props) {
                     nombre: "cliente"
                   }
             }
-            onChange={onClienteVendedorChange}
+            onChange={onClienteChange}
             options={optionsCliente}
             placeholder="Seleccione un cliente..."
             className="ventaInput"
@@ -115,7 +118,7 @@ export default function ClienteVendedor(props) {
 
       {/* Config Collapse */}
 
-      <div className="col-12 d-inline ">
+      <div className="col-12">
         <div
           id="collapseOne"
           className="collapse"
@@ -123,8 +126,8 @@ export default function ClienteVendedor(props) {
           data-parent="#ClienteVendedor"
         >
           <div className="d-flex justify-content-start bd-highlight">
-            <Vendedor newProp={newProp} />
-            <Cliente newProp={newProp} />
+            <Vendedor newProp={newProp} vendedor={vendedor} />
+            <Cliente newProp={newProp} cliente={cliente} />
           </div>
         </div>
       </div>
