@@ -52,7 +52,7 @@ const Subcategorias = props => {
     return (
       <div className="row">
         <div
-          style={{ fontSize: "1.3rem" }}
+          style={{ fontSize: "1.3rem", cursor: "pointer" }}
           className="col-2 text-danger"
           onClick={() => deleteSubcategoria(row.id)}
         >

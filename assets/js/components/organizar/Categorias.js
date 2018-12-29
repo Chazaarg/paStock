@@ -26,7 +26,7 @@ const Categorias = props => {
     return (
       <div className="row">
         <div
-          style={{ fontSize: "1.3rem" }}
+          style={{ fontSize: "1.3rem", cursor: "pointer" }}
           className="col-1 text-danger"
           onClick={() =>
             deleteCategoria(row.id).then(

@@ -60,9 +60,16 @@ const expandRow = {
   },
   expandColumnRenderer: ({ expanded }) => {
     if (expanded) {
-      return <i className="fas fa-minus showDetalles" />;
+      return (
+        <i
+          className="fas fa-minus showDetalles"
+          style={{ cursor: "pointer" }}
+        />
+      );
     }
-    return <i className="fas fa-plus showDetalles" />;
+    return (
+      <i className="fas fa-plus showDetalles" style={{ cursor: "pointer" }} />
+    );
   }
 };
 
