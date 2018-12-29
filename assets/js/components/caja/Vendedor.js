@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addVendedor } from "../../actions/ventaActions";
+import { addVendedor, deleteVendedor } from "../../actions/ventaActions";
 import { notifyUser } from "../../actions/notifyActions";
 
 class Vendedor extends Component {
@@ -14,6 +14,17 @@ class Vendedor extends Component {
     this.setState({
       [e.target.name]: e.target.value
     });
+  };
+  onVendedorSubmit = () => {
+    if (this.props.vendedor.id) {
+      this.props.deleteVendedor(this.props.vendedor.id).then(() => {
+        this.props.notifyUser(
+          `Categoria ${this.props.vendedor.nombre.toUpperCase()} eliminada.`,
+          "warning",
+          null
+        );
+      });
+    }
   };
   onSubmit = e => {
     const { addVendedor, notifyUser, newProp } = this.props;
@@ -44,6 +55,16 @@ class Vendedor extends Component {
     const { nombre, apellido, apodo } = this.state;
     return (
       <div className="col-5 vendedor">
+        <div className="row">
+          <button
+            type="button"
+            className="text-danger btn btn-link pt-0 pb-0"
+            onClick={this.onVendedorSubmit}
+          >
+            <small>Eliminar VENDEDOR seleccionado.</small>
+          </button>
+        </div>
+        <hr />
         <div className="form-row">
           <div className="form-group col-5">
             <input
@@ -95,7 +116,8 @@ class Vendedor extends Component {
 Vendedor.propTypes = {
   notify: PropTypes.object.isRequired,
   notifyUser: PropTypes.func.isRequired,
-  addVendedor: PropTypes.func.isRequired
+  addVendedor: PropTypes.func.isRequired,
+  deleteVendedor: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -104,5 +126,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addVendedor, notifyUser }
+  { addVendedor, deleteVendedor, notifyUser }
 )(Vendedor);

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addCliente } from "../../actions/ventaActions";
+import { addCliente, deleteCliente } from "../../actions/ventaActions";
 import { notifyUser } from "../../actions/notifyActions";
 
 class Cliente extends Component {
@@ -18,6 +18,18 @@ class Cliente extends Component {
     this.setState({
       [e.target.name]: e.target.value
     });
+  };
+
+  onClienteSubmit = () => {
+    if (this.props.cliente.id) {
+      this.props.deleteCliente(this.props.cliente.id).then(() => {
+        this.props.notifyUser(
+          `Categoria ${this.props.cliente.nombre.toUpperCase()} eliminada.`,
+          "warning",
+          null
+        );
+      });
+    }
   };
 
   onSubmit = e => {
@@ -60,6 +72,16 @@ class Cliente extends Component {
     } = this.state;
     return (
       <div className="col-5 cliente">
+        <div className="row">
+          <button
+            type="button"
+            className="text-danger btn btn-link pt-0 pb-0"
+            onClick={this.onClienteSubmit}
+          >
+            <small>Eliminar CLIENTE seleccionado.</small>
+          </button>
+        </div>
+        <hr />
         <div className="form-row">
           <div className="form-group col-5">
             <input
@@ -154,7 +176,8 @@ class Cliente extends Component {
 Cliente.propTypes = {
   notify: PropTypes.object.isRequired,
   notifyUser: PropTypes.func.isRequired,
-  addCliente: PropTypes.func.isRequired
+  addCliente: PropTypes.func.isRequired,
+  deleteCliente: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -162,5 +185,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { addCliente, notifyUser }
+  { addCliente, deleteCliente, notifyUser }
 )(Cliente);

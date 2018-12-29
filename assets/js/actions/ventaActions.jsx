@@ -5,7 +5,9 @@ import {
   ADD_VENDEDOR,
   ADD_VENTA,
   FETCH_VENTAS,
-  NOTIFY_USER
+  NOTIFY_USER,
+  DELETE_VENDEDOR,
+  DELETE_CLIENTE
 } from "../actions/types.js";
 import axios from "axios";
 
@@ -101,5 +103,20 @@ export const getVendedores = () => async dispatch => {
   dispatch({
     type: FETCH_VENDEDORES,
     payload: res.data
+  });
+};
+
+export const deleteCliente = id => async dispatch => {
+  await axios.delete(`/api/cliente/${id}`);
+  dispatch({
+    type: DELETE_CLIENTE,
+    payload: id
+  });
+};
+export const deleteVendedor = id => async dispatch => {
+  await axios.delete(`/api/vendedor/${id}`);
+  dispatch({
+    type: DELETE_VENDEDOR,
+    payload: id
   });
 };
