@@ -13,6 +13,7 @@ import {
   UPDATE_PRODUCTO,
   DELETE_PRODUCTO,
   ADD_VARIANTETIPO,
+  DELETE_VARIANTETIPO,
   NOTIFY_USER,
   DELETE_CATEGORIA,
   UPDATE_CATEGORIA,
@@ -278,6 +279,26 @@ export const updateMarca = marca => async dispatch => {
       message: error.response.data.message,
       messageType: error.response.data.messageType,
       errors: error.response.data.errors
+    });
+  }
+};
+
+export const deleteVarianteTipo = id => async dispatch => {
+  try {
+    await axios.delete(`/api/variante-tipo/${id}`);
+    dispatch({
+      type: DELETE_VARIANTETIPO,
+      payload: id
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.data.message,
+      messageType: error.response.data.messageType,
+      errors: {
+        productoError: [],
+        varianteError: []
+      }
     });
   }
 };

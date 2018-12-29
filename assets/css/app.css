@@ -187,11 +187,11 @@ div.ventaInput.is-valid > div:first-of-type {
   width: 100%;
 }
 
-.social-media-list li a {
+.social-media-list a li a {
   color: #fff;
 }
 
-.social-media-list li {
+.social-media-list a li {
   position: relative;
   top: 0;
   left: -20px;
@@ -207,7 +207,7 @@ div.ventaInput.is-valid > div:first-of-type {
   transition: all 0.2s ease-in-out;
 }
 
-.social-media-list li:after {
+.social-media-list a li:after {
   content: "";
   position: absolute;
   top: 0;
@@ -221,17 +221,17 @@ div.ventaInput.is-valid > div:first-of-type {
   transition: all 0.2s ease-in-out;
 }
 
-.social-media-list li:hover {
+.social-media-list a li:hover {
   background-color: #bbb;
 }
 
-.social-media-list li:hover:after {
+.social-media-list a li:hover:after {
   opacity: 1;
   transform: scale(1.12);
   transition-timing-function: cubic-bezier(0.37, 0.74, 0.15, 1.65);
 }
 
-.social-media-list li:hover a {
+.social-media-list a li:hover span {
   color: #111;
 }
 
@@ -263,12 +263,12 @@ div.ventaInput.is-valid > div:first-of-type {
     margin-top: 60px;
     max-width: 300px;
   }
-  .social-media-list li {
+  .social-media-list a li {
     height: 60px;
     width: 60px;
     line-height: 60px;
   }
-  .social-media-list li:after {
+  .social-media-list a li:after {
     width: 60px;
     height: 60px;
     line-height: 60px;
@@ -305,13 +305,13 @@ div.ventaInput.is-valid > div:first-of-type {
   .social-media-list {
     left: 0;
   }
-  .social-media-list li {
+  .social-media-list a li {
     height: 55px;
     width: 55px;
     line-height: 55px;
     font-size: 2rem;
   }
-  .social-media-list li:after {
+  .social-media-list a li:after {
     width: 55px;
     height: 55px;
     line-height: 55px;

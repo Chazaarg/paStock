@@ -118,18 +118,39 @@ class VarianteTipoController extends AbstractController
     /**
      * @Route("/{id}", name="variante_tipo_delete", methods="DELETE")
      */
-    public function delete(Request $request, VarianteTipo $varianteTipo): Response
+    public function delete(Request $request, VarianteTipo $varianteTipo, VarianteTipoRepository $varianteTipoRepository): Response
     {
         $user = $this->security->getUser()->getId();
+
+        if ($varianteTipo->getId() === 1 || $varianteTipo->getId() === 2) {
+            return new JsonResponse(
+
+                [
+                    'messageType' => 'error',
+                    'message' => 'Tipo de variante: ' . strtoupper($varianteTipo->getNombre()) . ' no se puede eliminar.',
+                ],
+                JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
         if ($varianteTipo->getUser()->getId() !== $user) {
             return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
         }
-        if ($this->isCsrfTokenValid('delete' . $varianteTipo->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($varianteTipo);
-            $em->flush();
+
+
+        //Si algún producto contiene el tipo de variante a eliminar, le pongo por defecto "TONO".
+        if ($varianteTipo->getVariante()) {
+            foreach ($varianteTipo->getVariante() as $variante) {
+                $variante->setVarianteTipo($varianteTipoRepository->find(1));
+            }
         }
 
-        return $this->redirectToRoute('variante_tipo_index');
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($varianteTipo);
+        $em->flush();
+        
+        return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }

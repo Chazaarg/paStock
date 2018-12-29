@@ -17,7 +17,8 @@ import {
   UPDATE_CATEGORIA,
   UPDATE_SUBCATEGORIA,
   UPDATE_MARCA,
-  DELETE_MARCA
+  DELETE_MARCA,
+  DELETE_VARIANTETIPO
 } from "../actions/types.js";
 
 const initState = {
@@ -84,6 +85,13 @@ export default function(state = initState, action) {
       return {
         ...state,
         varianteTipos: [action.payload, ...state.varianteTipos]
+      };
+    case DELETE_VARIANTETIPO:
+      return {
+        ...state,
+        varianteTipos: state.varianteTipos.filter(
+          varianteTipo => varianteTipo.id !== Number(action.payload)
+        )
       };
     case FETCH_MARCAS:
       return {

@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addVarianteTipo } from "../../actions/productosActions";
+import {
+  addVarianteTipo,
+  deleteVarianteTipo
+} from "../../actions/productosActions";
+import { notifyUser } from "../../actions/notifyActions";
+
 import {
   Modal,
   ModalHeader,
@@ -46,19 +51,51 @@ class TipoVarianteModal extends Component {
         });
         this.toggle();
       }
+      //Luego de unos segundos borro el mensaje
+      setTimeout(() => {
+        this.props.notifyUser(null, null, null);
+      }, 10000);
     });
   };
 
   render() {
     return (
-      <div>
-        <button
-          type="button"
-          className="text-secondary btn btn-link"
-          onClick={this.toggle}
-        >
-          <small>Añadir nuevo tipo de variante</small>
-        </button>
+      <React.Fragment>
+        <div className="row">
+          <button
+            type="button"
+            className="text-secondary btn btn-link"
+            onClick={this.toggle}
+          >
+            <small>Añadir nuevo tipo de variante</small>
+          </button>
+          {this.props.varianteTipoId ? (
+            <button
+              type="button"
+              className="text-danger btn btn-link"
+              onClick={() => {
+                this.props
+                  .deleteVarianteTipo(this.props.varianteTipoId)
+                  .then(() => {
+                    if (this.props.notify.messageType !== "error") {
+                      this.props.notifyUser(
+                        `Tipo de variante  eliminado.`,
+                        "warning",
+                        null
+                      );
+                    }
+                    //Luego de unos segundos borro el mensaje
+                    setTimeout(() => {
+                      this.props.notifyUser(null, null, null);
+                    }, 10000);
+                  });
+              }}
+            >
+              <small>Eliminar tipo de variante seleccionado.</small>
+            </button>
+          ) : null}
+        </div>
+        <hr />
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>
             Añadir tipo de variante
@@ -88,15 +125,17 @@ class TipoVarianteModal extends Component {
             </Form>
           </ModalBody>
         </Modal>
-      </div>
+      </React.Fragment>
     );
   }
 }
 TipoVarianteModal.propTypes = {
-  addVarianteTipo: PropTypes.func.isRequired
+  addVarianteTipo: PropTypes.func.isRequired,
+  deleteVarianteTipo: PropTypes.func.isRequired,
+  notifyUser: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
-  { addVarianteTipo }
+  { addVarianteTipo, deleteVarianteTipo, notifyUser }
 )(TipoVarianteModal);

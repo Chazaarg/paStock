@@ -38,10 +38,10 @@ const ProductoVariantes = props => {
         data-parent="#accordion"
       >
         <div className="card-body">
-          <div className="form-group col-md-4">
+          <div className="form-group">
             <select
               name="varianteTipo"
-              className="form-control varInputs"
+              className="form-control varInputs col-4"
               onChange={varianteTipoOnChange}
               value={varianteTipoId}
             >
@@ -52,7 +52,10 @@ const ProductoVariantes = props => {
                 </option>
               ))}
             </select>
-            <TipoVarianteModal notify={notify} />
+            <TipoVarianteModal
+              notify={notify}
+              varianteTipoId={varianteTipoId}
+            />
           </div>
           {variantes
             ? variantes.map((variante, idx) => (

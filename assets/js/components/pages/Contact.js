@@ -49,13 +49,19 @@ class Contact extends Component {
     });
   };
   render() {
-    document.title = "Contacto";
-
     const { notify } = this.props;
 
     return (
       <section id="contact">
-        <h1 className="section-header">CONTACTO</h1>
+        <h1
+          className="section-header pb-4"
+          style={{
+            borderBottom: "1px solid #111"
+          }}
+        >
+          CONTACTO
+        </h1>
+
         {notify.message ? (
           <div className="m-auto" style={{ maxWidth: "23rem" }}>
             <ProductoAlert
@@ -140,24 +146,30 @@ class Contact extends Component {
 
             <div className="author">Chazarreta Patricio</div>
             <hr style={{ borderColor: "#111" }} />
-            <ul className="social-media-list d-flex justify-content-between">
-              <li>
-                <a
-                  href="#"
-                  target="_blank"
-                  className="contact-icon"
-                  style={{
-                    fontSize: "1.9rem"
-                  }}
-                >
-                  CV
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank" className="contact-icon">
-                  <i className="fas fa-globe" />
-                </a>
-              </li>
+            <ul className="social-media-list row-12 d-flex justify-content-around">
+              <a
+                href="/build/files/CV_CHAZARRETA_PATRICIO_2CV.pdf"
+                title="CV del autor"
+                download
+              >
+                <li>
+                  <span
+                    className="contact-icon"
+                    style={{
+                      fontSize: "1.9rem"
+                    }}
+                  >
+                    CV
+                  </span>
+                </li>
+              </a>
+              <a href="#" title="Página del autor">
+                <li>
+                  <span className="contact-icon">
+                    <i className="fas fa-globe" />
+                  </span>
+                </li>
+              </a>
             </ul>
           </div>
         </div>
