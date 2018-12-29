@@ -97,8 +97,7 @@ class VentaCaja extends Component {
               <button
                 type="submit"
                 onClick={onSubmit}
-                className="btn btn-success pt-2 pb-2"
-                style={{ width: "100%" }}
+                className="btn btn-block btn-success pt-2 pb-2"
               >
                 VENDER
               </button>

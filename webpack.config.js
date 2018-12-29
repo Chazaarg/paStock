@@ -4,13 +4,13 @@ Encore.setOutputPath("public/build/")
   .setPublicPath("/build")
 
   //React App
-  .addEntry("index", ["babel-polyfill", "./assets/js/index.js"])
+  .addEntry("assets/index", ["babel-polyfill", "./assets/js/index.js"])
 
   //Custom CSS style.
-  .addStyleEntry("app", "./assets/css/app.css")
+  .addStyleEntry("assets/app", "./assets/css/app.css")
 
   //Imported CSS style.
-  .addStyleEntry("global", "./assets/css/global.scss")
+  .addStyleEntry("assets/global", "./assets/css/global.scss")
 
   //Config
   .cleanupOutputBeforeBuild()
@@ -30,9 +30,13 @@ Encore.setOutputPath("public/build/")
   .autoProvidejQuery()
 
   //React
-  .enableReactPreset();
+  .enableReactPreset()
 
-// uncomment if you use TypeScript
-//.enableTypeScriptLoader()
+  // uncomment if you use TypeScript
+  //.enableTypeScriptLoader()
+
+  .configureFilenames({
+    images: "[path][name].[hash:8].[ext]"
+  });
 
 module.exports = Encore.getWebpackConfig();

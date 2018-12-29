@@ -121,7 +121,7 @@ class Contact extends Component {
                 <i className="fa fa-phone fa-2x">
                   <span className="contact-text phone">
                     <a href="tel:1-212-555-5555" title="Llamame">
-                      (015) 2314-6048
+                      (015) 11 2314-6048
                     </a>
                   </span>
                 </i>
@@ -154,8 +154,8 @@ class Contact extends Component {
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" class="contact-icon">
-                  <i class="fas fa-globe" />
+                <a href="#" target="_blank" className="contact-icon">
+                  <i className="fas fa-globe" />
                 </a>
               </li>
             </ul>
