@@ -24,8 +24,8 @@ security:
       json_login:
         check_path: /api/login
       logout:
-        path: app_logout
-
+        path: /api/logout
+        success_handler: App\Service\OnLogoutSuccess
       # activate different ways to authenticate
       # http_basic: true
       # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate

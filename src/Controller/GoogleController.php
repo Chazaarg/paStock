@@ -36,6 +36,6 @@ class GoogleController extends Controller
         // ** if you want to *authenticate* the user, then
         // leave this method blank and create a Guard authenticator
         // (read below)
-        return $this->redirectToRoute('home');
+        return $this->redirect("/");
     }
 }
