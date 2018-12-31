@@ -93,6 +93,16 @@ class Producto implements \JsonSerializable
      */
     private $ventaDetalles;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $precioPromedio;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $cantidadPromedio;
+
     public function __construct($user)
     {
         $this->user = $user;
@@ -312,6 +322,30 @@ class Producto implements \JsonSerializable
                 $ventaDetalle->setProducto(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrecioPromedio(): ?float
+    {
+        return $this->precioPromedio;
+    }
+
+    public function setPrecioPromedio(?float $precioPromedio): self
+    {
+        $this->precioPromedio = $precioPromedio;
+
+        return $this;
+    }
+
+    public function getCantidadPromedio(): ?int
+    {
+        return $this->cantidadPromedio;
+    }
+
+    public function setCantidadPromedio(int $cantidadPromedio): self
+    {
+        $this->cantidadPromedio = $cantidadPromedio;
 
         return $this;
     }

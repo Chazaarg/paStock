@@ -268,10 +268,6 @@ class EditProducto extends Component {
       tieneVariante: b
     });
   };
-  onDeleteClick = id => {
-    this.props.deleteProducto(id);
-    this.props.history.push("/producto");
-  };
   newProp = (val, categoriaId) => {
     //Cuando se crea una nueva propiedad, se la selecciona en el input, buscando el último valor en el array que corresponda.
     switch (val) {
@@ -340,8 +336,12 @@ class EditProducto extends Component {
           <div className="col-3 float-right">
             <button
               type="button"
+              style={{ position: "inherit", zIndex: "99" }}
               className="btn btn-danger float-right mb-0"
-              onClick={this.onDeleteClick.bind(this, id)}
+              onClick={() => {
+                this.props.deleteProducto(id);
+                this.props.history.push("/producto");
+              }}
             >
               Eliminar
             </button>

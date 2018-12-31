@@ -2,18 +2,201 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getProductos } from "../../actions/productosActions";
+import {
+  getProductos,
+  getMarcas,
+  getCategorias,
+  getSubcategorias
+} from "../../actions/productosActions";
 import { createLoadingSelector } from "../../helpers/CreateLoadingSelector";
 import Loader from "react-loader";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import SortProductos from "./SortProductos";
+
+const categoriaFormatter = (cell, row) => {
+  if (row.sub_categoria) {
+    return `${cell} > ${row.sub_categoria.nombre}`;
+  }
+
+  return cell;
+};
+const varianteFormatter = (cell, row) => {
+  if (!row.variantes) {
+    return null;
+  }
+  const varianteColumns = [
+    {
+      dataField: "nombre",
+      text: "Nombre"
+    }
+  ];
+  return (
+    <BootstrapTable
+      keyField="id"
+      data={row.variantes}
+      columns={varianteColumns}
+      bootstrap4={true}
+      headerClasses="d-none"
+    />
+  );
+};
+const productoCantidadFormatter = (cell, row) => {
+  if (!row.variantes) {
+    return row.cantidad;
+  }
+
+  const varianteColumns = [
+    {
+      dataField: "cantidad",
+      text: "Cantidad"
+    }
+  ];
+  return (
+    <BootstrapTable
+      keyField="id"
+      data={row.variantes}
+      columns={varianteColumns}
+      bootstrap4={true}
+      headerClasses="d-none"
+    />
+  );
+};
+const productoPrecioFormatter = (cell, row) => {
+  if (!row.variantes) {
+    return "$" + parseFloat(row.precio).toFixed(2);
+  }
+
+  const variantePrecioFormatter = (cell, row) => {
+    return "$" + parseFloat(row.precio).toFixed(2);
+  };
+
+  const varianteColumns = [
+    {
+      dataField: "precio",
+      text: "Precio",
+      formatter: variantePrecioFormatter
+    }
+  ];
+  return (
+    <BootstrapTable
+      keyField="id"
+      data={row.variantes}
+      columns={varianteColumns}
+      bootstrap4={true}
+      headerClasses="d-none"
+    />
+  );
+};
+const { SearchBar } = Search;
+const columns = [
+  {
+    dataField: "nombre",
+    text: "Nombre",
+    sort: true
+  },
+  {
+    dataField: "marca.nombre",
+    text: "Marca",
+    sort: true
+  },
+
+  {
+    dataField: "productoCantidad",
+    text: "Cantidad",
+    isDummyField: true,
+    searchable: false,
+    formatter: productoCantidadFormatter
+  },
+  {
+    dataField: "productoPrecio",
+    text: "Precio",
+    isDummyField: true,
+    searchable: false,
+    formatter: productoPrecioFormatter
+  },
+  {
+    dataField: "variantes",
+    text: "Variante",
+    searchable: false,
+    formatter: varianteFormatter
+  },
+  {
+    dataField: "categoria.nombre",
+    text: "Categoria",
+    formatter: categoriaFormatter,
+    sort: true
+  },
+  {
+    dataField: "detalles",
+    text: "",
+    isDummyField: true,
+    searchable: false,
+    formatter: (cell, row) => {
+      return (
+        <Link
+          to={`/producto/${row.id}/show`}
+          className="btn btn-secondary ml-auto"
+        >
+          Detalles
+        </Link>
+      );
+    }
+  },
+  {
+    dataField: "editar",
+    text: "",
+    isDummyField: true,
+    searchable: false,
+    formatter: (cell, row) => {
+      return (
+        <Link
+          to={`/producto/${row.id}/edit`}
+          className="btn btn-secondary ml-auto"
+        >
+          Editar
+        </Link>
+      );
+    }
+  }
+];
+
+const customTotal = (from, to, size) => (
+  <span className="react-bootstrap-table-pagination-total small text-muted">
+    {" "}
+    Mostrando de {from} a {to}. Resultados en total: {size}.
+  </span>
+);
 
 class Productos extends Component {
-  state = {};
+  state = {
+    sort: {
+      sortProducto: 0,
+      sortMarca: "",
+      sortCategoria: ""
+    }
+  };
   componentDidMount() {
     this.props.getProductos();
+    this.props.getCategorias();
+    this.props.getSubcategorias();
+    this.props.getMarcas();
   }
+
+  sortOnChange = e => {
+    this.setState(
+      {
+        sort: {
+          ...this.state.sort,
+          [e.target.name]: e.target.value
+        }
+      },
+      () => {
+        this.props.getProductos(this.state.sort);
+      }
+    );
+  };
 
   static getDerivedStateFromProps(props, state) {
     const { loading } = props;
@@ -27,161 +210,6 @@ class Productos extends Component {
   render() {
     const { productos, isFetching } = this.props;
 
-    const categoriaFormatter = (cell, row) => {
-      if (row.sub_categoria) {
-        return `${cell} > ${row.sub_categoria.nombre}`;
-      }
-
-      return cell;
-    };
-    const varianteFormatter = (cell, row) => {
-      if (!row.variantes) {
-        return null;
-      }
-      const varianteColumns = [
-        {
-          dataField: "nombre",
-          text: "Nombre"
-        }
-      ];
-      return (
-        <BootstrapTable
-          keyField="id"
-          data={row.variantes}
-          columns={varianteColumns}
-          bootstrap4={true}
-          headerClasses="d-none"
-        />
-      );
-    };
-    const productoCantidadFormatter = (cell, row) => {
-      if (!row.variantes) {
-        return row.cantidad;
-      }
-
-      const varianteColumns = [
-        {
-          dataField: "cantidad",
-          text: "Cantidad"
-        }
-      ];
-      return (
-        <BootstrapTable
-          keyField="id"
-          data={row.variantes}
-          columns={varianteColumns}
-          bootstrap4={true}
-          headerClasses="d-none"
-        />
-      );
-    };
-    const productoPrecioFormatter = (cell, row) => {
-      if (!row.variantes) {
-        return "$" + parseFloat(row.precio).toFixed(2);
-      }
-
-      const variantePrecioFormatter = (cell, row) => {
-        return "$" + parseFloat(row.precio).toFixed(2);
-      };
-
-      const varianteColumns = [
-        {
-          dataField: "precio",
-          text: "Precio",
-          formatter: variantePrecioFormatter
-        }
-      ];
-      return (
-        <BootstrapTable
-          keyField="id"
-          data={row.variantes}
-          columns={varianteColumns}
-          bootstrap4={true}
-          headerClasses="d-none"
-        />
-      );
-    };
-
-    const { SearchBar } = Search;
-    const columns = [
-      {
-        dataField: "nombre",
-        text: "Nombre",
-        sort: true
-      },
-      {
-        dataField: "marca.nombre",
-        text: "Marca",
-        sort: true
-      },
-
-      {
-        dataField: "productoCantidad",
-        text: "Cantidad",
-        isDummyField: true,
-        searchable: false,
-        formatter: productoCantidadFormatter
-      },
-      {
-        dataField: "productoPrecio",
-        text: "Precio",
-        isDummyField: true,
-        searchable: false,
-        formatter: productoPrecioFormatter
-      },
-      {
-        dataField: "variantes",
-        text: "Variante",
-        searchable: false,
-        formatter: varianteFormatter
-      },
-      {
-        dataField: "categoria.nombre",
-        text: "Categoria",
-        formatter: categoriaFormatter,
-        sort: true
-      },
-      {
-        dataField: "detalles",
-        text: "",
-        isDummyField: true,
-        searchable: false,
-        formatter: (cell, row) => {
-          return (
-            <Link
-              to={`/producto/${row.id}/show`}
-              className="btn btn-secondary ml-auto"
-            >
-              Detalles
-            </Link>
-          );
-        }
-      },
-      {
-        dataField: "editar",
-        text: "",
-        isDummyField: true,
-        searchable: false,
-        formatter: (cell, row) => {
-          return (
-            <Link
-              to={`/producto/${row.id}/edit`}
-              className="btn btn-secondary ml-auto"
-            >
-              Editar
-            </Link>
-          );
-        }
-      }
-    ];
-
-    const customTotal = (from, to, size) => (
-      <span className="react-bootstrap-table-pagination-total small text-muted">
-        {" "}
-        Mostrando de {from} a {to}. Resultados en total: {size}.
-      </span>
-    );
-
     const options = {
       showTotal: true,
       paginationTotalRenderer: customTotal,
@@ -190,6 +218,12 @@ class Productos extends Component {
 
     return (
       <Loader loaded={isFetching}>
+        <SortProductos
+          sortOnChange={this.sortOnChange.bind(this)}
+          marcas={this.props.marcas}
+          categorias={this.props.categorias}
+          subcategorias={this.props.subcategorias}
+        />
         <ToolkitProvider
           keyField="id"
           data={productos}
@@ -217,21 +251,27 @@ class Productos extends Component {
   }
 }
 
-const loadingSelector = createLoadingSelector(["FETCH_PRODUCTOS"]);
+const loadingSelector = createLoadingSelector(["FETCH_MARCAS"]);
 
 Productos.propTypes = {
   productos: PropTypes.array.isRequired,
   getProductos: PropTypes.func.isRequired,
+  getCategorias: PropTypes.func.isRequired,
+  getSubcategorias: PropTypes.func.isRequired,
+  getMarcas: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   productos: state.producto.productos,
+  categorias: state.producto.categorias,
+  subcategorias: state.producto.subcategorias,
+  marcas: state.producto.marcas,
   isFetching: loadingSelector(state),
   loading: state.loading
 });
 
 export default connect(
   mapStateToProps,
-  { getProductos }
+  { getProductos, getMarcas, getCategorias, getSubcategorias }
 )(Productos);

@@ -24,8 +24,8 @@ import {
 } from "./types";
 import axios from "axios";
 
-export const getProductos = () => async dispatch => {
-  const res = await axios.get("/api/producto/");
+export const getProductos = sort => async dispatch => {
+  const res = await axios.post("/api/producto/", sort);
 
   dispatch({
     type: FETCH_PRODUCTOS,

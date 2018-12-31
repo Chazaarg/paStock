@@ -34,6 +34,343 @@ class ProductoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function findDESC($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findASC($user, $marca, $categoria, $subcategoria)
+    {
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.id', 'ASC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        }
+    }
+    public function findPriceDESC($user, $marca, $categoria, $subcategoria)
+    {
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.precioPromedio', 'DESC')//Del más caro al más barato
+            ->getQuery()
+            ->getResult();
+        }
+    }
+    
+    public function findPriceASC($user, $marca, $categoria, $subcategoria)
+    {
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.precioPromedio', 'ASC')//Del más barato al más caro
+            ->getQuery()
+            ->getResult();
+        }
+    }
+            
+    public function findCantDESC($user, $marca, $categoria, $subcategoria)
+    {
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.cantidadPromedio', 'DESC')//Mayor cantidad a menor
+            ->getQuery()
+            ->getResult();
+        }
+    }
+    public function findCantASC($user, $marca, $categoria, $subcategoria)
+    {
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.cantidadPromedio', 'ASC')//Menor cantidad a Mayor
+            ->getQuery()
+            ->getResult();
+        }
+    }
 
     /*
     public function findOneBySomeField($value): ?Producto

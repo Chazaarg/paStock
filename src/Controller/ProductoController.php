@@ -28,12 +28,71 @@ class ProductoController extends AbstractController
         $this->productoValidator = $productoValidator;
     }
     /**
-     * @Route("/", name="producto_index", methods="GET")
+     * @Route("/", name="producto_index", methods="GET|POST")
      */
-    public function index(ProductoRepository $productoRepository, VarianteRepository $variantesRepository): Response
+    public function index(Request $request, ProductoRepository $productoRepository, VarianteRepository $variantesRepository): Response
     {
         $user = $this->security->getUser()->getId();
-        $productos = $productoRepository->findByUser($user);
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
+       
+        $sortNumber = $data["sortProducto"];
+        $sortMarca = $data["sortMarca"];
+        $sortCategoria = "";
+        $sortSubcategoria = "";
+        
+        //Checkeo si $data["sortCategoria"] tiene una categoria o una subcategoria (esto es porque vienen del mismo select y la ID se puede superponer, entonces agregué "sub").
+
+        if (strpos($data["sortCategoria"], 'sub') === false) {
+            $sortCategoria = $data["sortCategoria"];
+        } else {
+            $subcategoria = str_replace("sub", "", $data["sortCategoria"]);
+            $sortSubcategoria = $subcategoria;
+        }
+
+
+        $productos;
+
+        switch ($sortNumber) {
+            case '0':
+                // Más nuevo a más viejo
+                $productos = $productoRepository->findDESC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '1':
+                // Más nuevo a más viejo
+                $productos = $productoRepository->findDESC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '2':
+                // Más viejo a más nuevo
+                $productos = $productoRepository->findASC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '3':
+                // Precio mayor a menor
+                $productos = $productoRepository->findPriceDESC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '4':
+                // Precio menor a mayor
+                $productos = $productoRepository->findPriceASC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '5':
+                // Cantidad menor a mayor
+                $productos = $productoRepository->findCantDESC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case '6':
+                // Cantidad menor a mayor
+                $productos = $productoRepository->findCantASC($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            case null:
+                // Cantidad menor a mayor
+                $productos = $productoRepository->findByUser($user, $sortMarca, $sortCategoria, $sortSubcategoria);
+                break;
+            
+            default:
+            $productos = $productoRepository->findByUser($user);
+                break;
+        }
         
         $productoVariante = [];
 
@@ -80,11 +139,34 @@ class ProductoController extends AbstractController
         $producto = new Producto($user);
         $producto->setCreatedAt(new \DateTime());
 
+        
         //Valido el producto.
         $err = $this->productoValidator->validarProducto($data, $producto);
         if ($err) {
             return $err;
         }
+
+
+        //Seteo un precio/cantidad promedio al producto para poder sortear la tabla PRODUCTOS a partir de esta propiedad.
+        
+        if (sizeOf($producto->getVariantes()) === 0) {
+            $producto->setPrecioPromedio($producto->getPrecio());
+            $producto->setCantidadPromedio($producto->getCantidad());
+        } else {
+            $precioPromedio = 0;
+            $cantidadPromedio = 0;
+
+            foreach ($producto->getVariantes() as $variante) {
+                $precioPromedio += $variante->getPrecio();
+                $cantidadPromedio += $variante->getCantidad();
+            }
+
+            $precioPromedio = $precioPromedio / sizeOf($producto->getVariantes());
+            $cantidadPromedio = $cantidadPromedio / sizeOf($producto->getVariantes());
+            $producto->setPrecioPromedio($precioPromedio);
+            $producto->setCantidadPromedio($cantidadPromedio);
+        }
+
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($producto);
@@ -161,7 +243,6 @@ class ProductoController extends AbstractController
             return $err;
         }
 
-
         $entityManager = $this->getDoctrine()->getManager();
 
         // Borra la relación entre Producto y sus variante.
@@ -178,6 +259,26 @@ class ProductoController extends AbstractController
                 // if you wanted to delete the Tag entirely, you can also do that
                 $entityManager->remove($variante);
             }
+        }
+
+        //Seteo un precio/cantidad promedio al producto para poder sortear la tabla PRODUCTOS a partir de esta propiedad.
+        
+        if (sizeOf($producto->getVariantes()) === 0) {
+            $producto->setPrecioPromedio($producto->getPrecio());
+            $producto->setCantidadPromedio($producto->getCantidad());
+        } else {
+            $precioPromedio = 0;
+            $cantidadPromedio = 0;
+
+            foreach ($producto->getVariantes() as $variante) {
+                $precioPromedio += $variante->getPrecio();
+                $cantidadPromedio += $variante->getCantidad();
+            }
+
+            $precioPromedio = $precioPromedio / sizeOf($producto->getVariantes());
+            $cantidadPromedio = $cantidadPromedio / sizeOf($producto->getVariantes());
+            $producto->setPrecioPromedio($precioPromedio);
+            $producto->setCantidadPromedio($cantidadPromedio);
         }
 
         $this->getDoctrine()->getManager()->flush();
