@@ -19,9 +19,45 @@ class VentaRepository extends ServiceEntityRepository
         parent::__construct($registry, Venta::class);
     }
 
-//    /**
-//     * @return Venta[] Returns an array of Venta objects
-//     */
+    /**
+     * @return Venta[] Returns an array of Venta objects
+     */
+    public function findByUser($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findByDate($user, $date)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.createdAt >= :date')
+            ->setParameter('user', $user)
+            ->setParameter('date', $date)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findByCustom($user, $desde, $hasta)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.createdAt >= :desde')
+            ->andWhere('p.createdAt <= :hasta')
+            ->setParameter('user', $user)
+            ->setParameter('desde', $desde)
+            ->setParameter('hasta', $hasta)
+            ->orderBy('p.id', 'DESC') //Del más nuevo al más viejo
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     /*
     public function findByExampleField($value)
     {

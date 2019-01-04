@@ -7,6 +7,7 @@ import Loader from "react-loader";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import SortVentas from "./SortVentas";
 
 const expandRow = {
   renderer: row => (
@@ -161,9 +162,37 @@ const customTotal = (from, to, size) => (
 );
 
 class Ventas extends Component {
+  state = {
+    sort: "",
+    desde: "",
+    hasta: ""
+  };
   componentDidMount() {
     this.props.getVentas();
   }
+  applyCustom = () => {
+    const { desde, hasta } = this.state;
+    this.props.getVentas({
+      sortNumber: this.state.sort,
+      sortDesde: this.state.desde,
+      sortHasta: this.state.hasta
+    });
+  };
+  customOnChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+  sortOnChange = e => {
+    const sortNumber = Number(e.target.value);
+    this.setState({ sort: sortNumber }, () => {
+      if (sortNumber !== 4) {
+        this.props.getVentas({
+          sortNumber: this.state.sort,
+          sortDesde: this.state.desde,
+          sortHasta: this.state.hasta
+        });
+      }
+    });
+  };
 
   render() {
     const { isFetching, ventas } = this.props;
@@ -171,14 +200,29 @@ class Ventas extends Component {
     const options = {
       showTotal: true,
       paginationTotalRenderer: customTotal,
-      sizePerPageList: [10, 20, 30, { text: "Todos", value: ventas.length }]
+      sizePerPageList: [
+        10,
+        20,
+        30,
+        { text: "Todos", value: ventas.length > 0 ? ventas.length : 10 }
+      ]
     };
     const { SearchBar } = Search;
+    const { sort, desde, hasta } = this.state;
 
     return (
       <div>
         <h1>Ventas</h1>
         <Loader loaded={isFetching}>
+          <SortVentas
+            sort={sort}
+            desde={desde}
+            hasta={hasta}
+            sortOnChange={this.sortOnChange.bind(this)}
+            applyCustom={this.applyCustom.bind(this)}
+            customOnChange={this.customOnChange.bind(this)}
+          />
+
           <ToolkitProvider
             keyField="id"
             data={ventas}

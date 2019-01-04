@@ -32,12 +32,52 @@ class VentaController extends AbstractController
         $this->security = $security;
     }
     /**
-     * @Route("/", name="venta_index", methods="GET")
+     * @Route("/", name="venta_index", methods="GET|POST")
      */
-    public function index(VentaRepository $ventaRepository, VentaDetalleRepository $ventaDetalleRepository): Response
+    public function index(VentaRepository $ventaRepository, VentaDetalleRepository $ventaDetalleRepository, Request $request): Response
     {
         $user = $this->security->getUser()->getId();
-        $ventas = $ventaRepository->findByUser($user);
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
+        $sortNumber = $data["sortNumber"];
+        $sortDesde = $data["sortDesde"];
+        $sortHasta = $data["sortHasta"];
+        $date = date('Y-m-d H:i:s');
+        $ventas;
+        switch ($sortNumber) {
+            case '0':
+            $ventas = $ventaRepository->findByUser($user);
+                break;
+            case '1':
+            $lastDay = (new \DateTime())->modify('-24 hours');
+            $ventas = $ventaRepository->findByDate($user, $lastDay);
+                break;
+            case '2':
+            $lastWeek = (new \DateTime())->modify('-1 week');
+            $ventas = $ventaRepository->findByDate($user, $lastWeek);
+                break;
+            case '3':
+            $lastMonth = (new \DateTime())->modify('-1 month');
+            $ventas = $ventaRepository->findByDate($user, $lastMonth);
+                break;
+            case '4':
+            $sortDesde = \DateTime::createFromFormat("d/m/Y H:i:s", $sortDesde . "24:60:99");
+            $sortDesde = $sortDesde->format("Y-m-d H:i:s");
+            $sortHasta = \DateTime::createFromFormat("d/m/Y H:i:s", $sortHasta . "24:60:99");
+            $sortHasta = $sortHasta->format("Y-m-d H:i:s");
+
+            
+            $ventas = $ventaRepository->findByCustom($user, $sortDesde, $sortHasta);
+                break;
+            
+            default:
+            $ventas = $ventaRepository->findByUser($user);
+                break;
+        }
+        
+        
 
         $ventaVentaDetalle = [];
 

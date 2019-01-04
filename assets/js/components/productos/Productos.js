@@ -213,7 +213,12 @@ class Productos extends Component {
     const options = {
       showTotal: true,
       paginationTotalRenderer: customTotal,
-      sizePerPageList: [10, 20, 30, { text: "Todos", value: productos.length }]
+      sizePerPageList: [
+        10,
+        20,
+        30,
+        { text: "Todos", value: productos.length > 0 ? productos.length : 10 }
+      ]
     };
 
     return (

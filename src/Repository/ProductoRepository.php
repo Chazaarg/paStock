@@ -34,15 +34,71 @@ class ProductoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    public function findDESC($user)
+    
+    public function findDESC($user, $marca, $categoria, $subcategoria)
     {
-        return $this->createQueryBuilder('p')
+        if (!$marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
             ->andWhere('p.user = :user')
             ->setParameter('user', $user)
             ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
             ->getQuery()
             ->getResult()
         ;
+        } elseif ($marca && !$categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+        ;
+        } elseif ($marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult()
+;
+        } elseif ($marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.marca = :marca')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('marca', $marca)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && $categoria && !$subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('user', $user)
+            ->setParameter('categoria', $categoria)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        } elseif (!$marca && !$categoria && $subcategoria) {
+            return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user')
+            ->andWhere('p.subCategoria = :subcategoria')
+            ->setParameter('user', $user)
+            ->setParameter('subcategoria', $subcategoria)
+            ->orderBy('p.id', 'DESC')//Del más viejo al más nuevo
+            ->getQuery()
+            ->getResult();
+        }
     }
     public function findASC($user, $marca, $categoria, $subcategoria)
     {

@@ -79,8 +79,8 @@ export const addVenta = venta => async dispatch => {
   }
 };
 
-export const getVentas = () => async dispatch => {
-  const res = await axios.get("/api/venta/");
+export const getVentas = sort => async dispatch => {
+  const res = await axios.post("/api/venta/", sort);
   dispatch({
     type: FETCH_VENTAS,
     payload: res.data
