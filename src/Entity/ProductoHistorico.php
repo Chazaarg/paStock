@@ -24,7 +24,7 @@ class ProductoHistorico
     private $nombre;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $marca;
 
@@ -106,7 +106,7 @@ class ProductoHistorico
         return $this->marca;
     }
 
-    public function setMarca(string $marca): self
+    public function setMarca(?string $marca): self
     {
         $this->marca = $marca;
 

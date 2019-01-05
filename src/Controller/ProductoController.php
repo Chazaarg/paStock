@@ -309,8 +309,9 @@ class ProductoController extends AbstractController
 
         if (sizeOf($producto->getVentaDetalles()) !== 0) {
             foreach ($producto->getVentaDetalles() as $venta) {
-                $entityManager->remove($venta);
-            };
+                $venta->setProducto(null);
+                $venta->setVariante(null);
+            }
         }
         if (sizeOf($producto->getVariantes()) !== 0) {
             foreach ($producto->getVariantes() as $variante) {

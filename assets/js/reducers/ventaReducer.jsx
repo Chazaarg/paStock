@@ -4,7 +4,9 @@ import {
   ADD_CLIENTE,
   ADD_VENDEDOR,
   ADD_VENTA,
-  FETCH_VENTAS
+  FETCH_VENTAS,
+  DELETE_VENDEDOR,
+  DELETE_CLIENTE
 } from "../actions/types.js";
 
 const initState = {
@@ -44,6 +46,18 @@ export default function(state = initState, action) {
       return {
         ...state,
         ventas: [action.payload, ...state.ventas]
+      };
+    case DELETE_VENDEDOR:
+      return {
+        ...state,
+        ventas: state.ventas.filter(venta => venta.id !== action.payload)
+      };
+    case DELETE_CLIENTE:
+      return {
+        ...state,
+        clientes: state.clientes.filter(
+          cliente => cliente.id !== action.payload
+        )
       };
     default:
       return state;

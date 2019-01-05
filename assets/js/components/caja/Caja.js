@@ -243,6 +243,22 @@ class Caja extends Component {
   newProp = val => {
     //Cuando se crea una nueva propiedad, se la selecciona en el input, buscando el último valor en el array que corresponda.
     switch (val) {
+      case "setClienteNull":
+        this.setState({
+          cliente: {
+            id: undefined,
+            nombre: undefined
+          }
+        });
+        break;
+      case "setVendedorNull":
+        this.setState({
+          vendedor: {
+            id: undefined,
+            nombre: undefined
+          }
+        });
+        break;
       case "cliente":
         this.setState({
           cliente: {

@@ -47,14 +47,14 @@ class Venta
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Vendedor", inversedBy="ventas")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $vendedor;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\FormaDePago", inversedBy="ventas")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\NotBlank(message="Este campo es requerido.")
      */
     private $formaDePago;

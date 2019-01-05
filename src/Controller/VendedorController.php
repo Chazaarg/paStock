@@ -120,12 +120,24 @@ class VendedorController extends AbstractController
      */
     public function delete(Request $request, Vendedor $vendedor): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$vendedor->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($vendedor);
-            $em->flush();
+        $user = $this->security->getUser()->getId();
+        
+        if ($vendedor->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
         }
+        if (sizeOf($vendedor->getVentas()) !== 0) {
+            foreach ($vendedor->getVentas() as $venta) {
+                $venta->setVendedor(null);
+            }
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($vendedor);
+        $em->flush();
+        
 
-        return $this->redirectToRoute('vendedor_index');
+        return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }

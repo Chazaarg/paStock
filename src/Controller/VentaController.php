@@ -194,9 +194,9 @@ class VentaController extends AbstractController
             
             $detalle["producto"] = $ventaDetalles[$i]->getProducto()->getId();
             $detalle["nombre"] = $ventaDetalles[$i]->getProducto()->getNombre();
-            $detalle["marca"] = $ventaDetalles[$i]->getProducto()->getMarca()->getNombre();
-            $detalle["categoria"] = $ventaDetalles[$i]->getProducto()->getCategoria()->getNombre();
-            $detalle["subcategoria"] = $ventaDetalles[$i]->getProducto()->getSubcategoria()->getNombre();
+            $detalle["marca"] = $ventaDetalles[$i]->getProducto()->getMarca() ? $ventaDetalles[$i]->getProducto()->getMarca()->getNombre() : null;
+            $detalle["categoria"] = $ventaDetalles[$i]->getProducto()->getCategoria() ? $ventaDetalles[$i]->getProducto()->getCategoria()->getNombre() : null;
+            $detalle["subcategoria"] = $ventaDetalles[$i]->getProducto()->getSubcategoria() ? $ventaDetalles[$i]->getProducto()->getSubcategoria()->getNombre() : null;
 
             if ($detalle["variante"]) {
                 $detalle["variante"] = $ventaDetalles[$i]->getVariante()->getNombre();

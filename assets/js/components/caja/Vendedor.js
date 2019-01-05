@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addVendedor } from "../../actions/ventaActions";
+import { addVendedor, deleteVendedor } from "../../actions/ventaActions";
 import { notifyUser } from "../../actions/notifyActions";
 
 class Vendedor extends Component {
@@ -15,6 +15,21 @@ class Vendedor extends Component {
       [e.target.name]: e.target.value
     });
   };
+  onVendedorSubmit = () => {
+    const vendedorInput = document.getElementById("vendedor");
+    if (this.props.vendedor.id) {
+      this.props.deleteVendedor(this.props.vendedor.id).then(() => {
+        //Hago una alerta
+        this.props.newProp("setVendedorNull");
+        vendedorInput.classList.add("is-warning");
+
+        //Luego de unos segundos borro la alerta
+        setTimeout(() => {
+          vendedorInput.classList.remove("is-warning");
+        }, 10000);
+      });
+    }
+  };
   onSubmit = e => {
     const { addVendedor, notifyUser, newProp } = this.props;
 
@@ -22,6 +37,7 @@ class Vendedor extends Component {
     //Selecciona la nueva marca en el DOM.
 
     addVendedor(this.state).then(() => {
+      const vendedorInput = document.getElementById("vendedor");
       if (this.props.notify.messageType === "success") {
         newProp("vendedor");
 
@@ -30,20 +46,30 @@ class Vendedor extends Component {
           apellido: "",
           apodo: ""
         });
-        document.getElementById("vendedor").classList.add("is-valid");
+        vendedorInput.classList.add("is-valid");
       }
     });
 
     //Luego de unos segundos borro el mensaje
     setTimeout(() => {
       notifyUser(null, null, null);
-      document.getElementById("cliente").classList.remove("is-valid");
+      document.getElementById("vendedor").classList.remove("is-valid");
     }, 10000);
   };
   render() {
     const { nombre, apellido, apodo } = this.state;
     return (
       <div className="col-5 vendedor">
+        <div className="row">
+          <button
+            type="button"
+            className="text-danger btn btn-link pt-0 pb-0"
+            onClick={this.onVendedorSubmit}
+          >
+            <small>Eliminar VENDEDOR seleccionado.</small>
+          </button>
+        </div>
+        <hr />
         <div className="form-row">
           <div className="form-group col-5">
             <input
@@ -95,7 +121,8 @@ class Vendedor extends Component {
 Vendedor.propTypes = {
   notify: PropTypes.object.isRequired,
   notifyUser: PropTypes.func.isRequired,
-  addVendedor: PropTypes.func.isRequired
+  addVendedor: PropTypes.func.isRequired,
+  deleteVendedor: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -104,5 +131,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addVendedor, notifyUser }
+  { addVendedor, deleteVendedor, notifyUser }
 )(Vendedor);

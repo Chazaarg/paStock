@@ -121,12 +121,23 @@ class ClienteController extends AbstractController
      */
     public function delete(Request $request, Cliente $cliente): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cliente->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($cliente);
-            $em->flush();
+        $user = $this->security->getUser()->getId();
+        if ($cliente->getUser()->getId() !== $user) {
+            return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
         }
+        if (sizeOf($cliente->getVentas()) !== 0) {
+            foreach ($cliente->getVentas() as $venta) {
+                $venta->setCliente(null);
+            }
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($cliente);
+        $em->flush();
+        
 
-        return $this->redirectToRoute('cliente_index');
+        return new JsonResponse(
+                null,
+                JsonResponse::HTTP_NO_CONTENT
+            );
     }
 }

@@ -25,7 +25,7 @@ class VentaDetalle
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Producto", inversedBy="ventaDetalles")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Assert\NotBlank(message="Introduzca un producto válido.")
      */
     private $producto;

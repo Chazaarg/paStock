@@ -62,6 +62,11 @@ div.ventaInput.is-valid > div:first-of-type {
   box-shadow: none !important;
 }
 
+div.ventaInput.is-warning > div:first-of-type {
+  border-color: orange !important;
+  box-shadow: none !important;
+}
+
 /*                              -------------------- #contact Page -------------------- */
 
 #contact {
