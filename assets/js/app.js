@@ -5,13 +5,16 @@ import { Provider } from "react-redux";
 //Redux
 import Routes from "./helpers/Routes";
 import store from "./store";
+import HttpsRedirect from "react-https-redirect";
 
 class App extends Component {
   render() {
     return (
-      <Provider store={store}>
-        <Routes />
-      </Provider>
+      <HttpsRedirect>
+        <Provider store={store}>
+          <Routes />
+        </Provider>
+      </HttpsRedirect>
     );
   }
 }
