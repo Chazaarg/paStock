@@ -64,11 +64,16 @@ class ClienteHistorico
      */
     private $user;
 
-    public function __construct()
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $cliente;
+
+    public function __construct($user)
     {
+        $this->user = $user;
         $this->ventas = new ArrayCollection();
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -197,6 +202,18 @@ class ClienteHistorico
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCliente(): ?int
+    {
+        return $this->cliente;
+    }
+
+    public function setCliente(int $cliente): self
+    {
+        $this->cliente = $cliente;
 
         return $this;
     }

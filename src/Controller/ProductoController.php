@@ -303,8 +303,15 @@ class ProductoController extends AbstractController
             return new JsonResponse("404", JsonResponse::HTTP_NOT_FOUND);
         }
 
+        
+
         $entityManager = $this->getDoctrine()->getManager();
 
+        if (sizeOf($producto->getVentaDetalles()) !== 0) {
+            foreach ($producto->getVentaDetalles() as $venta) {
+                $entityManager->remove($venta);
+            };
+        }
         if (sizeOf($producto->getVariantes()) !== 0) {
             foreach ($producto->getVariantes() as $variante) {
                 $entityManager->remove($variante);

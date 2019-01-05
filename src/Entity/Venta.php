@@ -209,8 +209,8 @@ class Venta
     {
         return [
             'id' => $this->id,
-            'cliente' => $this->cliente->getNombre() ." ". $this->cliente->getApellido(),
-            'vendedor' => $this->vendedor->getNombre() ." ". $this->vendedor->getApellido(),
+            'cliente' => $this->clienteHistorico->getNombre() ." ". $this->clienteHistorico->getApellido(),
+            'vendedor' => $this->vendedorHistorico->getNombre() ." ". $this->vendedorHistorico->getApellido(),
             "total" => $this->total,
             "descuento" => $this->descuento,
             "createdAt" => $this->createdAt

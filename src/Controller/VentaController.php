@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\VentaDetalle;
 use App\Entity\Producto;
 use App\Entity\Variante;
+use App\Entity\ClienteHistorico;
+use App\Form\ClienteHistoricoType;
+use App\Entity\VendedorHistorico;
+use App\Form\VendedorHistoricoType;
+use App\Entity\ProductoHistorico;
+use App\Form\ProductoHistoricoType;
+use App\Entity\VentaDetalle;
 use App\Form\VentaDetalleType;
 use App\Entity\Venta;
 use App\Form\VentaType;
@@ -125,6 +131,39 @@ class VentaController extends AbstractController
         $form = $this->createForm(VentaType::class, $ventum);
         
         $form->submit($data['venta']);
+
+        //Saco valores para ponerlos en vendedorHistorico
+        $vendedorData = [
+            "vendedor" => $ventum->getVendedor()->getId(),
+            "nombre" => $ventum->getVendedor()->getNombre(),
+            "apellido" => $ventum->getVendedor()->getApellido(),
+            "apodo" => $ventum->getVendedor()->getApodo()
+        ];
+
+        $vendedorHistorico = new VendedorHistorico($user);
+        $form = $this->createForm(VendedorHistoricoType::class, $vendedorHistorico);
+        $form->submit($vendedorData);
+
+        //Saco valores para ponerlos en clienteHistorico
+
+        $clienteData = [
+            "cliente" => $ventum->getCliente()->getId(),
+            "nombre" => $ventum->getCliente()->getNombre(),
+            "apellido" => $ventum->getCliente()->getApellido(),
+            "email" => $ventum->getCliente()->getEmail(),
+            "telefono" => $ventum->getCliente()->getTelefono(),
+            "dni" => $ventum->getCliente()->getDni(),
+            "direccion" => $ventum->getCliente()->getDireccion(),
+            "localidad" => $ventum->getCliente()->getLocalidad(),
+        ];
+
+        $clienteHistorico = new ClienteHistorico($user);
+        $form = $this->createForm(ClienteHistoricoType::class, $clienteHistorico);
+        $form->submit($clienteData);
+
+
+        $ventum->setClienteHistorico($clienteHistorico);
+        $ventum->setVendedorHistorico($vendedorHistorico);
         
         //Si tiene errores, los almaceno en una variable.
         $errVenta = $this->defaultValidator->validar($ventum);
@@ -149,7 +188,29 @@ class VentaController extends AbstractController
             $ventaDetalles[$i]->setVenta($ventum);
             $form = $this->createForm(VentaDetalleType::class, $ventaDetalles[$i]);
             $form->submit($detalle);
-           
+
+
+            //Ingreso datos duros para la tabla ProductoHistorico
+            
+            $detalle["producto"] = $ventaDetalles[$i]->getProducto()->getId();
+            $detalle["nombre"] = $ventaDetalles[$i]->getProducto()->getNombre();
+            $detalle["marca"] = $ventaDetalles[$i]->getProducto()->getMarca()->getNombre();
+            $detalle["categoria"] = $ventaDetalles[$i]->getProducto()->getCategoria()->getNombre();
+            $detalle["subcategoria"] = $ventaDetalles[$i]->getProducto()->getSubcategoria()->getNombre();
+
+            if ($detalle["variante"]) {
+                $detalle["variante"] = $ventaDetalles[$i]->getVariante()->getNombre();
+                $detalle["varianteTipo"] = $ventaDetalles[$i]->getVariante()->getVarianteTipo()->getNombre();
+                $detalle["varianteId"] = $ventaDetalles[$i]->getVariante()->getId();
+            }
+
+            $productoHistoricos[$i] = new ProductoHistorico($user);
+            $form = $this->createForm(ProductoHistoricoType::class, $productoHistoricos[$i]);
+            $form->submit($detalle);
+            if (!$form->isValid()) {
+                return new JsonResponse("Ha habido un error.");
+            }
+            $ventaDetalles[$i]->setProductoHistorico($productoHistoricos[$i]);
             //Si tiene errores, almaceno solamente esos en la variable $errProducto. Si no, dejo un array vacío que es igual a una fila de producto en el FrontEnd.
             $errProducto = [];
 
@@ -180,16 +241,25 @@ class VentaController extends AbstractController
             );
         }
 
+        $em = $this->getDoctrine()->getManager();
+        
 
 
         
         //No hay errores, persisto venta a la base de datos y también el detalle.
         foreach ($data['ventaDetalle'] as $detalle) {
-            $em = $this->getDoctrine()->getManager();
+            $em->persist($clienteHistorico);
+            $em->flush();
+            $em->persist($vendedorHistorico);
+            $em->flush();
             $em->persist($ventum);
             $em->flush();
 
 
+            foreach ($productoHistoricos as $productoHistorico) {
+                $em->persist($productoHistorico);
+                $em->flush();
+            }
             foreach ($ventaDetalles as $ventaDetalle) {
                 $em->persist($ventaDetalle);
                 $em->flush();

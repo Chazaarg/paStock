@@ -44,8 +44,14 @@ class VendedorHistorico
      */
     private $user;
 
-    public function __construct()
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $vendedor;
+
+    public function __construct($user)
     {
+        $this->user = $user;
         $this->ventas = new ArrayCollection();
     }
 
@@ -129,6 +135,18 @@ class VendedorHistorico
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getVendedor(): ?int
+    {
+        return $this->vendedor;
+    }
+
+    public function setVendedor(int $vendedor): self
+    {
+        $this->vendedor = $vendedor;
 
         return $this;
     }

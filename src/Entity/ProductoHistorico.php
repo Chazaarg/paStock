@@ -59,11 +59,31 @@ class ProductoHistorico
      */
     private $user;
 
-    public function __construct()
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $variante;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $producto;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $varianteTipo;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $varianteId;
+
+    public function __construct($user)
     {
         $this->ventaDetalles = new ArrayCollection();
+        $this->user = $user;
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -180,6 +200,54 @@ class ProductoHistorico
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getVariante(): ?string
+    {
+        return $this->variante;
+    }
+
+    public function setVariante(?string $variante): self
+    {
+        $this->variante = $variante;
+
+        return $this;
+    }
+
+    public function getProducto(): ?int
+    {
+        return $this->producto;
+    }
+
+    public function setProducto(int $producto): self
+    {
+        $this->producto = $producto;
+
+        return $this;
+    }
+
+    public function getVarianteTipo(): ?string
+    {
+        return $this->varianteTipo;
+    }
+
+    public function setVarianteTipo(?string $varianteTipo): self
+    {
+        $this->varianteTipo = $varianteTipo;
+
+        return $this;
+    }
+
+    public function getVarianteId(): ?int
+    {
+        return $this->varianteId;
+    }
+
+    public function setVarianteId(?int $varianteId): self
+    {
+        $this->varianteId = $varianteId;
 
         return $this;
     }

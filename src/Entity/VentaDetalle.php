@@ -145,10 +145,10 @@ class VentaDetalle
         return [
             'id' => $this->id,
             'venta' => $this->venta,
-            'producto' => ["nombre" => $this->producto->getNombre(), "marca" =>  $this->producto->getMarca()->getNombre(), "id" => $this->producto->getId()],
+            'producto' => ["nombre" => $this->productoHistorico->getNombre(), "marca" =>  $this->productoHistorico->getMarca(), "id" => $this->productoHistorico->getProducto()],
             "cantidad" => $this->cantidad,
             "precio" => $this->precio,
-            "variante" => $this->variante ? ["nombre" => $this->variante->getNombre(), "varianteTipo" => $this->variante->getVarianteTipo()->getNombre(), "id" => $this->variante->getId()] : null
+            "variante" => $this->productoHistorico->getVariante() ? ["nombre" => $this->productoHistorico->getVariante(), "varianteTipo" => $this->productoHistorico->getVarianteTipo(), "id" => $this->productoHistorico->getVarianteId()] : null
         ];
     }
 
