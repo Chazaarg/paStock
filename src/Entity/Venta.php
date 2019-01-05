@@ -70,6 +70,18 @@ class Venta
      */
     private $ventaDetalles;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ClienteHistorico", inversedBy="ventas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $clienteHistorico;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\VendedorHistorico", inversedBy="ventas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $vendedorHistorico;
+
     public function __construct($user)
     {
         $this->ventaDetalles = new ArrayCollection();
@@ -203,5 +215,29 @@ class Venta
             "descuento" => $this->descuento,
             "createdAt" => $this->createdAt
         ];
+    }
+
+    public function getClienteHistorico(): ?ClienteHistorico
+    {
+        return $this->clienteHistorico;
+    }
+
+    public function setClienteHistorico(?ClienteHistorico $clienteHistorico): self
+    {
+        $this->clienteHistorico = $clienteHistorico;
+
+        return $this;
+    }
+
+    public function getVendedorHistorico(): ?VendedorHistorico
+    {
+        return $this->vendedorHistorico;
+    }
+
+    public function setVendedorHistorico(?VendedorHistorico $vendedorHistorico): self
+    {
+        $this->vendedorHistorico = $vendedorHistorico;
+
+        return $this;
     }
 }

@@ -52,6 +52,12 @@ class VentaDetalle
      * @ORM\ManyToOne(targetEntity="App\Entity\Variante", inversedBy="ventaDetalles")
      */
     private $variante;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ProductoHistorico", inversedBy="ventaDetalles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $productoHistorico;
     
     public function __construct($user)
     {
@@ -144,5 +150,17 @@ class VentaDetalle
             "precio" => $this->precio,
             "variante" => $this->variante ? ["nombre" => $this->variante->getNombre(), "varianteTipo" => $this->variante->getVarianteTipo()->getNombre(), "id" => $this->variante->getId()] : null
         ];
+    }
+
+    public function getProductoHistorico(): ?ProductoHistorico
+    {
+        return $this->productoHistorico;
+    }
+
+    public function setProductoHistorico(?ProductoHistorico $productoHistorico): self
+    {
+        $this->productoHistorico = $productoHistorico;
+
+        return $this;
     }
 }

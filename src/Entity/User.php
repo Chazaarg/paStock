@@ -114,6 +114,21 @@ class User implements UserInterface
      */
     private $ventaDetalles;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductoHistorico", mappedBy="user")
+     */
+    private $productoHistoricos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ClienteHistorico", mappedBy="user")
+     */
+    private $clienteHistoricos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\VendedorHistorico", mappedBy="user")
+     */
+    private $vendedorHistoricos;
+
     public function __construct()
     {
         $this->productos = new ArrayCollection();
@@ -127,6 +142,9 @@ class User implements UserInterface
         $this->formaDePagos = new ArrayCollection();
         $this->ventas = new ArrayCollection();
         $this->ventaDetalles = new ArrayCollection();
+        $this->productoHistoricos = new ArrayCollection();
+        $this->clienteHistoricos = new ArrayCollection();
+        $this->vendedorHistoricos = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -561,6 +579,99 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($ventaDetalle->getUser() === $this) {
                 $ventaDetalle->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductoHistorico[]
+     */
+    public function getProductoHistoricos(): Collection
+    {
+        return $this->productoHistoricos;
+    }
+
+    public function addProductoHistorico(ProductoHistorico $productoHistorico): self
+    {
+        if (!$this->productoHistoricos->contains($productoHistorico)) {
+            $this->productoHistoricos[] = $productoHistorico;
+            $productoHistorico->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductoHistorico(ProductoHistorico $productoHistorico): self
+    {
+        if ($this->productoHistoricos->contains($productoHistorico)) {
+            $this->productoHistoricos->removeElement($productoHistorico);
+            // set the owning side to null (unless already changed)
+            if ($productoHistorico->getUser() === $this) {
+                $productoHistorico->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ClienteHistorico[]
+     */
+    public function getClienteHistoricos(): Collection
+    {
+        return $this->clienteHistoricos;
+    }
+
+    public function addClienteHistorico(ClienteHistorico $clienteHistorico): self
+    {
+        if (!$this->clienteHistoricos->contains($clienteHistorico)) {
+            $this->clienteHistoricos[] = $clienteHistorico;
+            $clienteHistorico->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClienteHistorico(ClienteHistorico $clienteHistorico): self
+    {
+        if ($this->clienteHistoricos->contains($clienteHistorico)) {
+            $this->clienteHistoricos->removeElement($clienteHistorico);
+            // set the owning side to null (unless already changed)
+            if ($clienteHistorico->getUser() === $this) {
+                $clienteHistorico->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|VendedorHistorico[]
+     */
+    public function getVendedorHistoricos(): Collection
+    {
+        return $this->vendedorHistoricos;
+    }
+
+    public function addVendedorHistorico(VendedorHistorico $vendedorHistorico): self
+    {
+        if (!$this->vendedorHistoricos->contains($vendedorHistorico)) {
+            $this->vendedorHistoricos[] = $vendedorHistorico;
+            $vendedorHistorico->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVendedorHistorico(VendedorHistorico $vendedorHistorico): self
+    {
+        if ($this->vendedorHistoricos->contains($vendedorHistorico)) {
+            $this->vendedorHistoricos->removeElement($vendedorHistorico);
+            // set the owning side to null (unless already changed)
+            if ($vendedorHistorico->getUser() === $this) {
+                $vendedorHistorico->setUser(null);
             }
         }
 
