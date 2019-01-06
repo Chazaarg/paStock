@@ -25,14 +25,26 @@ const Alert = props => {
       //Con este if elimino la clase is-invalid y el elemento small de todos los inputs, si es que los tienen. Con esto me aseguro de que no haya repeticiones.
       if (el.classList.contains("is-invalid")) {
         el.classList.remove("is-invalid");
-        el.parentElement.removeChild(
-          el.parentElement.getElementsByClassName("text-danger")[0]
-        );
+        if (el.name === "password") {
+          el.parentElement.parentElement.removeChild(
+            el.parentElement.parentElement.getElementsByClassName(
+              "text-danger"
+            )[0]
+          );
+        } else {
+          el.parentElement.removeChild(
+            el.parentElement.getElementsByClassName("text-danger")[0]
+          );
+        }
       }
       //Si el valor del error coincide con el nombre del input, entonces el input es inválido e ingreso el elemento small en el DOM. De otra forma, el input es válido.
       if (contains) {
         el.classList.add("is-invalid");
-        el.parentElement.prepend(small);
+        if (el.name === "password") {
+          el.parentElement.parentElement.prepend(small);
+        } else {
+          el.parentElement.prepend(small);
+        }
       } else {
         el.classList.add("is-valid");
       }

@@ -342,8 +342,25 @@ div.ventaInput.is-warning > div:first-of-type {
 #passlabel {
   padding: 0;
   background-color: white;
+  border-color: #ced4da;
+  transition: border-color 0.15s ease-in-out;
 }
 
 #viewpass > i {
   cursor: pointer;
+}
+
+#login-form input,
+#register-form input {
+  box-shadow: none !important;
+}
+#login-form input:focus,
+#register-form input:focus {
+  border-color: #343a40;
+}
+#password:focus + div #passlabel {
+  border-color: #343a40;
+}
+.is-invalid + div #passlabel {
+  border-color: #dc3545;
 }

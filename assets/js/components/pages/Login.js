@@ -48,15 +48,18 @@ class Login extends Component {
   render() {
     document.title = "Login";
     const passwordInput = document.getElementById("password");
-    if (this.state.showPass) {
-      passwordInput ? (passwordInput.type = "text") : null;
-    } else {
-      passwordInput ? (passwordInput.type = "password") : null;
+
+    if (passwordInput) {
+      if (this.state.showPass) {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
     }
 
     const { message, messageType, errors } = this.props.notify;
     return (
-      <div>
+      <React.Fragment>
         <div className="row">
           <div className="col-md-6 mx-auto">
             <div className="card">
@@ -69,10 +72,11 @@ class Login extends Component {
                   />
                 ) : null}
                 <h1 className="text-center pb-4 pt-3">Ingresar</h1>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} id="login-form">
                   <div className="form-group">
                     <label htmlFor="username">Usuario</label>
                     <input
+                      id="username"
                       type="text"
                       name="username"
                       className="form-control register"
@@ -145,7 +149,7 @@ class Login extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

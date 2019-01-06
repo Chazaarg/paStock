@@ -10,7 +10,9 @@ class Register extends Component {
     username: "",
     password: "",
     email: "",
-    passwordVerifyIsValid: true
+    passwordVerifyIsValid: true,
+    capsLock: false,
+    showPass: false
   };
 
   componentWillUnmount() {
@@ -20,6 +22,18 @@ class Register extends Component {
 
     message && notifyUser(null, null, null);
   }
+
+  capsLock = e => {
+    if (e.getModifierState("CapsLock")) {
+      this.setState({ capsLock: true });
+    } else {
+      this.setState({ capsLock: false });
+    }
+  };
+
+  viewpass = e => {
+    this.setState({ showPass: !this.state.showPass });
+  };
 
   onSubmit = e => {
     e.preventDefault();
@@ -40,7 +54,7 @@ class Register extends Component {
   };
 
   verifyPassword = () => {
-    const passRegister = document.getElementById("passwordRegister");
+    const passRegister = document.getElementById("password");
     const passRepeat = document.getElementById("passwordRepeat");
 
     //Creo el elemento small que contendrá el mensaje de error.
@@ -75,8 +89,17 @@ class Register extends Component {
 
     const { message, messageType, errors } = this.props.notify;
 
+    const passwordInput = document.getElementById("password");
+    if (passwordInput) {
+      if (this.state.showPass) {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    }
+
     return (
-      <div>
+      <React.Fragment>
         <div className="row">
           <div className="col-md-6 mx-auto">
             <div className="card">
@@ -90,10 +113,11 @@ class Register extends Component {
                   />
                 ) : null}
                 <h1 className="text-center pb-4 pt-3">Registrarse</h1>
-                <form onSubmit={this.onSubmit} noValidate>
+                <form onSubmit={this.onSubmit} noValidate id="register-form">
                   <div className="form-group">
                     <label htmlFor="username">Usuario</label>
                     <input
+                      id="username"
                       type="text"
                       name="username"
                       className="form-control register"
@@ -111,14 +135,46 @@ class Register extends Component {
                         cursor: "help"
                       }}
                     />
-                    <input
-                      id="passwordRegister"
-                      type="password"
-                      name="password"
-                      className="form-control register"
-                      value={this.state.password}
-                      onChange={this.onChange}
-                    />
+                    <div className="input-group">
+                      <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        className="form-control register"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                        style={{ borderRight: "none" }}
+                        onKeyUp={this.capsLock}
+                      />
+                      <div className="input-group-append">
+                        <label className="input-group-text" id="passlabel">
+                          <div
+                            id="caps"
+                            className="d-flex align-items-center justify-content-center"
+                          >
+                            {this.state.capsLock ? (
+                              <i className="fas fa-caret-up" />
+                            ) : null}
+                          </div>
+                          <div
+                            id="viewpass"
+                            className="d-flex align-items-center justify-content-center"
+                          >
+                            {this.state.showPass ? (
+                              <i
+                                className="far fa-eye-slash"
+                                onMouseUp={this.viewpass}
+                              />
+                            ) : (
+                              <i
+                                className="far fa-eye"
+                                onMouseDown={this.viewpass}
+                              />
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="passwordRepeat">Repetir Contraseña</label>
@@ -161,7 +217,7 @@ class Register extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

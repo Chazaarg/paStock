@@ -131,15 +131,16 @@ class VentaController extends AbstractController
         $form = $this->createForm(VentaType::class, $ventum);
         
         $form->submit($data['venta']);
-
+        $vendedorData = "";
         //Saco valores para ponerlos en vendedorHistorico
-        $vendedorData = [
+        if ($ventum->getVendedor()) {
+            $vendedorData = [
             "vendedor" => $ventum->getVendedor()->getId(),
             "nombre" => $ventum->getVendedor()->getNombre(),
             "apellido" => $ventum->getVendedor()->getApellido(),
             "apodo" => $ventum->getVendedor()->getApodo()
         ];
-
+        }
         $vendedorHistorico = new VendedorHistorico($user);
         $form = $this->createForm(VendedorHistoricoType::class, $vendedorHistorico);
         $form->submit($vendedorData);
@@ -191,13 +192,13 @@ class VentaController extends AbstractController
 
 
             //Ingreso datos duros para la tabla ProductoHistorico
-            
-            $detalle["producto"] = $ventaDetalles[$i]->getProducto()->getId();
-            $detalle["nombre"] = $ventaDetalles[$i]->getProducto()->getNombre();
-            $detalle["marca"] = $ventaDetalles[$i]->getProducto()->getMarca() ? $ventaDetalles[$i]->getProducto()->getMarca()->getNombre() : null;
-            $detalle["categoria"] = $ventaDetalles[$i]->getProducto()->getCategoria() ? $ventaDetalles[$i]->getProducto()->getCategoria()->getNombre() : null;
-            $detalle["subcategoria"] = $ventaDetalles[$i]->getProducto()->getSubcategoria() ? $ventaDetalles[$i]->getProducto()->getSubcategoria()->getNombre() : null;
-
+            if ($ventaDetalles[$i]->getProducto()) {
+                $detalle["producto"] = $ventaDetalles[$i]->getProducto()->getId();
+                $detalle["nombre"] = $ventaDetalles[$i]->getProducto()->getNombre();
+                $detalle["marca"] = $ventaDetalles[$i]->getProducto()->getMarca() ? $ventaDetalles[$i]->getProducto()->getMarca()->getNombre() : null;
+                $detalle["categoria"] = $ventaDetalles[$i]->getProducto()->getCategoria() ? $ventaDetalles[$i]->getProducto()->getCategoria()->getNombre() : null;
+                $detalle["subcategoria"] = $ventaDetalles[$i]->getProducto()->getSubcategoria() ? $ventaDetalles[$i]->getProducto()->getSubcategoria()->getNombre() : null;
+            }
             if ($detalle["variante"]) {
                 $detalle["variante"] = $ventaDetalles[$i]->getVariante()->getNombre();
                 $detalle["varianteTipo"] = $ventaDetalles[$i]->getVariante()->getVarianteTipo()->getNombre();
