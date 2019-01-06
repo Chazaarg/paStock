@@ -21,21 +21,25 @@ import ProductoAlert from "../alert/ProductoAlert";
 import { notifyUser } from "../../actions/notifyActions";
 
 class EditProducto extends Component {
-  state = {
-    nombre: "",
-    descripcion: "",
-    marca: { id: undefined, nombre: undefined },
-    categoria: { id: undefined, nombre: undefined },
-    sub_categoria: { id: undefined, nombre: undefined },
-    precio: 0,
-    codigo_de_barras: "",
-    cantidad: 0,
-    precio_compra: "",
-    precio_real: "",
-    variantes: [],
-    varianteTipoId: "",
-    tieneVariante: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      nombre: "",
+      descripcion: "",
+      marca: { id: undefined, nombre: undefined },
+      categoria: { id: undefined, nombre: undefined },
+      sub_categoria: { id: undefined, nombre: undefined },
+      precio: 0,
+      codigo_de_barras: "",
+      cantidad: 0,
+      precio_compra: "",
+      precio_real: "",
+      variantes: [],
+      varianteTipoId: "",
+      tieneVariante: false
+    };
+  }
+
   componentWillUnmount() {
     //Esto hace un clear a notify cada vez que cambie de ruta.
     const { message } = this.props.notify;
@@ -46,71 +50,70 @@ class EditProducto extends Component {
     const { loading } = this.props;
     //Cuando se sale, le asigno false a FETCH_PRODUCTO, para que vuelva a cargar la página al volver.
     if (loading.FETCH_PRODUCTO) {
-      return (loading["FETCH_CATEGORIAS"] = false);
-    }
-  }
-  componentWillReceiveProps(nextProps, nextState) {
-    const {
-      nombre,
-      descripcion,
-      marca,
-      categoria,
-      sub_categoria,
-      precio,
-      codigo_de_barras,
-      cantidad,
-      precio_compra,
-      precio_real,
-      variantes
-    } = nextProps.producto;
-
-    //BUG:Esto se setea después de que la página termine de cargar (despues del spinner)...
-
-    this.setState({
-      nombre,
-      descripcion,
-      marca: marca ? marca : { id: undefined, nombre: undefined },
-      categoria: categoria ? categoria : { id: undefined, nombre: undefined },
-      sub_categoria: sub_categoria
-        ? sub_categoria
-        : { id: undefined, nombre: undefined },
-      precio,
-      codigo_de_barras,
-      cantidad,
-      precio_compra,
-      precio_real,
-      variantes
-    });
-
-    if (!variantes) {
-      this.setState({
-        variantes: []
-      });
-      //Si no tiene variantes le agrega la clase 'show' al collapse
-      if (document.getElementById("collapseOne")) {
-        document.getElementById("collapseOne").classList.add("show");
-      }
-    } else {
-      this.setState({
-        tieneVariante: true,
-        varianteTipoId: this.state.variantes[0]
-          ? this.state.variantes[0].variante_tipo.id
-          : null
-      });
-      //Si tiene variantes le agrega la clase 'show' al collapse
-      if (document.getElementById("collapseTwo")) {
-        document.getElementById("collapseTwo").classList.add("show");
-      }
+      return (loading["FETCH_PRODUCTO"] = false);
     }
   }
 
   componentDidMount() {
     const { id } = this.props.match.params;
-    this.props.getProducto(id);
     this.props.getMarcas();
     this.props.getVarianteTipos();
     this.props.getCategorias();
     this.props.getSubcategorias();
+    this.props.getProducto(id).then(() => {
+      //LUEGO DE CARGAR EL PRODUCTO, ASIGNO LOS DATOS AL STATE.
+
+      const {
+        nombre,
+        descripcion,
+        marca,
+        categoria,
+        sub_categoria,
+        precio,
+        codigo_de_barras,
+        cantidad,
+        precio_compra,
+        precio_real,
+        variantes
+      } = this.props.producto;
+
+      this.setState({
+        nombre,
+        descripcion,
+        marca: marca ? marca : { id: undefined, nombre: undefined },
+        categoria: categoria ? categoria : { id: undefined, nombre: undefined },
+        sub_categoria: sub_categoria
+          ? sub_categoria
+          : { id: undefined, nombre: undefined },
+        precio,
+        codigo_de_barras,
+        cantidad,
+        precio_compra,
+        precio_real,
+        variantes
+      });
+
+      if (!variantes) {
+        this.setState({
+          variantes: []
+        });
+        //Si no tiene variantes le agrega la clase 'show' al collapse
+        if (document.getElementById("collapseOne")) {
+          document.getElementById("collapseOne").classList.add("show");
+        }
+      } else {
+        this.setState({
+          tieneVariante: true,
+          varianteTipoId: this.state.variantes[0]
+            ? this.state.variantes[0].variante_tipo.id
+            : null
+        });
+        //Si tiene variantes le agrega la clase 'show' al collapse
+        if (document.getElementById("collapseTwo")) {
+          document.getElementById("collapseTwo").classList.add("show");
+        }
+      }
+    });
   }
 
   onSubmit = e => {
@@ -425,7 +428,7 @@ class EditProducto extends Component {
   }
 }
 
-const loadingSelector = createLoadingSelector(["FETCH_CATEGORIAS"]);
+const loadingSelector = createLoadingSelector(["FETCH_PRODUCTO"]);
 
 EditProducto.propTypes = {
   producto: PropTypes.object.isRequired,

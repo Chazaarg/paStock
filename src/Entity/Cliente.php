@@ -57,7 +57,7 @@ class Cliente
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="clientes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 

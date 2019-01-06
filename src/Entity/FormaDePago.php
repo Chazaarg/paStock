@@ -25,7 +25,7 @@ class FormaDePago
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="formaDePagos")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
