@@ -21,7 +21,7 @@ class VentaCaja extends Component {
     });
 
     //Si se paga en efectivo, se resta un 15 por ciento y se redondea.
-    if (ventaTipo == 2) {
+    if (ventaTipo == 1) {
       total = total - Math.round(total * 0.15);
     }
     //Se le resta el descuento al total.
@@ -53,8 +53,8 @@ class VentaCaja extends Component {
                 className="form-control col-8 ventaInput"
               >
                 <option>Tipo de pago</option>
-                <option value={2}>Efectivo</option>
-                <option value={1}>Tarjeta</option>
+                <option value={1}>Efectivo</option>
+                <option value={2}>Tarjeta</option>
               </select>
             </div>
             <div className="col-4 form-group">
