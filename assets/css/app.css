@@ -328,3 +328,22 @@ div.ventaInput.is-warning > div:first-of-type {
     width: 99%;
   }
 }
+
+/* Login page. Password input */
+
+#caps,
+#viewpass {
+  width: 2rem;
+  height: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#passlabel {
+  padding: 0;
+  background-color: white;
+}
+
+#viewpass > i {
+  cursor: pointer;
+}

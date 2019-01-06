@@ -8,7 +8,9 @@ import { notifyUser } from "../../actions/notifyActions";
 class Login extends Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    capsLock: false,
+    showPass: false
   };
 
   componentWillUnmount() {
@@ -25,13 +27,32 @@ class Login extends Component {
 
     this.props.login({ username, password });
   };
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  capsLock = e => {
+    if (e.getModifierState("CapsLock")) {
+      this.setState({ capsLock: true });
+    } else {
+      this.setState({ capsLock: false });
+    }
+  };
+
+  viewpass = e => {
+    this.setState({ showPass: !this.state.showPass });
+  };
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
   onGoogleClick = e => {
     e.preventDefault();
     window.location.replace("/api/connect/google");
   };
   render() {
     document.title = "Login";
+    const passwordInput = document.getElementById("password");
+    if (this.state.showPass) {
+      passwordInput ? (passwordInput.type = "text") : null;
+    } else {
+      passwordInput ? (passwordInput.type = "password") : null;
+    }
 
     const { message, messageType, errors } = this.props.notify;
     return (
@@ -59,15 +80,49 @@ class Login extends Component {
                       onChange={this.onChange}
                     />
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="password">Contraseña</label>
-                    <input
-                      type="password"
-                      name="password"
-                      className="form-control register"
-                      value={this.state.password}
-                      onChange={this.onChange}
-                    />
+                    <div className="input-group">
+                      <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        className="form-control register"
+                        value={this.state.password}
+                        onChange={this.onChange}
+                        style={{ borderRight: "none" }}
+                        onKeyUp={this.capsLock}
+                      />
+                      <div className="input-group-append">
+                        <label className="input-group-text" id="passlabel">
+                          <div
+                            id="caps"
+                            className="d-flex align-items-center justify-content-center"
+                          >
+                            {this.state.capsLock ? (
+                              <i className="fas fa-caret-up" />
+                            ) : null}
+                          </div>
+                          <div
+                            id="viewpass"
+                            className="d-flex align-items-center justify-content-center"
+                          >
+                            {this.state.showPass ? (
+                              <i
+                                className="far fa-eye-slash"
+                                onMouseUp={this.viewpass}
+                              />
+                            ) : (
+                              <i
+                                className="far fa-eye"
+                                onMouseDown={this.viewpass}
+                              />
+                            )}
+                          </div>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                   <input
                     type="submit"

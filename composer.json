@@ -6,6 +6,7 @@
     "ext-ctype": "*",
     "ext-iconv": "*",
     "doctrine/annotations": "^1.6",
+    "doctrine/doctrine-fixtures-bundle": "^3.1",
     "knpuniversity/oauth2-client-bundle": "^1.25",
     "league/oauth2-google": "^2.2",
     "nelmio/cors-bundle": "^1.5",
@@ -32,7 +33,6 @@
     "symfony/yaml": "*"
   },
   "require-dev": {
-    "doctrine/doctrine-fixtures-bundle": "^3.0",
     "symfony/debug-pack": "*",
     "symfony/dotenv": "*",
     "symfony/maker-bundle": "^1.8",
