@@ -17,7 +17,7 @@ class SecurityController extends AbstractController
     {
         $user = $this->getUser();
         $roles = $user->getRoles();
-        $name = $user->getUsername();
+        $name = $user->getName();
         $email = $user->getEmail();
         $id = $user->getID();
 
@@ -28,7 +28,7 @@ class SecurityController extends AbstractController
 
         // Call whatever methods you've added to your User class
         // For example, if you added a getFirstName() method, you can use that.
-        return new JsonResponse(['id' => $id,'roles' => $role, 'username' => $name, 'email' => $email]);
+        return new JsonResponse(['id' => $id,'roles' => $role,  'email' => $email, 'username' => $name]);
     }
 
     /**
@@ -49,7 +49,8 @@ class SecurityController extends AbstractController
         }
 
         $roles = $user->getRoles();
-        $name = $user->getUsername();
+        $name = $user->getName();
+        $lastname = $user->getLastname();
         $email = $user->getEmail();
         $id = $user->getID();
 
@@ -60,7 +61,7 @@ class SecurityController extends AbstractController
 
         // Call whatever methods you've added to your User class
         // For example, if you added a getFirstName() method, you can use that.
-        return new JsonResponse(['id' => $id,'roles' => $role, 'username' => $name, 'email' => $email]);
+        return new JsonResponse(['id' => $id,'roles' => $role, 'email' => $email, 'username' => $name, "lastname" => $lastname]);
     }
     /**
      * @Route("/api/logout", name="app_logout")

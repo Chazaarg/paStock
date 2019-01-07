@@ -32,14 +32,17 @@ class RegistrationController extends AbstractController
         $data = (array) json_decode($request->getContent());
 
         //Inserto cada uno de los datos en variables.
-        $username = $data['username'];
+        $name = $data['name'];
+        $lastname = $data['lastname'];
         $email = $data['email'];
         $password = $data['password'];
         $passwordVerifyIsValid = $data['passwordVerifyIsValid'];
+       
 
         //Creo el usuario.
         $user = new User();
-        $user->setUserName($username);
+        $user->setName($name);
+        $user->setLastname($lastname);
         $user->setEmail($email);
         $user->setPassword($password);
 
@@ -60,7 +63,6 @@ class RegistrationController extends AbstractController
                 'message' => 'Ha habido un error.',
                 'errors' => [$passVerifyErr],
             ];
-
         }
 
         //Valido el usuario.
@@ -73,8 +75,7 @@ class RegistrationController extends AbstractController
             }
 
             return new JsonResponse($err, JsonResponse::HTTP_BAD_REQUEST);
-
-        } else if ($passVerifyErr) {
+        } elseif ($passVerifyErr) {
 
             //Si no hay más errores, entonces devuelvo solamente el error de verificación de contraseña.
             return new JsonResponse($passVerifyFullErr, JsonResponse::HTTP_BAD_REQUEST);
@@ -85,22 +86,21 @@ class RegistrationController extends AbstractController
             $user,
             $password
         ));
-
+        
         //Reemplazo la vieja contraseña de $data con la codificada.
         $password = $user->getPassword();
         $data['password'] = $password;
 
         $form = $this->createForm(UserType::class, $user);
         //Saco el verifypassword antes de hacer el submit.
-        $data = array_slice($data, 0, 3);
-
+        $data = array_slice($data, 0, 4);
+        
         $form->submit($data);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $manager->persist($user);
             $manager->flush();
-
+            //TODO: Si quisiese confirmar el EMAIL. Lo haría acá.
             // after validating the user and saving them to the database
             // authenticate the user and use onAuthenticationSuccess on the authenticator
 
@@ -112,14 +112,12 @@ class RegistrationController extends AbstractController
             );
 
             return new JsonResponse([
-                'user' => [
-                    'username' => $username, 'email' => $email, 'roles' => $user->getRoles(), 'id' => $user->getId(),
+                'user' => [ 'username' => $name . " " . $lastname,'email' => $email, 'roles' => $user->getRoles(), 'id' => $user->getId(),
                 ],
                 'message' => '¡Registrado!',
                 'messageType' => 'success',
 
             ]);
-
         } else {
             return new JsonResponse(
                 [
@@ -127,8 +125,6 @@ class RegistrationController extends AbstractController
                     'messageType' => 'error',
                 ]
             );
-
         }
-
     }
 }

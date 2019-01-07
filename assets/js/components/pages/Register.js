@@ -7,7 +7,8 @@ import { notifyUser } from "../../actions/notifyActions";
 
 class Register extends Component {
   state = {
-    username: "",
+    name: "",
+    lastname: "",
     password: "",
     email: "",
     passwordVerifyIsValid: true,
@@ -38,10 +39,16 @@ class Register extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const { username, password, email, passwordVerifyIsValid } = this.state;
+    const {
+      password,
+      email,
+      passwordVerifyIsValid,
+      name,
+      lastname
+    } = this.state;
     const { registerUser } = this.props;
 
-    registerUser({ username, password, email, passwordVerifyIsValid });
+    registerUser({ name, lastname, password, email, passwordVerifyIsValid });
   };
 
   onChange = e => {
@@ -115,13 +122,24 @@ class Register extends Component {
                 <h1 className="text-center pb-4 pt-3">Registrarse</h1>
                 <form onSubmit={this.onSubmit} noValidate id="register-form">
                   <div className="form-group">
-                    <label htmlFor="username">Usuario</label>
+                    <label htmlFor="name">Nombre</label>
                     <input
-                      id="username"
+                      id="name"
                       type="text"
-                      name="username"
+                      name="name"
                       className="form-control register"
-                      value={this.state.username}
+                      value={this.state.name}
+                      onChange={this.onChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="lastname">Apellido</label>
+                    <input
+                      id="lastname"
+                      type="text"
+                      name="lastname"
+                      className="form-control register"
+                      value={this.state.lastname}
                       onChange={this.onChange}
                     />
                   </div>
