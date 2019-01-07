@@ -23,6 +23,8 @@ class Vendedor extends Component {
         this.props.newProp("setVendedorNull");
         vendedorInput.classList.add("is-warning");
 
+        //Elimino al vendedor del localstorage
+        localStorage.removeItem("vendedor");
         //Luego de unos segundos borro la alerta
         setTimeout(() => {
           vendedorInput.classList.remove("is-warning");

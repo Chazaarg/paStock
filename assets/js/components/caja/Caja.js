@@ -361,7 +361,7 @@ class Caja extends Component {
     //Habilitar el Select para elegir el producto.
 
     document.querySelectorAll("input.productoInput").forEach(productoInput => {
-      productoInput.addEventListener("dblclick", e => {
+      productoInput.addEventListener("click", e => {
         e.target.classList.add("d-none");
         e.target.classList.remove("productoInput");
         e.target.parentElement.firstChild.classList.remove("d-none");

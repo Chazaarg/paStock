@@ -19,7 +19,17 @@ class ProductosCaja extends Component {
             <h4 style={{ fontSize: "1.4rem" }}>&nbsp;&nbsp;Código de Barras</h4>
           </div>
           <div className="col-5">
-            <h4 style={{ fontSize: "1.4rem" }}>&nbsp;&nbsp;Producto</h4>
+            <h4 style={{ fontSize: "1.4rem" }}>
+              &nbsp;&nbsp;Producto
+              <i
+                className="far fa-question-circle float-right mr-1"
+                title="Click en el input pata cargar productos manualmente."
+                style={{
+                  fontSize: "1rem",
+                  cursor: "help"
+                }}
+              />
+            </h4>
           </div>
           <div className="col-2">
             <h4 style={{ fontSize: "1.4rem" }}>&nbsp;&nbsp;Cantidad</h4>
