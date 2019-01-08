@@ -1,10 +1,18 @@
 # paStock
-Stock management web application.
+## Stock management web application.
 
-Symfony 4 RESTful API used for the back-end.
+  
+  
 
-ReactJS used for the front-end.
+- Symfony 4 RESTful API used in the back-end.
 
-Application deployed to heroku:
+- ReactJS used for the front-end.
 
-# https://pastock.herokuapp.com/
+
+
+
+#
+
+### Application deployed to heroku:
+
+https://pastock.herokuapp.com/
