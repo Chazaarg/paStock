@@ -85,3 +85,58 @@ export const sendEmail = mail => async dispatch => {
     });
   }
 };
+
+export const recoverPassword = email => async dispatch => {
+  try {
+    const res = await axios.post("/api/recover-password", email);
+    dispatch({
+      type: NOTIFY_USER,
+      message: res.data.message,
+      messageType: res.data.messageType,
+      errors: res.data.errors
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.data.message,
+      messageType: error.response.data.messageType,
+      errors: error.response.data.errors
+    });
+  }
+};
+export const sendPasswordCode = code => async dispatch => {
+  try {
+    const res = await axios.post("/api/recover-password-code", code);
+    dispatch({
+      type: NOTIFY_USER,
+      message: res.data.message,
+      messageType: res.data.messageType,
+      errors: res.data.errors
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.data.message,
+      messageType: error.response.data.messageType,
+      errors: error.response.data.errors
+    });
+  }
+};
+export const changePassword = password => async dispatch => {
+  try {
+    const res = await axios.post("/api/recover-password-change", password);
+    dispatch({
+      type: NOTIFY_USER,
+      message: res.data.message,
+      messageType: res.data.messageType,
+      errors: res.data.errors
+    });
+  } catch (error) {
+    dispatch({
+      type: NOTIFY_USER,
+      message: error.response.data.message,
+      messageType: error.response.data.messageType,
+      errors: error.response.data.errors
+    });
+  }
+};

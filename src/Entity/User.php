@@ -134,6 +134,11 @@ class User implements UserInterface
      */
     private $lastname;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $recoveryCode;
+
     public function __construct()
     {
         $this->productos = new ArrayCollection();
@@ -696,6 +701,18 @@ class User implements UserInterface
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getRecoveryCode(): ?string
+    {
+        return $this->recoveryCode;
+    }
+
+    public function setRecoveryCode(?string $recoveryCode): self
+    {
+        $this->recoveryCode = $recoveryCode;
 
         return $this;
     }

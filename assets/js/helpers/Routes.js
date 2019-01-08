@@ -15,7 +15,7 @@ import NewProducto from "../components/productos/NewProducto";
 import EditProducto from "../components/productos/EditProducto";
 import NotFound from "../components/pages/NotFound";
 import Contact from "../components/pages/Contact";
-import Login from "../components/pages/Login";
+import Login from "../components/pages/login/Login";
 import OrganizarMarcas from "../components/organizar/OrganizarMarcas";
 import OrganizarCategorias from "../components/organizar/OrganizarCategorias";
 import Register from "../components/pages/Register";
